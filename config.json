@@ -1,0 +1,8 @@
+{
+    "nomenclature": {
+        "name": "bhawan_app",
+        "verboseName": "Bhawan_app"
+    },
+    "baseUrl": "/bhawan_app",
+    "source": "bhawan_app/src/index"
+}
