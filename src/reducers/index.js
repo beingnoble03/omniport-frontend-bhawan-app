@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux'
-import exampleReducer from './exampleReducer'
+import authorities from './authorities'
+import facility from './facility'
 
 const rootReducers = combineReducers({
-  exampleReducer
+  authorities: authorities,
+  facility: facility,
 })
 
 export default rootReducers
