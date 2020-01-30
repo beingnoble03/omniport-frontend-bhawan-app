@@ -1,0 +1,20 @@
+.field{
+    display: flex;
+}
+.date-margin{
+    margin-right: 15px !important;
+}
+.complaint{
+    width: 633px !important;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.05) !important; 
+}
+.button{
+    background: #304FFE !important;
+    box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.06) !important;
+    border-radius: 4px !important;
+    font-family: Lato !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    color: #FFFFFF !important;
+    width: 226px !important;
+}
