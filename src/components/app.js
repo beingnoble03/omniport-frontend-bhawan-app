@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
+import React, { Suspense, lazy} from 'react'
 import { connect } from 'react-redux'
-// import { Scrollbars } from 'react-custom-scrollbars'
-import { Segment, Container } from 'semantic-ui-react'
+import { render } from 'react-dom'
+import {Switch, Route} from 'react-router-dom'
+import { Segment, Container, Grid } from 'semantic-ui-react'
 
-import { AppHeader, AppFooter, AppMain, getTheme } from 'formula_one'
+import { AppHeader, AppFooter, AppMain, Loading, getTheme } from 'formula_one'
 import Nav  from './navbar/index'
 import BookRoom from './book_room/index'
 import ComplainRegister from './complain_register/index'
@@ -21,49 +22,101 @@ import StudentDatabase from './studentDatabase/index'
 import RegisterStudent from './register_student/index'
 import BookingRequests from './booking_request/index'
 
-class App extends Component {
-  render () {
-    const creators = [
-      {
-        name: 'Ritvik Jain',
-        role: 'Backend developer',
-        link: 'https://dhruvkb.github.io/'
-      },
-      {
-        name: 'Suyash Salampuria',
-        role: 'Frontend developer',
-        link: 'https://github.com/SuyashSalampuria/'
-      },
-      {
-        name: 'Kashish Jagyasi',
-        role: 'Designer',
-        link: 'https://pradumangoyal.github.io'
-      }
-    ]
+const creators = [
+  {
+    name: 'Ritvik Jain',
+    role: 'Backend developer',
+    link: 'https://dhruvkb.github.io/'
+  },
+  {
+    name: 'Suyash Salampuria',
+    role: 'Frontend developer',
+    link: 'https://github.com/SuyashSalampuria/'
+  },
+  {
+    name: 'Kashish Jagyasi',
+    role: 'Designer',
+    link: 'https://pradumangoyal.github.io'
+  }
+]
 
+class App extends React.Component {
+  constructor (props) {
+    super(props)
+    this.divRef = React.createRef()
+  }
+
+  scrollDiv = () => {
+    if (this.divRef && this.divRef.current) {
+      this.divRef.current.scrollTo(0, 0)
+    }
+  }
+
+  render () {
+    const { match } = this.props
+    console.log(match)
     return (
-      <div styleName='blocks.content-div'>
-        <AppHeader appName='bhawan_app' mode='app' />
-        <AppMain>
-          <Nav />
-          {/* <div styleName='blocks.content-div'><Home /></div> */}
-          {/* <div><Facilities /></div> */}
-            {/* <div><Authorities /></div> */}
-          <div styleName='main.app-main'>
-          {/* <div><AdminFacility /></div> */}
-          {/* <div><PastBookings /></div> */}
-          {/* <div><BookingRequests /></div> */}
-          {/* <div><StudentDatabase /></div> */}
-          {/* <div><RegisterStudent/></div> */}
-          {/* <div><Calendar /></div> */}
-          {/* <div><MyInfo/></div> */}
-            <div><Authorities /></div>
-                {/* <div><Facility /></div> */}
-                {/* <Calendar /> */}
-                {/* <BookRoom></BookRoom> */}
-                {/* <div><ComplainRegister /></div> */}
+      <div ref={this.divRef} styleName='blocks.app-wrapper'>
+        <Suspense fallback={<Loading />}>
+          <Switch>
+            <Route
+              path={`${match.path}`}
+              render={props => (
+                <AppHeader
+                  appName='bhawan_app'
+                  mode='app'
+                  userDropdown
+                />
+              )}
+            />
+          </Switch>
+          <Switch>
+            <Route
+              path={`${match.path}`}
+              render={props => (
+                <Nav/>
+              )}
+            />
+          </Switch>
+          <div styleName='blocks.app-container'>
+            <Grid container>
+              <Grid.Row>
+                <Switch>
+                <Route
+                    path={`${match.path}book_room`}
+                    render={props => (
+                      <BookRoom />
+                    )}
+                  />
+                <Route
+                    path={`${match.path}complain`}
+                    render={props => (
+                      <ComplainRegister />
+                    )}
+                  />
+                <Route
+                    path={`${match.path}facilities`}
+                    render={props => (
+                      <Facilities />
+                    )}
+                  />
+                  <Route
+                    path={`${match.path}calendar`}
+                    render={props => (
+                      <Calendar />
+                    )}
+                  />
+                  <Route
+                    path={`${match.path}`}
+                    render={props => (
+                      <Authorities />
+                    )}
+                  />
+                </Switch>
+              </Grid.Row>
+            </Grid>
           </div>
-        </AppMain>
+        </Suspense>
         <AppFooter creators={creators} />
       </div>
     )
