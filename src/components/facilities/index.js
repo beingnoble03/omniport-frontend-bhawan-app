@@ -1,60 +1,106 @@
 import React from 'react'
-import { Button ,Card,Image, Divider } from 'semantic-ui-react'
+import {connect} from 'react-redux'
+import { Card } from 'semantic-ui-react'
+import { getFacilities } from '../../actions/facilities'
 import './index.css'
-export default class Authorities extends React.Component {
+class Facilities extends React.Component {
+
+  componentDidMount(){
+    this.props.getFacilities()
+  }
   state = { activeItem: 'home' }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
   render() {
     const { activeItem } = this.state
+    const { facilities } = this.props
 
     return (
       <div>
         <h2>Facilities</h2>
+        
         <Card.Group itemsPerRow={3}>
-    <Card>
-      <Card.Content styleName="content">
-        <Card.Header>Mess</Card.Header>
-        <Card.Content styleName="desc">Mess Time</Card.Content>
-      </Card.Content>
-    </Card>
-    <Card>
-      <Card.Content styleName="content">
-        <Card.Header>Mess</Card.Header>
-        <Card.Content styleName="desc">Mess Time</Card.Content>
-      </Card.Content>
-    </Card>
-    <Card>
-      <Card.Content styleName="content">
-        <Card.Header>Mess</Card.Header>
-        <Card.Content styleName="desc">
-          <Card.Content>Mess Time</Card.Content>
-          <Card.Content>Mess Time</Card.Content>
-          <Card.Content>Mess Time</Card.Content>
-          </Card.Content>
-      </Card.Content>
-    </Card>
-    <Card>
-      <Card.Content styleName="content">
-        <Card.Header>Mess</Card.Header>
-        <Card.Content styleName="desc">Mess Time</Card.Content>
-      </Card.Content>
-    </Card>
-    <Card>
-      <Card.Content styleName="content">
-        <Card.Header>Mess</Card.Header>
-        <Card.Content styleName="desc">Mess Time</Card.Content>
-      </Card.Content>
-    </Card>
-    <Card>
-      <Card.Content styleName="content">
-        <Card.Header>Mess</Card.Header>
-        <Card.Content styleName="desc">Mess Time</Card.Content>
-      </Card.Content>
-    </Card>
-  </Card.Group>
+        {facilities.length>0?( facilities.map((facility) =>{
+            return (
+              <Card>
+                <Card.Content styleName="content">
+                  <Card.Header>Mess</Card.Header>
+                  <Card.Content styleName="desc">
+                    <Card.Content>Mess Time</Card.Content>
+                    <Card.Content>Mess Time</Card.Content>
+                    <Card.Content>Mess Time</Card.Content>
+                  </Card.Content>
+                </Card.Content>
+              </Card>
+            )
+          })): ""}
+          <Card>
+                <Card.Content styleName="content">
+                  <Card.Header>Mess</Card.Header>
+                  <Card.Content styleName="desc">
+                    <Card.Content>Mess Time</Card.Content>
+                    <Card.Content>Mess Time</Card.Content>
+                    <Card.Content>Mess Time</Card.Content>
+                  </Card.Content>
+                </Card.Content>
+              </Card>
+              <Card>
+                <Card.Content styleName="content">
+                  <Card.Header>Mess</Card.Header>
+                  <Card.Content styleName="desc">
+                    <Card.Content>Mess Time</Card.Content>
+                    <Card.Content>Mess Time</Card.Content>
+                    <Card.Content>Mess Time</Card.Content>
+                  </Card.Content>
+                </Card.Content>
+              </Card>
+              <Card>
+                <Card.Content styleName="content">
+                  <Card.Header>Mess</Card.Header>
+                  <Card.Content styleName="desc">
+                    <Card.Content>Mess Time</Card.Content>
+                    <Card.Content>Mess Time</Card.Content>
+                    <Card.Content>Mess Time</Card.Content>
+                  </Card.Content>
+                </Card.Content>
+              </Card>
+              <Card>
+                <Card.Content styleName="content">
+                  <Card.Header>Mess</Card.Header>
+                  <Card.Content styleName="desc">
+                    <Card.Content>Mess Time</Card.Content>
+                    <Card.Content>Mess Time</Card.Content>
+                    <Card.Content>Mess Time</Card.Content>
+                  </Card.Content>
+                </Card.Content>
+              </Card>
+              <Card>
+                <Card.Content styleName="content">
+                  <Card.Header>Mess</Card.Header>
+                  <Card.Content styleName="desc">
+                    <Card.Content>Mess Time</Card.Content>
+                    <Card.Content>Mess Time</Card.Content>
+                    <Card.Content>Mess Time</Card.Content>
+                  </Card.Content>
+                </Card.Content>
+              </Card>
+        </Card.Group>
           </div>
     )
   }
 }
+function mapStateToProps(state){
+  console.log(state)
+  return{
+    facilities: state.facilities,
+  }
+}
+ const mapDispatchToProps= dispatch => {
+  return {
+    getFacilities: ()=> {
+      dispatch(getFacilities())
+    }
+  }
+ }
+ export default connect(mapStateToProps, mapDispatchToProps)(Facilities)

@@ -1,16 +1,17 @@
 import React from 'react'
-import connect from 'react-redux'
+import { connect } from 'react-redux'
 import { Header, Image, Container } from 'semantic-ui-react'
 import './index.css'
-import { getFacility } from '../../actions/facility'
+import { getFacilities } from '../../actions/facilities'
 class Facility extends React.Component {
-  // componentDidMount() {
-  //   this.props.getFacililty()
-  // }
+  componentDidMount() {
+    this.props.getFacililties()
+  }
   render(){
+    const { facilities } = this.props
         return(
             <div>
-                <Header as='h2'>Mess</Header>
+                <Header as='h2'>{(facilities.length>0)?facilities[0].name:""} </Header>
                 <Image src='https://react.semantic-ui.com/images/wireframe/image.png' size='medium' floated='left' styleName='image_margin'/>
                 <Container>
     <p>
@@ -34,14 +35,14 @@ class Facility extends React.Component {
 function mapStateToProps (state) {
   console.log(state)
   return {
-    facility: state.facility,
+    facilities: state.facilities,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    getFacililty: () => {
-      dispatch(getFacility())
+    getFacililties: () => {
+      dispatch(getFacilities())
     }
   }
 }

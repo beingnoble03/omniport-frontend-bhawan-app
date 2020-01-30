@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { Menu, Button, Icon } from 'semantic-ui-react'
 import "./index.css"
 export default class Nav extends Component {
@@ -17,10 +18,10 @@ export default class Nav extends Component {
             </Menu.Item>
         <Menu.Menu position='right'>
           <Menu.Item>
-            <Button styleName="button_color">Book a Guest Room</Button>
+            <Link to='/bhawan_app/book_room/'><Button styleName="button_color">Book a Guest Room</Button></Link>
           </Menu.Item>
           <Menu.Item>
-            <Button styleName="button_color">Register a Complaint</Button>
+            <Link to='/bhawan_app/complain/'><Button styleName="button_color">Register a Complaint</Button></Link>
           </Menu.Item>
         </Menu.Menu>
       </Menu>

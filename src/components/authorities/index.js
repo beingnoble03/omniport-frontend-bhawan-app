@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Button ,Card,Image, Header } from 'semantic-ui-react'
+import { Container ,Card,Image, Header } from 'semantic-ui-react'
 import './index.css'
 import {
   getAllAuthorities
@@ -38,7 +38,7 @@ class Authorities extends React.Component {
               </Card>
             )
           })): ""}
-            <Card styleName="card">
+          <Card styleName="card">
               <Card.Content styleName="topCard">
                 <Header as='h5' styleName="zero_margin">Mess Secreatary</Header>
                 <Card.Content styleName="small_font">Anushka</Card.Content>

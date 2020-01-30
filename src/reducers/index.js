@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux'
 import authorities from './authorities'
-import facility from './facility'
+import facilities from './facilities'
 
 const rootReducers = combineReducers({
   authorities: authorities,
-  facility: facility,
+  facilities: facilities,
 })
 
 export default rootReducers

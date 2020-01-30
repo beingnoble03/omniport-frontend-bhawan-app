@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const getFacility = () => {
+export const getFacilities = () => {
   return dispatch => {
     axios({
       method: 'get',
