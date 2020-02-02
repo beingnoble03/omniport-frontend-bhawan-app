@@ -5,14 +5,11 @@
 .details{
     margin-right: 12px;
 }
-.extra{
-    padding: 0px !important;
-}
-.image_style{
+.image-style{
     margin: 0px 16px 0px 0px !important;
     height: 100% !important;
 }
-.authority_info{
+.authority-info{
     margin-top: 1.7%;
 }
 .details{
@@ -26,18 +23,16 @@
     box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.06) !important;
     border-radius: 4px !important;
 }
-.zero_margin{
+.zero-margin{
     margin-bottom: 0px !important;
 }
 .content{
     padding: 0px !important;
-    height: 81px !important;
 }
-.topCard{
-    height: 54px !important;
+.top-card{
     line-height: 10px;
 }
-.small_font{
+.small-font{
     font-size: 10px !important;
     font-weight: normal;
 }

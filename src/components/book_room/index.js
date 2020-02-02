@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form,Input } from 'semantic-ui-react'
+import { Button, Form,Input, Container, Icon } from 'semantic-ui-react'
 import { DateInput, TimeInput} from 'semantic-ui-calendar-react';
 import './index.css'
 
@@ -10,7 +10,8 @@ export default class BookRoom extends React.Component {
           fromDate: '',
           fromTime: '',
           endDate: '',
-          endTime: ''
+          endTime: '',
+          visitors: 1,
         };
       }
       handleChange = (event, {name, value}) => {
@@ -18,39 +19,54 @@ export default class BookRoom extends React.Component {
           this.setState({ [name]: value });
         }
       }
+      increaseVisitor = (event) => {
+        const visitors = this.state.visitors
+        this.setState({visitors: visitors+1})
+      }
     render(){
+      const visitors = []
+      for(var i=0;i<this.state.visitors;i++){
+        visitors.push(
+          <Form.Group>
+          <Form.Field >
+            <label>Name of Visitor</label>
+            <Input icon='angle down'/>
+          </Form.Field>
+          <Form.Field>
+            <label>Relation</label>
+            <Input icon='angle down'/>
+          </Form.Field>
+          
+           </Form.Group>
+        )
+      }
         return (
-            <div>
+            <Container>
                 <Form>
-                      <Form.Group>
-                        <Form.Field>
-                          <label>From Date</label>
-                          <DateInput
-                              name="fromDate"
-                              value={this.state.fromDate}
-                              icon="angle down"
-                              iconPosition="right"
-                              onChange={this.handleChange}
-                            />
-                          </Form.Field>
-                          <Form.Field>
-                            <label>From time</label>
-                            <TimeInput
-                                name="fromTime"
-                                value={this.state.fromTime}
-                                icon="angle down"
-                                iconPosition="right"
-                                onChange={this.handleChange}
-                              />
-                          </Form.Field>
-                    </Form.Group>
+                  <Form.Group>
+                    <Form.Field>
+                      <label>From Date</label>
+                      <DateInput
+                          name="fromDate"
+                          value={this.state.fromDate}
+                          onChange={this.handleChange}
+                        />
+                    </Form.Field>
+                    <Form.Field>
+                      <label>From time</label>
+                      <TimeInput
+                          name="fromTime"
+                          value={this.state.fromTime}
+                          onChange={this.handleChange}
+                        />
+                    </Form.Field>
+                  </Form.Group>
                     <Form.Group>
                       <Form.Field>
                         <label>Until Date</label>
                         <DateInput
                             name="endDate"
                             value={this.state.endDate}
-                            iconPosition="right"
                             onChange={this.handleChange}
                           />
                       </Form.Field>
@@ -59,24 +75,15 @@ export default class BookRoom extends React.Component {
                         <TimeInput
                             name="endTime"
                             value={this.state.endTime}
-                            iconPosition="right"
                             onChange={this.handleChange}
                           />
                       </Form.Field>
                     </Form.Group>
-                    <Form.Group>
-                    <Form.Field >
-                      <label>Name of Visitor</label>
-                      <Input icon='angle down'/>
-                    </Form.Field>
-                    <Form.Field>
-                      <label>Relation</label>
-                      <Input icon='angle down'/>
-                    </Form.Field>
-                  </Form.Group>
-                    <Button primary fluid type='submit'>Submit</Button>
+                    {visitors}
+                    <Icon onClick={this.increaseVisitor} name="plus" size="big" styleName="plus-icon"/>
+                    <Button primary type='submit'>Submit</Button>
                   </Form>
-              </div>
+              </Container>
         )
     }
 }

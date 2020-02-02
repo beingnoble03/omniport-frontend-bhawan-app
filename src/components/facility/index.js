@@ -33,7 +33,6 @@ class Facility extends React.Component {
 }
 
 function mapStateToProps (state) {
-  console.log(state)
   return {
     facilities: state.facilities,
   }

@@ -1,97 +1,41 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import { Card } from 'semantic-ui-react'
+import { Card, Container } from 'semantic-ui-react'
 import { getFacilities } from '../../actions/facilities'
-import './index.css'
+import facilities from './index.css'
+import blocks from '../../css/app.css'
+
 class Facilities extends React.Component {
 
   componentDidMount(){
     this.props.getFacilities()
   }
-  state = { activeItem: 'home' }
-
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
   render() {
-    const { activeItem } = this.state
     const { facilities } = this.props
 
     return (
-      <div>
+      <Container>
         <h2>Facilities</h2>
-        
         <Card.Group itemsPerRow={3}>
-        {facilities.length>0?( facilities.map((facility) =>{
+        {facilities.length>0 ? ( facilities.map((facility) =>{
             return (
-              <Card>
-                <Card.Content styleName="content">
-                  <Card.Header>Mess</Card.Header>
-                  <Card.Content styleName="desc">
-                    <Card.Content>Mess Time</Card.Content>
-                    <Card.Content>Mess Time</Card.Content>
-                    <Card.Content>Mess Time</Card.Content>
-                  </Card.Content>
+              <Card styleName="blocks.card-border">
+                <Card.Content>
+                  <div styleName="facilities.facility_card">
+                    <div>{facility.name}</div>
+                    <div>Mess</div>
+                  </div>
                 </Card.Content>
               </Card>
             )
           })): ""}
-          <Card>
-                <Card.Content styleName="content">
-                  <Card.Header>Mess</Card.Header>
-                  <Card.Content styleName="desc">
-                    <Card.Content>Mess Time</Card.Content>
-                    <Card.Content>Mess Time</Card.Content>
-                    <Card.Content>Mess Time</Card.Content>
-                  </Card.Content>
-                </Card.Content>
-              </Card>
-              <Card>
-                <Card.Content styleName="content">
-                  <Card.Header>Mess</Card.Header>
-                  <Card.Content styleName="desc">
-                    <Card.Content>Mess Time</Card.Content>
-                    <Card.Content>Mess Time</Card.Content>
-                    <Card.Content>Mess Time</Card.Content>
-                  </Card.Content>
-                </Card.Content>
-              </Card>
-              <Card>
-                <Card.Content styleName="content">
-                  <Card.Header>Mess</Card.Header>
-                  <Card.Content styleName="desc">
-                    <Card.Content>Mess Time</Card.Content>
-                    <Card.Content>Mess Time</Card.Content>
-                    <Card.Content>Mess Time</Card.Content>
-                  </Card.Content>
-                </Card.Content>
-              </Card>
-              <Card>
-                <Card.Content styleName="content">
-                  <Card.Header>Mess</Card.Header>
-                  <Card.Content styleName="desc">
-                    <Card.Content>Mess Time</Card.Content>
-                    <Card.Content>Mess Time</Card.Content>
-                    <Card.Content>Mess Time</Card.Content>
-                  </Card.Content>
-                </Card.Content>
-              </Card>
-              <Card>
-                <Card.Content styleName="content">
-                  <Card.Header>Mess</Card.Header>
-                  <Card.Content styleName="desc">
-                    <Card.Content>Mess Time</Card.Content>
-                    <Card.Content>Mess Time</Card.Content>
-                    <Card.Content>Mess Time</Card.Content>
-                  </Card.Content>
-                </Card.Content>
-              </Card>
         </Card.Group>
-          </div>
+          </Container>
     )
   }
 }
 function mapStateToProps(state){
-  console.log(state)
   return{
     facilities: state.facilities,
   }
@@ -104,3 +48,6 @@ function mapStateToProps(state){
   }
  }
  export default connect(mapStateToProps, mapDispatchToProps)(Facilities)
+
+
+ 

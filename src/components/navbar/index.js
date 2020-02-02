@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Menu, Button, Icon } from 'semantic-ui-react'
-import "./index.css"
+import { Header, Menu, Button, Icon } from 'semantic-ui-react'
+import navCss from "./index.css"
+import blocks from "../../css/app.css"
 export default class Nav extends Component {
   state = { activeItem: 'home' }
 
@@ -12,20 +13,20 @@ export default class Nav extends Component {
 
     return (
         <div>
-        <Menu stackable secondary styleName="upper_menu">
-          <Menu.Item header>
-               Kasturba Bhawan
+        <Menu stackable secondary styleName="navCss.upper_menu">
+          <Menu.Item>
+            <Header size='medium'>Kasturba Bhawan</Header>
             </Menu.Item>
         <Menu.Menu position='right'>
           <Menu.Item>
-            <Link to='/bhawan_app/book_room/'><Button styleName="button_color">Book a Guest Room</Button></Link>
+            <Link to='/bhawan_app/book_room/'><Button styleName="blocks.active-button">Book a Guest Room</Button></Link>
           </Menu.Item>
           <Menu.Item>
-            <Link to='/bhawan_app/complain/'><Button styleName="button_color">Register a Complaint</Button></Link>
+            <Link to='/bhawan_app/complain/'><Button styleName="blocks.active-button">Register a Complaint</Button></Link>
           </Menu.Item>
         </Menu.Menu>
       </Menu>
-      <Menu size='mini' secondary styleName="lower_menu">
+      <Menu size='mini' secondary styleName="navCss.lower_menu">
           <Menu.Item size='mini'>
               <Icon name="angle left"/> <Icon name="angle right"/>Home
           </Menu.Item>

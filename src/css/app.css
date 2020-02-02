@@ -21,5 +21,31 @@
 }
 
 .app-container {
+  margin-top: 64px;
   flex-grow: 1;
+}
+
+.active-button {
+  background-color: #304FFE !important;
+  color: #FFFFFF !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+}
+.disactive-button {
+  background: #8C9EFF !important;
+  border: 1px solid #E9E9E9 !important;
+  box-sizing: border-box ;
+  box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.06) !important;
+  border-radius: 4px !important;
+}
+.card-border {
+  border: 1px solid #E9E9E9 !important;
+  box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.06) !important;
+  border-radius: 4px !important;
+}
+.zero-top-margin {
+  margin-top: 0px !important;
+}
+.zero-bottom-margin{
+  margin-bottom: 0px !important;
 }

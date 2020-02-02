@@ -1,14 +1,8 @@
-.button_color{
-    background-color: #304FFE !important;
-    color: #FFFFFF !important;
-    font-style: normal !important;
-    font-weight: normal !important;
-}
 .upper_menu{
     background-color: #F6F6F6 !important;
     margin-bottom: 0px !important;
     box-shadow: 3px 3px 16px rgba(0, 0, 0, 0.11) !important;
-    z-index: 10;
+    z-index: 5;
     position: relative;
 }
 .lower_menu{

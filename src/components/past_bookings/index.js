@@ -1,49 +1,42 @@
 import React, { Component } from 'react'
-import { Menu, Header, Table, Icon, Container } from 'semantic-ui-react'
-
-export default class BookingRequests extends Component {
-  state = {}
-
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+// import { Link } from 'react-router-dom'
+import { Table, Menu, Button, Icon } from 'semantic-ui-react'
+// import navCss from "./index.css"
+// import blocks from "../../css/app.css"
+export default class PastBookings extends Component {
+  
 
   render() {
-    const { activeItem } = this.state
 
     return (
         <div>
-    <Header as='h4'>Past Bookings <Icon name="angle down"/> </Header>
-      
-      <Container>
-      <Table celled >
-    <Table.Header>
-      <Table.Row>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-      </Table.Row>
-    </Table.Header>
-
-    <Table.Body>
-      <Table.Row>
-        <Table.Cell>Cell</Table.Cell>
-        <Table.Cell>Cell</Table.Cell>
-        <Table.Cell>Cell</Table.Cell>
-        <Table.Cell>Cell</Table.Cell>
-        <Table.Cell>Cell</Table.Cell>
-        <Table.Cell>Cell</Table.Cell>
-        <Table.Cell>Cell</Table.Cell>
-        <Table.Cell>Cell</Table.Cell>
-        <Table.Cell>Cell</Table.Cell>
-      </Table.Row>
-    </Table.Body>
-  </Table>
-  </Container>
+        <Table celled compact>
+         <Table.Header>
+           <Table.Row>
+             <Table.HeaderCell>ID</Table.HeaderCell>
+             <Table.HeaderCell>Complaint</Table.HeaderCell>
+             <Table.HeaderCell>Complain Type</Table.HeaderCell>
+             <Table.HeaderCell>Complain Status</Table.HeaderCell>
+             <Table.HeaderCell>Complain Date</Table.HeaderCell>
+           </Table.Row>
+         </Table.Header>
+         <Table.Body>
+           <Table.Row>
+             <Table.Cell>Cell</Table.Cell>
+             <Table.Cell>Cell</Table.Cell>
+             <Table.Cell>Cell</Table.Cell>
+             <Table.Cell>Cell</Table.Cell>
+             <Table.Cell>Cell</Table.Cell>
+           </Table.Row>
+           <Table.Row>
+             <Table.Cell>Cell</Table.Cell>
+             <Table.Cell>Cell</Table.Cell>
+             <Table.Cell>Cell</Table.Cell>
+             <Table.Cell>Cell</Table.Cell>
+             <Table.Cell>Cell</Table.Cell>
+           </Table.Row>
+         </Table.Body>
+       </Table>
       </div>
     )
   }

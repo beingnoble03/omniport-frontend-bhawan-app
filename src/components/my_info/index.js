@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, Icon  } from 'semantic-ui-react'
 // import './index.css'
-export default class Authorities extends React.Component {
+export default class MyInfo extends React.Component {
   state = { activeItem: 'home' }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })

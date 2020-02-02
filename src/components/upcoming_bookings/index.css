@@ -1,0 +1,13 @@
+.flex{
+    display: flex;
+}
+.margin{
+    margin-right: 29px;
+}
+.space {
+    justify-content: space-between;
+}
+.center{
+    display: flex;
+    align-items: center;
+}
