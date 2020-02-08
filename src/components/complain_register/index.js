@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form, Input, Select, TextArea, Grid, Responsive } from 'semantic-ui-react'
+import { Button, Form, Select, TextArea, Message, Icon } from 'semantic-ui-react'
 import { TimeInput } from 'semantic-ui-calendar-react';
 import './index.css';
 import { connect } from 'react-redux';
@@ -7,7 +7,7 @@ import { addComplaint } from '../../actions/add_complaint'
 
   const options = [
     { key: '1', text: 'Toilet', value: 'toi' },
-    { key: '2', text: 'Electric', value: 'ele' },
+    { key: '2', text: 'Electric',value: 'ele' },
     { key: '3', text: 'Carpentary', value: 'car' },
   ]
 
@@ -19,6 +19,9 @@ class ComplainRegister extends React.Component {
         convenientTime: "",
         complain: "",
         category: "",
+        success: false,
+        error: false,
+        message: "",
         };
       }
     handleChange = (event, {name, value}) => {
@@ -28,20 +31,43 @@ class ComplainRegister extends React.Component {
     }
     handleSubmit = e => {
       let data = {
-        "complainant": 4,
-        "hostel": "Radhakrishnan bhawan",
-        "complaintType": this.state.category,
-        "availableFrom": this.state.convenientTime,
-        "availableTill": "23:59",
-        "roomNo": 343,
-        "hostelCode": "rkb",
+        "person": 1,
+        "complaint_type": this.state.category,
+        "available_from": this.state.convenientTime,
+        "available_till": "23:59",
+        "room_no": 343,
+        "hostel_code": "rkb",
         "description": this.state.complain
       }
-      addComplaint(data)
+      addComplaint(data, this.successCallBack, this.errCallBack)
+    }
+
+    successCallBack = res => {
+      console.log(res)
+      this.setState({
+        success: true,
+        error: false,
+        message: res.statusText
+      })
+    }
+  
+    errCallBack = err => {
+      console.log(err)
+      this.setState({
+        error: true,
+        success: false,
+        message: err
+      })
     }
     render(){
         return (
-            <div>
+            <React.Fragment>
+              {this.state.error && (
+                <Message warning>
+                <Icon name='warning' />
+                You've reached the end of this content segment!
+              </Message>
+              )}
                 <Form>
                   <Form.Field
                       name='category'
@@ -73,9 +99,9 @@ class ComplainRegister extends React.Component {
                           width={4}
                       />
                    </Form.Field>
-                   <Button size='medium' styleName="button" onClick={this.handleSubmit}>Submit</Button>
-                </Form> 
-              </div>
+                   <Button size='medium' styleName="button" onClick={this.handleSubmit} width={3}>Submit</Button>
+                </Form>
+              </React.Fragment>
         )
     }
 }
@@ -94,5 +120,3 @@ const mapDispatchToProps = dispatch => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ComplainRegister)
-
- 
