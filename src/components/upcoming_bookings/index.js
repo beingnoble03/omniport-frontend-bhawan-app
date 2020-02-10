@@ -14,19 +14,18 @@ export default class UpcomingBookings extends React.Component {
                 <div styleName="main.flex main.space">
                     <div styleName="main.flex">
                     <div styleName="main.margin">
-                        <div>Check In</div>
-                        <div>12 bje</div>
-                        <div>Bhag ja</div>
+                        <div styleName='main.check'>Check In</div>
+                        <div styleName='main.check-detail'>12 bje</div>
+                        <div styleName='main.check-detail'>Bhag ja</div>
                     </div>
                     <div styleName="main.margin">
-                        <div>Check In</div>
-                        <div>12 bje</div>
-                        <div>Bhag ja</div>
+                        <div styleName='main.check'>Check In</div>
+                        <div styleName='main.check-detail'>12 bje</div>
+                        <div styleName='main.check-detail'>Bhag ja</div>
                     </div>
-                    <div styleName="main.margin">
-                        <div>Check In</div>
-                        <div>12 bje</div>
-                        <div>Bhag ja</div>
+                    <div styleName="main.margin main.column-center">
+                        <div styleName='main.check-detail'><Icon name='file alternate outline'/> 12 bje</div>
+                        <div styleName='main.check-detail'><Icon name='users' /> Bhag ja</div>
                     </div>
                     </div>
                     <div styleName="main.center">

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header, Image, Container, Button, Form } from 'semantic-ui-react'
+import { Header, Image, Container, Button, Form, Dropdown, TextArea } from 'semantic-ui-react'
 import { TimeInput } from 'semantic-ui-calendar-react';
 import './index.css';
 
@@ -7,7 +7,7 @@ export default class AdminFacility extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          editMode: false,
+          editMode: true,
           startBreakfast: "",
           endBreakfast: "",
           startLunch: "",
@@ -15,18 +15,31 @@ export default class AdminFacility extends React.Component {
           startDinner: "",
           endDinner: "",
         };
+    }
+
+    toggleEditMode = () => {
+      const editMode = this.state.editMode
+      this.setState({
+          editMode: !editMode
+      })
+    }
+
+    handleChange = (event, {name, value}) => {
+      if (this.state.hasOwnProperty(name)) {
+        this.setState({ [name]: value });
       }
-      changetoEditMode = () => {
-        this.setState({
-            editMode: true,
-        })
-      }
-      handleChange = (event, {name, value}) => {
-        if (this.state.hasOwnProperty(name)) {
-          this.setState({ [name]: value });
-        }
-      }
+    }
+
     render(){
+      const options = [
+        { key: 'mon', text: 'Monday', value: 'Monday' },
+        { key: 'tue', text: 'Tuesday', value: 'Tuesday' },
+        { key: 'wed', text: 'Wednesday', value: 'Wednesday' },
+        { key: 'thurs', text: 'Thursday', value: 'Thursday' },
+        { key: 'fri', text: 'Friday', value: 'Friday' },
+        { key: 'sat', text: 'Saturday', value: 'Saturday' },
+        { key: 'sun', text: 'Sunday', value: 'Sunday' },
+      ]
         return(
             <div>
                 <div>
@@ -38,82 +51,94 @@ export default class AdminFacility extends React.Component {
                     <Button styleName="button_margin">Canteen</Button>
                 </div>
                 <Header as='h2'>Mess</Header>
-                <Image src='https://react.semantic-ui.com/images/wireframe/image.png' size='large' floated='left' styleName='image_margin'/>
+                <Image src='https://react.semantic-ui.com/images/wireframe/image.png' size='medium' floated='left' styleName='image_margin'/>
                 <Container>
                 {this.state.editMode ? (
                     <div>
+                      <TextArea placeholder='Tell us more' />
                         <Form>
-                            {/* <Form.TextArea label='Edit Information'/> */}
                             <Header as='h5'>Edit Information</Header>
+                            <Header as='h6'>Breakfast</Header>
                             <Form.Group>
                                 <Form.Field>
-                                  <label> Start Breakfast</label>
+                                  <Dropdown placeholder="Select Day" multiple selection options={options} />
+                                </Form.Field>
+                                <Form.Field>
                                   <TimeInput
                                       name="startBreakfast"
                                       value={this.state.startBreakfast}
                                       icon="angle down"
                                       iconPosition="right"
                                       onChange={this.handleChange}
+                                      placeholder="Time from"
                                     />
                                   </Form.Field>
                                 <Form.Field>
-                                <label>End Breakfast</label> 
                                   <TimeInput
                                       name="endBreakfast"
                                       value={this.state.endBreakfast}
                                       icon="angle down"
                                       iconPosition="right"
                                       onChange={this.handleChange}
+                                      placeholder="Time To"
                                     />
                                 </Form.Field>
                             </Form.Group>
+                            <Header as='h6'>Lunch</Header>
                             <Form.Group>
                                 <Form.Field>
-                                  <label> Start Lunch</label>
+                                  <Dropdown placeholder="Select Day" multiple selection options={options} />
+                                </Form.Field>
+                                <Form.Field>
                                   <TimeInput
-                                      name="startBreakfast"
+                                      name="startLunch"
                                       value={this.state.startLunch}
                                       icon="angle down"
                                       iconPosition="right"
                                       onChange={this.handleChange}
+                                      placeholder="Time from"
                                     />
                                   </Form.Field>
                                 <Form.Field>
-                                <label>End Lunch</label> 
                                   <TimeInput
-                                      name="endBreakfast"
+                                      name="endLunch"
                                       value={this.state.endLunch}
                                       icon="angle down"
                                       iconPosition="right"
                                       onChange={this.handleChange}
+                                      placeholder="Time To"
                                     />
                                 </Form.Field>
                             </Form.Group>
+                            <Header as='h6'>Dinner</Header>
                             <Form.Group>
                                 <Form.Field>
-                                  <label> Start Dinner</label>
+                                  <Dropdown placeholder="Select Day" multiple selection options={options} />
+                                </Form.Field>
+                                <Form.Field>
                                   <TimeInput
-                                      name="startLunch"
+                                      name="startDinner"
                                       value={this.state.startDinner}
                                       icon="angle down"
                                       iconPosition="right"
                                       onChange={this.handleChange}
+                                      placeholder="Time from"
                                     />
                                   </Form.Field>
                                 <Form.Field>
-                                <label>End Dinner</label> 
                                   <TimeInput
-                                      name="endBreakfast"
+                                      name="endDinner"
                                       value={this.state.endDinner}
                                       icon="angle down"
                                       iconPosition="right"
                                       onChange={this.handleChange}
+                                      placeholder="Time To"
                                     />
                                 </Form.Field>
                             </Form.Group>
                             <Form.Group>
-                                <Form.Button>Save Changes</Form.Button>
-                                <Form.Button>Cancel</Form.Button>
+                                <Form.Button onClick={this.toggleEditMode}>Save Changes</Form.Button>
+                                <Form.Button onClick={this.toggleEditMode}>Cancel</Form.Button>
                             </Form.Group>
                         </Form>
                     </div>
@@ -129,10 +154,9 @@ export default class AdminFacility extends React.Component {
                     <Header size='small' styleName="low_margin">Timings</Header>
                     <div>Breakfast</div>
                     <div>Lunch</div>
-                    <span onClick={this.changetoEditMode}>Edit</span>
+                    <span onClick={this.toggleEditMode}>Edit</span>
                     </div>
                     )}
-                   
                 </Container>
             </div>
         )

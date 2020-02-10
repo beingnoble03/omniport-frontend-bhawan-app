@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Menu, Header, Table, Icon, Container } from 'semantic-ui-react'
+import { Header, Table, Icon, Container } from 'semantic-ui-react'
 
-export default class BookingRequests extends Component {
+export default class StudentDatabase extends Component {
   state = {}
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
@@ -11,8 +11,7 @@ export default class BookingRequests extends Component {
 
     return (
         <div>
-    <Header as='h4'>Past Bookings <Icon name="angle down"/> </Header>
-      
+    <Header as='h4'>Student Database </Header>
       <Container>
       <Table celled >
     <Table.Header>

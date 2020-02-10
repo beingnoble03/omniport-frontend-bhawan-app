@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Form,Input, Container, Icon } from 'semantic-ui-react'
 import { DateInput, TimeInput} from 'semantic-ui-calendar-react';
 import './index.css'
+import { useLocation } from 'react-router-dom';
 
 export default class BookRoom extends React.Component {
     constructor(props) {
@@ -36,7 +37,6 @@ export default class BookRoom extends React.Component {
             <label>Relation</label>
             <Input icon='angle down'/>
           </Form.Field>
-          
            </Form.Group>
         )
       }

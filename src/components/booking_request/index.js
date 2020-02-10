@@ -1,50 +1,94 @@
 import React, { Component } from 'react'
-import { Menu, Header, Table, Button, Modal, Container } from 'semantic-ui-react'
+import { Menu, Header, Table, Button, Modal, Container, Icon } from 'semantic-ui-react'
 import './index.css'
 export default class BookingRequests extends Component {
-  state = { open: false }
+  state = { open: false, activeItem: 'pending', pastBookingIcon: 'angle up' }
 
   show = () => () => this.setState({ open: true })
   close = () => this.setState({ open: false })
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
-
+  togglePastIcon = () => {
+    const pastBookingIcon = this.state.pastBookingIcon
+    pastBookingIcon === 'angle down' ?
+      this.setState({pastBookingIcon: 'angle up'}):
+      this.setState({pastBookingIcon: 'angle down'})
+  }
   render() {
-    const { activeItem } = this.state
-    const { open } = this.state
+    const { activeItem, open, pastBookingIcon } = this.state
 
     return (
         <div>
     <Container>
     <Header as='h4'>Room Bookings</Header>
-      <Menu compact>
-        <Menu.Item
-          name='editorials'
-          active={activeItem === 'editorials'}
-          onClick={this.handleItemClick}
-        >
-          Pending
-        </Menu.Item>
-
-        <Menu.Item
-          name='reviews'
-          active={activeItem === 'reviews'}
-          onClick={this.handleItemClick}
-        >
-          Approved
-        </Menu.Item>
-
-        <Menu.Item
-          name='upcomingEvents'
-          active={activeItem === 'upcomingEvents'}
-          onClick={this.handleItemClick}
-        >
-          Confirmed
-        </Menu.Item>
-      </Menu>
-      {/* </Container>
-      <Container> */}
+    <Menu compact icon='labeled'>
+          <Menu.Item
+            name="pending"
+            active={activeItem === 'pending'} 
+            onClick={this.handleItemClick}
+            color='blue'
+            styleName="booking-menu"
+          >
+           Pending
+          </Menu.Item>
+          <Menu.Item
+            name="approved"
+            active={activeItem === 'approved'}
+            onClick={this.handleItemClick}
+            color='blue'
+            styleName="booking-menu"
+          >
+           Approved
+          </Menu.Item>
+          <Menu.Item
+            name="confirmed"
+            active={activeItem === 'confirmed'}
+            onClick={this.handleItemClick}
+            color='blue'
+            styleName="booking-menu"
+          >
+            Confirmed
+          </Menu.Item>
+        </Menu>
       <Table celled >
+    <Table.Header>
+      <Table.Row>
+        <Table.HeaderCell>Header</Table.HeaderCell>
+        <Table.HeaderCell>Header</Table.HeaderCell>
+        <Table.HeaderCell>Header</Table.HeaderCell>
+        <Table.HeaderCell>Header</Table.HeaderCell>
+        <Table.HeaderCell>Header</Table.HeaderCell>
+        <Table.HeaderCell>Header</Table.HeaderCell>
+        <Table.HeaderCell>Header</Table.HeaderCell>
+        <Table.HeaderCell>Header</Table.HeaderCell>
+        <Table.HeaderCell>Header</Table.HeaderCell>
+        <Table.HeaderCell>Header</Table.HeaderCell>
+      </Table.Row>
+    </Table.Header>
+
+    <Table.Body>
+      <Table.Row>
+        <Table.Cell>Cell</Table.Cell>
+        <Table.Cell>Cell</Table.Cell>
+        <Table.Cell>Cell</Table.Cell>
+        <Table.Cell>Cell</Table.Cell>
+        <Table.Cell>Cell</Table.Cell>
+        <Table.Cell>Cell</Table.Cell>
+        <Table.Cell>Cell</Table.Cell>
+        <Table.Cell>Cell</Table.Cell>
+        <Table.Cell>Cell</Table.Cell>
+        <Table.Cell>Cell</Table.Cell>
+      </Table.Row>
+    </Table.Body>
+  </Table>
+
+  <Header as='h4'>
+    Past Bookings
+    <Icon name={pastBookingIcon} onClick={this.togglePastIcon} />
+  </Header>
+  {pastBookingIcon==='angle down' &&
+  (
+    <Table celled >
     <Table.Header>
       <Table.Row>
         <Table.HeaderCell>Header</Table.HeaderCell>
@@ -73,6 +117,8 @@ export default class BookingRequests extends Component {
       </Table.Row>
     </Table.Body>
   </Table>
+  )}
+
   </Container>
   <Button onClick={this.show('mini')}>Mini</Button>
   <Modal size="mini" open={open} onClose={this.close}>

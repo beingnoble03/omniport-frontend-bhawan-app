@@ -17,7 +17,7 @@ class Authorities extends React.Component {
     return (
       <Container>
         <Header as="h5">Authorities</Header>
-        <Card.Group itemsPerRow={(3<authorities.length)?3:authorities.length}>
+        <Card.Group itemsPerRow={3}>
           {authorities.length>0?( authorities.map((authority) =>{
             return (
               <Card styleName="card">

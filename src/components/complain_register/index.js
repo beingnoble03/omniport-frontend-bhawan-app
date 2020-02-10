@@ -4,7 +4,7 @@ import { TimeInput } from 'semantic-ui-calendar-react';
 import './index.css';
 import { connect } from 'react-redux';
 import { addComplaint } from '../../actions/add_complaint'
-
+import Complains from '../complains/index'
   const options = [
     { key: '1', text: 'Toilet', value: 'toi' },
     { key: '2', text: 'Electric',value: 'ele' },
@@ -101,6 +101,7 @@ class ComplainRegister extends React.Component {
                    </Form.Field>
                    <Button size='medium' styleName="button" onClick={this.handleSubmit} width={3}>Submit</Button>
                 </Form>
+                <Complains />
               </React.Fragment>
         )
     }

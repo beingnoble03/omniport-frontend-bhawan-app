@@ -5,7 +5,6 @@ import {Switch, Route} from 'react-router-dom'
 import { Segment, Container, Grid } from 'semantic-ui-react'
 
 import { AppHeader, AppFooter, AppMain, Loading, getTheme } from 'formula_one'
-// import Nav  from './navbar/index'
 const Nav = lazy(() => import('./navbar/index'))
 const BookRoom = lazy(() => import('./book_room/index'))
 const ComplainRegister = lazy(() => import('./complain_register/index'))
@@ -13,14 +12,15 @@ const Authorities = lazy(() => import('./authorities/index'))
 const Facilities = lazy(() => import('./facilities/index'))
 const Calendar = lazy(() => import('./calendar/index'))
 const MyInfo = lazy(() => import('./my_info/index'))
+const StudentDatabase = lazy(() => import('./student-database/index'))
+const Events = lazy(() => import('./events/index'))
 import AdminFacility from './admin_facility'
 import MyProfile from './my_profile/index'
 import Facility from './facility/index'
-import BookingsRequest from './booking_request/index'
+import {whoami} from '../actions/who_am_i'
 import PastBookings from './past_bookings_admin/index'
 import main from 'formula_one/src/css/app.css'
 import blocks from '../css/app.css'
-import StudentDatabase from './studentDatabase/index'
 import RegisterStudent from './register_student/index'
 import BookingRequests from './booking_request/index'
 
@@ -48,14 +48,12 @@ class App extends React.Component {
     this.divRef = React.createRef()
   }
 
-  scrollDiv = () => {
-    if (this.divRef && this.divRef.current) {
-      this.divRef.current.scrollTo(0, 0)
-    }
+  componentDidMount() {
+    this.props.whoami()
   }
 
   render () {
-    const { match } = this.props
+    const { match, who_am_i } = this.props
     return (
       <div ref={this.divRef} styleName='blocks.app-wrapper'>
         <Suspense fallback={<Loading />}>
@@ -96,6 +94,12 @@ class App extends React.Component {
                         <ComplainRegister />
                       )}
                     />
+                    <Route
+                      path={`${match.path}facility`}
+                      render={props => (
+                        <Facility />
+                      )}
+                    />
                   <Route
                       path={`${match.path}profile`}
                       render={props => (
@@ -103,7 +107,7 @@ class App extends React.Component {
                       )}
                     />
                   <Route
-                      path={`${match.path}`}
+                      path={`${match.path}`} exact
                       render={props => (
                         <Facilities />
                       )}
@@ -114,10 +118,44 @@ class App extends React.Component {
                         <Calendar />
                       )}
                     />
+                    <Route
+                      path={`${match.path}admin/facility`}
+                      render={props => (
+                        <AdminFacility />
+                      )}
+                    />
+                    <Route
+                      path={`${match.path}admin/database`}
+                      render={props => (
+                        <StudentDatabase />
+                      )}
+                    />
+                     <Route
+                      path={`${match.path}admin/bookings`}
+                      render={props => (
+                        <BookingRequests />
+                      )}
+                    />
+                    <Route
+                      path={`${match.path}admin/register_student`}
+                      render={props => (
+                        <RegisterStudent />
+                      )}
+                    />
                   </Switch>
                 </Grid.Column>
                 <Grid.Column width={3} floated='right'>
-                  <MyInfo />
+                  <Switch>
+                    <Route
+                      path={`${match.path}`}
+                      render={props => (
+                        <React.Fragment>
+                          <MyInfo {...props} who_am_i={who_am_i}/>
+                          <Events {...props} who_am_i={who_am_i}/>
+                        </React.Fragment>
+                      )}
+                    />
+                  </Switch>
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
@@ -139,10 +177,16 @@ class App extends React.Component {
   }
 }
 function mapStateToProps (state) {
-  return {}
+  return {
+    who_am_i: state.who_am_i
+  }
 }
 const mapDispatchToProps = dispatch => {
-  return {}
+  return {
+    whoami: () => {
+      dispatch(whoami())
+  }
+}
 }
 export default connect(
   mapStateToProps,
