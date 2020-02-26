@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
+import {getRoomBookings } from '../../actions/get-room-bookings'
+import {approveOrConfirmRequest} from '../../actions/approve-or-confirm-request'
 import { Menu, Header, Table, Button, Modal, Container, Icon } from 'semantic-ui-react'
 import './index.css'
-export default class BookingRequests extends Component {
+
+class BookingRequests extends Component {
   state = { open: false, activeItem: 'pending', pastBookingIcon: 'angle up' }
 
+  componentDidMount() {
+    this.props.getRoomBookings()
+  }
   show = () => () => this.setState({ open: true })
   close = () => this.setState({ open: false })
 
@@ -16,7 +23,7 @@ export default class BookingRequests extends Component {
   }
   render() {
     const { activeItem, open, pastBookingIcon } = this.state
-
+    const { bookingRequests } = this.props
     return (
         <div>
     <Container>
@@ -24,7 +31,7 @@ export default class BookingRequests extends Component {
     <Menu compact icon='labeled'>
           <Menu.Item
             name="pending"
-            active={activeItem === 'pending'} 
+            active={activeItem === 'pending'}
             onClick={this.handleItemClick}
             color='blue'
             styleName="booking-menu"
@@ -53,32 +60,37 @@ export default class BookingRequests extends Component {
       <Table celled >
     <Table.Header>
       <Table.Row>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
+      <Table.HeaderCell>ID</Table.HeaderCell>
+        <Table.HeaderCell>Applicant Name</Table.HeaderCell>
+        <Table.HeaderCell>Occupancy</Table.HeaderCell>
+        <Table.HeaderCell>No ofRooms</Table.HeaderCell>
+        <Table.HeaderCell>Applicant Room</Table.HeaderCell>
+        <Table.HeaderCell>No of Visitors</Table.HeaderCell>
+        <Table.HeaderCell>From </Table.HeaderCell>
+        <Table.HeaderCell>To</Table.HeaderCell>
+        <Table.HeaderCell>Contact Number</Table.HeaderCell>
+        <Table.HeaderCell>{activeItem == 'pending'? "Approve Request": activeItem == 'approved'? 'Confirm Payment': 'Still No ideA'}</Table.HeaderCell>
       </Table.Row>
     </Table.Header>
 
     <Table.Body>
-      <Table.Row>
+    { bookingRequests.length>0? (bookingRequests.map((request,index) => {
+                      return (
+                        <Table.Row>
+        <Table.Cell>{index + 1}</Table.Cell>
+        <Table.Cell>{request.bookedBy}</Table.Cell>
         <Table.Cell>Cell</Table.Cell>
         <Table.Cell>Cell</Table.Cell>
         <Table.Cell>Cell</Table.Cell>
+        <Table.Cell>{request.visitor.length}</Table.Cell>
+        <Table.Cell>{request.requestedFrom}</Table.Cell>
+        <Table.Cell>{request.requestedTill}</Table.Cell>
         <Table.Cell>Cell</Table.Cell>
-        <Table.Cell>Cell</Table.Cell>
-        <Table.Cell>Cell</Table.Cell>
-        <Table.Cell>Cell</Table.Cell>
-        <Table.Cell>Cell</Table.Cell>
-        <Table.Cell>Cell</Table.Cell>
-        <Table.Cell>Cell</Table.Cell>
+        <Table.Cell>{activeItem == 'pending'? "Approve": activeItem == 'approved'? 'Confirm': 'Still No ideA'}</Table.Cell>
       </Table.Row>
+                      )
+                    })):null
+                    }
     </Table.Body>
   </Table>
 
@@ -91,15 +103,15 @@ export default class BookingRequests extends Component {
     <Table celled >
     <Table.Header>
       <Table.Row>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
-        <Table.HeaderCell>Header</Table.HeaderCell>
+        <Table.HeaderCell>ID</Table.HeaderCell>
+        <Table.HeaderCell>Applicant Name</Table.HeaderCell>
+        <Table.HeaderCell>Occupancy</Table.HeaderCell>
+        <Table.HeaderCell>No ofRooms</Table.HeaderCell>
+        <Table.HeaderCell>Applicant Room</Table.HeaderCell>
+        <Table.HeaderCell>No of Visitors</Table.HeaderCell>
+        <Table.HeaderCell>From </Table.HeaderCell>
+        <Table.HeaderCell>To</Table.HeaderCell>
+        <Table.HeaderCell>Contact Number</Table.HeaderCell>
       </Table.Row>
     </Table.Header>
 
@@ -121,14 +133,34 @@ export default class BookingRequests extends Component {
 
   </Container>
   <Button onClick={this.show('mini')}>Mini</Button>
-  <Modal size="mini" open={open} onClose={this.close}>
-          <Modal.Header styleName="center">Approve Request?</Modal.Header>
-          <Modal.Actions styleName="modalActions">
-            <Button positive fluid>Yes</Button>
-            <Button negative fluid>No</Button>
-          </Modal.Actions>
-        </Modal>
+    <Modal size="mini" open={open} onClose={this.close}>
+      <Modal.Header styleName="center">Approve Request?</Modal.Header>
+      <Modal.Actions styleName="modalActions">
+        <Button positive fluid>Yes</Button>
+        <Button negative fluid>No</Button>
+      </Modal.Actions>
+    </Modal>
       </div>
     )
   }
 }
+
+function mapStateToProps(state){
+  console.log(state.bookingRequests)
+  return{
+    bookingRequests: state.bookingRequests,
+ }
+}
+
+const mapDispatchToProps= dispatch => {
+  return {
+    getRoomBookings: ()=> {
+      dispatch(getRoomBookings())
+  },
+    approveOrConfirmRequest: () => {
+      dispatch(approveOrConfirmRequest())
+    }
+}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookingRequests)

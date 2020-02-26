@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form, Select, TextArea, Message, Icon } from 'semantic-ui-react'
+import { Button, Form, Select, TextArea, Message, Icon, Input, Dropdown } from 'semantic-ui-react'
 import { TimeInput } from 'semantic-ui-calendar-react';
 import './index.css';
 import { connect } from 'react-redux';
@@ -15,7 +15,6 @@ class ComplainRegister extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
         convenientTime: "",
         complain: "",
         category: "",
@@ -43,16 +42,14 @@ class ComplainRegister extends React.Component {
     }
 
     successCallBack = res => {
-      console.log(res)
       this.setState({
         success: true,
         error: false,
         message: res.statusText
       })
     }
-  
+
     errCallBack = err => {
-      console.log(err)
       this.setState({
         error: true,
         success: false,
@@ -69,14 +66,15 @@ class ComplainRegister extends React.Component {
               </Message>
               )}
                 <Form>
-                  <Form.Field
+                  <Form.Field>
+                    <label>Category</label>
+                    <Dropdown
                       name='category'
-                      control={Select}
-                      label='Category'
+                      selection
                       options={options}
-                      width={4}
-                      onChange={this.handleChange}
+                      styleName='field-width'
                     />
+                  </Form.Field>
                   <Form.Field
                     name='complain'
                     value={this.state.complain}
@@ -87,7 +85,7 @@ class ComplainRegister extends React.Component {
                     styleName="complaint"
                     rows="5"
                   />
-                   <Form.Field>
+                   <Form.Field styleName='field-width'>
                       <label>Convenient time</label>
                       <TimeInput
                           autoComplete='off'
@@ -96,7 +94,6 @@ class ComplainRegister extends React.Component {
                           icon="angle down"
                           iconPosition="right"
                           onChange={this.handleChange}
-                          width={4}
                       />
                    </Form.Field>
                    <Button size='medium' styleName="button" onClick={this.handleSubmit} width={3}>Submit</Button>
@@ -114,8 +111,8 @@ function mapStateToProps (state) {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getAllAuthoritie: () => {
-      dispatch(getComplains())
+      addComplaint: () => {
+      dispatch(addComplaint())
     }
   }
 }

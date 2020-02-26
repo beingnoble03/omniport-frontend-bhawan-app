@@ -1,0 +1,10 @@
+.font_color{
+    color: #000000;
+}
+.display-flex {
+    display: flex;
+    justify-content: space-between;
+}
+.max-content-width {
+    width: max-content;
+}

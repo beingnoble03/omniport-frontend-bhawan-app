@@ -1,12 +1,15 @@
 import axios from 'axios'
 
-export const whoami = () => {
+export const getRoomBookings = () => {
   return dispatch => {
-    axios.get('/api/bhawan_app/personal_info')
+    axios({
+      method: 'get',
+      url: '/api/bhawan_app/room_booking/rkb/',
+    })
       .then(response => {
         let item = response.data
         dispatch({
-          type: 'WHO_AM_I',
+          type: 'GET_ALL_ROOM_BOOKINGS',
           payload: item
         })
       })

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header, Image, Container, Button, Form, Dropdown, TextArea } from 'semantic-ui-react'
+import { Header, Image, Container, Button, Form, Dropdown, TextArea, Grid } from 'semantic-ui-react'
 import { TimeInput } from 'semantic-ui-calendar-react';
 import './index.css';
 
@@ -7,7 +7,7 @@ export default class AdminFacility extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          editMode: true,
+          editMode: false,
           startBreakfast: "",
           endBreakfast: "",
           startLunch: "",
@@ -41,7 +41,7 @@ export default class AdminFacility extends React.Component {
         { key: 'sun', text: 'Sunday', value: 'Sunday' },
       ]
         return(
-            <div>
+            <React.Fragment>
                 <div>
                     <Button styleName="button_margin">Mess</Button>
                     <Button styleName="button_margin">Canteen</Button>
@@ -51,13 +51,18 @@ export default class AdminFacility extends React.Component {
                     <Button styleName="button_margin">Canteen</Button>
                 </div>
                 <Header as='h2'>Mess</Header>
-                <Image src='https://react.semantic-ui.com/images/wireframe/image.png' size='medium' floated='left' styleName='image_margin'/>
-                <Container>
+                <Grid divided='vertically'>
+                  <Grid.Row columns={2}>
+                    <Grid.Column>
+                      <Image src='https://react.semantic-ui.com/images/wireframe/image.png' size='medium'/>
+                    </Grid.Column>
+                    <Grid.Column>
+                    <Container>
                 {this.state.editMode ? (
                     <div>
-                      <TextArea placeholder='Tell us more' />
+                      <Header as='h5'>Edit Information</Header>
                         <Form>
-                            <Header as='h5'>Edit Information</Header>
+                            <TextArea placeholder='Tell us more' fluid />
                             <Header as='h6'>Breakfast</Header>
                             <Form.Group>
                                 <Form.Field>
@@ -158,7 +163,10 @@ export default class AdminFacility extends React.Component {
                     </div>
                     )}
                 </Container>
-            </div>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+            </React.Fragment>
         )
     }
 }

@@ -1,29 +1,60 @@
 import React from 'react'
-import { Card, Icon, } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+
 import './index.css'
-export default class Events extends React.Component {
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from "@fullcalendar/interaction";
+
+import {getEvents} from '../../actions/events'
+
+class Events extends React.Component {
+  componentDidMount() {
+    this.props.getEvents()
+  }
+  handleDateClick = (arg) => {
+    console.log(arg.dateStr)
+  }
 
   render() {
-    const { who_am_i } = this.props
     return (
-        <Card>
-            <Card.Content>
-                <Card.Header>Todays events</Card.Header>
-                <div styleName="max-content-width">
-                <Card.Description>
-                  Councelling Session
-                  <div styleName="display-flex">
-                    <div>
-                      mess
-                    </div>
-                    <div>
-                      9 bje
-                    </div>
-                  </div>
-                </Card.Description>
-              </div>
-            </Card.Content>
-          </Card>
+      <FullCalendar
+        defaultView='dayGridMonth'
+        ref= {this.calendarRef}
+        dateClick={this.handleDateClick}
+        weekends={true}
+        aspectRatio='1.3'
+        events={this.props.mappedEvents}
+        plugins={[dayGridPlugin, interactionPlugin]}
+        header={{
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+        }}
+      />
     )
   }
 }
+function mapStateToProps(state){
+  let mappedEvents = []
+  if(state.events && state.events.length > 0){
+    state.events.forEach(event =>
+      mappedEvents.push({
+        title: event.name,
+        date: event.date,
+      })
+    )
+  }
+  return{
+    events: state.events,
+    mappedEvents: mappedEvents,
+  }
+}
+ const mapDispatchToProps= dispatch => {
+  return {
+    getEvents: ()=> {
+      dispatch(getEvents())
+    }
+  }
+ }
+ export default connect(mapStateToProps, mapDispatchToProps)(Events)

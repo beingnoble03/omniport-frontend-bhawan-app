@@ -1,18 +1,17 @@
 import React, { Suspense, lazy} from 'react'
 import { connect } from 'react-redux'
-import { render } from 'react-dom'
 import {Switch, Route} from 'react-router-dom'
-import { Segment, Container, Grid } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 
-import { AppHeader, AppFooter, AppMain, Loading, getTheme } from 'formula_one'
+import { AppHeader, AppFooter, Loading, } from 'formula_one'
 const Nav = lazy(() => import('./navbar/index'))
 const BookRoom = lazy(() => import('./book_room/index'))
 const ComplainRegister = lazy(() => import('./complain_register/index'))
 const Authorities = lazy(() => import('./authorities/index'))
 const Facilities = lazy(() => import('./facilities/index'))
-const Calendar = lazy(() => import('./calendar/index'))
 const MyInfo = lazy(() => import('./my_info/index'))
 const StudentDatabase = lazy(() => import('./student-database/index'))
+const EventsCard = lazy(() => import('./events-card/index'))
 const Events = lazy(() => import('./events/index'))
 import AdminFacility from './admin_facility'
 import MyProfile from './my_profile/index'
@@ -28,7 +27,7 @@ const creators = [
   {
     name: 'Ritvik Jain',
     role: 'Backend developer',
-    link: 'https://dhruvkb.github.io/'
+    link: 'https://github.com/ritvikjain99/'
   },
   {
     name: 'Suyash Salampuria',
@@ -38,7 +37,7 @@ const creators = [
   {
     name: 'Kashish Jagyasi',
     role: 'Designer',
-    link: 'https://pradumangoyal.github.io'
+    link: 'aalu'
   }
 ]
 
@@ -85,7 +84,7 @@ class App extends React.Component {
                   <Route
                       path={`${match.path}book_room`}
                       render={props => (
-                        <BookRoom />
+                        <BookRoom who_am_i={who_am_i} />
                       )}
                     />
                   <Route
@@ -113,9 +112,9 @@ class App extends React.Component {
                       )}
                     />
                     <Route
-                      path={`${match.path}calendar`}
+                      path={`${match.path}events`}
                       render={props => (
-                        <Calendar />
+                        <Events />
                       )}
                     />
                     <Route
@@ -147,12 +146,18 @@ class App extends React.Component {
                 <Grid.Column width={3} floated='right'>
                   <Switch>
                     <Route
-                      path={`${match.path}`}
+                      path={`${match.path}`} exact
                       render={props => (
                         <React.Fragment>
                           <MyInfo {...props} who_am_i={who_am_i}/>
-                          <Events {...props} who_am_i={who_am_i}/>
+                          <EventsCard {...props} who_am_i={who_am_i}/>
                         </React.Fragment>
+                      )}
+                    />
+                    <Route
+                      path={`${match.path}events`} exact
+                      render={props => (
+                        <EventsCard />
                       )}
                     />
                   </Switch>

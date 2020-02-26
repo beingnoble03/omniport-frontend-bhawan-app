@@ -16,6 +16,7 @@ class Complains extends React.Component {
     }
 
     toggleButtonMode = (event, {complain}) => {
+      console.log("fucl ")
         const inButtonMode = this.state.inButtonMode
         if(inButtonMode){
             addComplaint(complain)

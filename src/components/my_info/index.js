@@ -12,7 +12,7 @@ export default class MyInfo extends React.Component {
             <Link to='/bhawan_app/profile'>
               <Card.Content styleName="font_color">
                 <Icon name="user" size="small" />
-                <strong>{who_am_i.person}</strong>
+                <strong>{who_am_i.fullName}</strong>
               </Card.Content>
             </Link>
             <Link to='/bhawan_app/profile'>
