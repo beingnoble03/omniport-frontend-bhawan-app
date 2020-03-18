@@ -8,6 +8,7 @@ export const addComplaint = (data, successCallBack, errCallBack) => {
     'X-CSRFToken': getCookie('csrftoken')
   }
 
+  return dispatch => {
     axios
       .post('/api/bhawan_app/complaint/rkb/', data, { headers: headers })
       .then(res => {
@@ -18,16 +19,13 @@ export const addComplaint = (data, successCallBack, errCallBack) => {
             'Congratulations! Your complain has been made succesfully.'
         }
         dispatch({
-          type: ADD_COMPLAINT,
-          payload: response
+          type: "ADD_COMPLAINT",
+          payload: res.data,
         })
       })
       .catch(err => {
         errCallBack(err);
-        const response = {
-          value: 'Sorry! There has been an error in making your complain. Please try again!',
-          status: false
-        };
       }
     )
+  }
 }

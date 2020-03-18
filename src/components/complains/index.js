@@ -16,7 +16,6 @@ class Complains extends React.Component {
     }
 
     toggleButtonMode = (event, {complain}) => {
-      console.log("fucl ")
         const inButtonMode = this.state.inButtonMode
         if(inButtonMode){
             addComplaint(complain)
@@ -26,8 +25,8 @@ class Complains extends React.Component {
         })
     }
     render(){
-        const {complains} = this.props
-        const {inButtonMode} = this.state
+        const { complains } = this.props
+        const { inButtonMode } = this.state
 
         return (
             <React.Fragment>

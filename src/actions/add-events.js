@@ -18,7 +18,7 @@ export const addEvent = (data, successCallBack, errCallBack) => {
             'Congratulations! Your event has been added succesfully.'
         }
         dispatch({
-          type: ADD_COMPLAINT,
+          type: "ADD_EVENT",
           payload: response
         })
       })

@@ -55,6 +55,10 @@
   margin-bottom: 0px !important;
 }
 
+.zero-padding {
+  padding: 0px !important;
+}
+
 .color-black {
   color: #000000;
 }

@@ -16,7 +16,7 @@ const Events = lazy(() => import('./events/index'))
 import AdminFacility from './admin_facility'
 import MyProfile from './my_profile/index'
 import Facility from './facility/index'
-import {whoami} from '../actions/who_am_i'
+import { whoami } from '../actions/who_am_i'
 import PastBookings from './past_bookings_admin/index'
 import main from 'formula_one/src/css/app.css'
 import blocks from '../css/app.css'

@@ -12,7 +12,7 @@ export default class BookingRequests extends Component {
     return (
         <div>
     <Header as='h4'>Past Bookings <Icon name="angle down"/> </Header>
-      
+
       <Container>
       <Table celled >
     <Table.Header>

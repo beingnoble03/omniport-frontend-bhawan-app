@@ -5,11 +5,6 @@ import './index.css';
 import { connect } from 'react-redux';
 import { addComplaint } from '../../actions/add_complaint'
 import Complains from '../complains/index'
-  const options = [
-    { key: '1', text: 'Toilet', value: 'toi' },
-    { key: '2', text: 'Electric',value: 'ele' },
-    { key: '3', text: 'Carpentary', value: 'car' },
-  ]
 
 class ComplainRegister extends React.Component {
     constructor(props) {
@@ -31,14 +26,14 @@ class ComplainRegister extends React.Component {
     handleSubmit = e => {
       let data = {
         "person": 1,
-        "complaint_type": this.state.category,
-        "available_from": this.state.convenientTime,
-        "available_till": "23:59",
+        "complaintType": this.state.category,
+        "availableFrom": this.state.convenientTime,
+        "availableTill": "23:59",
         "room_no": 343,
         "hostel_code": "rkb",
         "description": this.state.complain
       }
-      addComplaint(data, this.successCallBack, this.errCallBack)
+      this.props.addComplaint(data, this.successCallBack, this.errCallBack)
     }
 
     successCallBack = res => {
@@ -57,12 +52,22 @@ class ComplainRegister extends React.Component {
       })
     }
     render(){
+      const options = [
+        { key: '1', text: 'Toilet', value: 'toi' },
+        { key: '2', text: 'Electric',value: 'ele' },
+        { key: '3', text: 'Carpentary', value: 'car' },
+      ]
         return (
             <React.Fragment>
               {this.state.error && (
                 <Message warning>
                 <Icon name='warning' />
-                You've reached the end of this content segment!
+                  Okay
+              </Message>
+              )}
+              {this.state.success && (
+                <Message positive>
+                Your complain has been made succesfully
               </Message>
               )}
                 <Form>
@@ -72,6 +77,7 @@ class ComplainRegister extends React.Component {
                       name='category'
                       selection
                       options={options}
+                      onChange={this.handleChange}
                       styleName='field-width'
                     />
                   </Form.Field>
@@ -111,8 +117,8 @@ function mapStateToProps (state) {
 
 const mapDispatchToProps = dispatch => {
   return {
-      addComplaint: () => {
-      dispatch(addComplaint())
+      addComplaint: (data, successCallBack, errCallBack) => {
+      dispatch(addComplaint(data, successCallBack, errCallBack))
     }
   }
 }
