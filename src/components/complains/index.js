@@ -14,7 +14,6 @@ class Complains extends React.Component {
     componentDidMount(){
         this.props.getComplains()
     }
-
     toggleButtonMode = (event, {complain}) => {
         const inButtonMode = this.state.inButtonMode
         if(inButtonMode){
@@ -78,7 +77,7 @@ class Complains extends React.Component {
 }
 
 function mapStateToProps(state){
-    return{
+  return{
       complains: state.complains,
    }
 }

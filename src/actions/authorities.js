@@ -4,7 +4,7 @@ export const getAllAuthorities = () => {
   return dispatch => {
     axios({
       method: 'get',
-      url: '/api/bhawan_app/contact/rkb',
+      url: '/api/bhawan_app/rkb/contact/',
     })
       .then(response => {
         let item = response.data.results

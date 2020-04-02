@@ -33,14 +33,17 @@ class ComplainRegister extends React.Component {
         "hostel_code": "rkb",
         "description": this.state.complain
       }
-      this.props.addComplaint(data, this.successCallBack, this.errCallBack)
+      this.props.addComplaint(data,this.props.who_am_i.residence, this.successCallBack, this.errCallBack)
     }
 
     successCallBack = res => {
       this.setState({
         success: true,
         error: false,
-        message: res.statusText
+        message: res.statusText,
+        convenientTime: "",
+        complain: "",
+        category: ""
       })
     }
 
@@ -117,8 +120,8 @@ function mapStateToProps (state) {
 
 const mapDispatchToProps = dispatch => {
   return {
-      addComplaint: (data, successCallBack, errCallBack) => {
-      dispatch(addComplaint(data, successCallBack, errCallBack))
+      addComplaint: (data, residence, successCallBack, errCallBack) => {
+      dispatch(addComplaint(data, residence, successCallBack, errCallBack))
     }
   }
 }

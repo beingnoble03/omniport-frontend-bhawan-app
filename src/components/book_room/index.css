@@ -2,3 +2,12 @@
     margin-top: 3.3%;
     cursor: pointer;
 }
+.upload-btn {
+    font-size: .8em !important;
+    color: #C4C4C4 !important;
+}
+
+.upload-btn:hover {
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.87) !important;
+}

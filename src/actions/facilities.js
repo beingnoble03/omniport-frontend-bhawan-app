@@ -4,7 +4,7 @@ export const getFacilities = () => {
   return dispatch => {
     axios({
       method: 'get',
-      url: '/api/bhawan_app/facility/rkb',
+      url: '/api/bhawan_app/rkb/facility/',
     })
       .then(response => {
         let item = response.data.results

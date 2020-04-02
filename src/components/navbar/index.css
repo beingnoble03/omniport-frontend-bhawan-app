@@ -1,11 +1,11 @@
 .upper_menu{
-    padding: 2% 0.5% 2% 0;
+    padding: 0.3% 0.5% 0.3% 0 !important;
     background-color:  #F6F6F6 !important;
     margin-top: 0px !important;
     margin-bottom: 0px !important;
     box-shadow: 3px 3px 16px rgba(0, 0, 0, 0.11) !important;
     z-index: 5;
-    position: relative;
+    position: relative !important;
 }
 .lower_menu{
     background-color: #F6F6F6 !important;

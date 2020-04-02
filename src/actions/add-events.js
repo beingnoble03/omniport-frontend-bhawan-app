@@ -9,7 +9,7 @@ export const addEvent = (data, successCallBack, errCallBack) => {
   }
 
     axios
-      .post('/api/bhawan_app/event/rkb/', data, { headers: headers })
+      .post('/api/bhawan_app/rkb/event/', data, { headers: headers })
       .then(res => {
         successCallBack(res)
         const response = {

@@ -9,7 +9,7 @@ export const bookRoom = (data, successCallBack, errCallBack) => {
   }
 
     axios
-      .post('/api/bhawan_app/room_booking/rkb/', data, { headers: headers })
+      .post('/api/bhawan_app/rkb/room_booking/', data, { headers: headers })
       .then(res => {
         successCallBack(res)
         const response = {

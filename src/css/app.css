@@ -30,15 +30,18 @@
   color: #FFFFFF !important;
   font-style: normal !important;
   font-weight: normal !important;
+  border-radius: 4px !important;
 }
 
 .disactive-button {
   background: #8C9EFF !important;
   border: 1px solid #E9E9E9 !important;
-  box-sizing: border-box ;
+  /* box-sizing: border-box ; */
   box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.06) !important;
   border-radius: 4px !important;
   color: #000000;
+  font-style: normal !important;
+  font-weight: normal !important;
 }
 
 .card-border {

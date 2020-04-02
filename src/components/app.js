@@ -13,6 +13,8 @@ const MyInfo = lazy(() => import('./my_info/index'))
 const StudentDatabase = lazy(() => import('./student-database/index'))
 const EventsCard = lazy(() => import('./events-card/index'))
 const Events = lazy(() => import('./events/index'))
+const AdminComplains = lazy(() => import('./admin-complaints/index'))
+const BookingRequests = lazy(() => import('./booking_request/index'))
 import AdminFacility from './admin_facility'
 import MyProfile from './my_profile/index'
 import Facility from './facility/index'
@@ -21,7 +23,6 @@ import PastBookings from './past_bookings_admin/index'
 import main from 'formula_one/src/css/app.css'
 import blocks from '../css/app.css'
 import RegisterStudent from './register_student/index'
-import BookingRequests from './booking_request/index'
 
 const creators = [
   {
@@ -72,7 +73,7 @@ class App extends React.Component {
             <Route
               path={`${match.path}`}
               render={props => (
-                <Nav/>
+                <Nav who_am_i={who_am_i}/>
               )}
             />
           </Switch>
@@ -90,55 +91,61 @@ class App extends React.Component {
                   <Route
                       path={`${match.path}complain`}
                       render={props => (
-                        <ComplainRegister />
+                        <ComplainRegister who_am_i={who_am_i} />
                       )}
                     />
                     <Route
                       path={`${match.path}facility`}
                       render={props => (
-                        <Facility />
+                        <Facility who_am_i={who_am_i}/>
                       )}
                     />
                   <Route
                       path={`${match.path}profile`}
                       render={props => (
-                        <MyProfile />
+                        <MyProfile who_am_i={who_am_i}/>
                       )}
                     />
                   <Route
                       path={`${match.path}`} exact
                       render={props => (
-                        <Facilities />
+                        <Facilities who_am_i={who_am_i}/>
                       )}
                     />
                     <Route
                       path={`${match.path}events`}
                       render={props => (
-                        <Events />
+                        <Events who_am_i={who_am_i}/>
+                      )}
+                    />
+                    <Route
+                      path={`${match.path}admin/complains`}
+                      render={props => (
+                        <AdminComplains who_am_i={who_am_i}/>
                       )}
                     />
                     <Route
                       path={`${match.path}admin/facility`}
                       render={props => (
-                        <AdminFacility />
+                        <AdminFacility who_am_i={who_am_i}/>
                       )}
                     />
                     <Route
                       path={`${match.path}admin/database`}
                       render={props => (
-                        <StudentDatabase />
+                        <StudentDatabase who_am_i={who_am_i} />
                       )}
                     />
                      <Route
                       path={`${match.path}admin/bookings`}
                       render={props => (
-                        <BookingRequests />
+                        <BookingRequests who_am_i={who_am_i}/>
                       )}
                     />
                     <Route
                       path={`${match.path}admin/register_student`}
                       render={props => (
-                        <RegisterStudent />
+                        <RegisterStudent who_am_i={who_am_i} />
                       )}
                     />
                   </Switch>
@@ -157,7 +164,7 @@ class App extends React.Component {
                     <Route
                       path={`${match.path}events`} exact
                       render={props => (
-                        <EventsCard />
+                        <EventsCard who_am_i={who_am_i}/>
                       )}
                     />
                   </Switch>
@@ -168,7 +175,7 @@ class App extends React.Component {
                 <Route
                   path={`${match.path}`} exact
                   render={props => (
-                    <Authorities />
+                    <Authorities who_am_i={who_am_i}/>
                   )}
                     />
                   </Grid.Column>

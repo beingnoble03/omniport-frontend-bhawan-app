@@ -4,7 +4,7 @@ export const getEvents = () => {
   return dispatch => {
     axios({
       method: 'get',
-      url: '/api/bhawan_app/event/rkb',
+      url: '/api/bhawan_app/rkb/event/',
     })
       .then(response => {
         let item = response.data.results

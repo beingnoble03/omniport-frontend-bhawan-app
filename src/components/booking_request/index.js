@@ -11,10 +11,13 @@ class BookingRequests extends Component {
   componentDidMount() {
     this.props.getRoomBookings()
   }
-  show = () => () => this.setState({ open: true })
+
+  show = () =>  this.setState({ open: true })
+
   close = () => this.setState({ open: false })
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+
   togglePastIcon = () => {
     const pastBookingIcon = this.state.pastBookingIcon
     pastBookingIcon === 'angle down' ?
@@ -29,35 +32,44 @@ class BookingRequests extends Component {
     <Container>
     <Header as='h4'>Room Bookings</Header>
     <Menu compact icon='labeled'>
-          <Menu.Item
-            name="pending"
-            active={activeItem === 'pending'}
-            onClick={this.handleItemClick}
-            color='blue'
-            styleName="booking-menu"
-          >
-           Pending
-          </Menu.Item>
-          <Menu.Item
-            name="approved"
-            active={activeItem === 'approved'}
-            onClick={this.handleItemClick}
-            color='blue'
-            styleName="booking-menu"
-          >
-           Approved
-          </Menu.Item>
-          <Menu.Item
-            name="confirmed"
-            active={activeItem === 'confirmed'}
-            onClick={this.handleItemClick}
-            color='blue'
-            styleName="booking-menu"
-          >
-            Confirmed
-          </Menu.Item>
-        </Menu>
-      <Table celled >
+      <Menu.Item
+        name="pending"
+        active={activeItem === 'pending'}
+        onClick={this.handleItemClick}
+        color='blue'
+        styleName="booking-menu"
+      >
+       Pending
+      </Menu.Item>
+      <Menu.Item
+        name="forwarded"
+        active={activeItem === 'forwarded'}
+        onClick={this.handleItemClick}
+        color='blue'
+        styleName="booking-menu"
+      >
+       Forwarded
+      </Menu.Item>
+      <Menu.Item
+        name="approved"
+        active={activeItem === 'approved'}
+        onClick={this.handleItemClick}
+        color='blue'
+        styleName="booking-menu"
+      >
+       Approved
+      </Menu.Item>
+      <Menu.Item
+        name="confirmed"
+        active={activeItem === 'confirmed'}
+        onClick={this.handleItemClick}
+        color='blue'
+        styleName="booking-menu"
+      >
+        Confirmed
+      </Menu.Item>
+    </Menu>
+    <Table celled >
     <Table.Header>
       <Table.Row>
       <Table.HeaderCell>ID</Table.HeaderCell>
@@ -69,7 +81,7 @@ class BookingRequests extends Component {
         <Table.HeaderCell>From </Table.HeaderCell>
         <Table.HeaderCell>To</Table.HeaderCell>
         <Table.HeaderCell>Contact Number</Table.HeaderCell>
-        <Table.HeaderCell>{activeItem == 'pending'? "Approve Request": activeItem == 'approved'? 'Confirm Payment': 'Still No ideA'}</Table.HeaderCell>
+        <Table.HeaderCell>{activeItem == 'pending'? "Forward Request": activeItem == 'forwarded'? 'Approve Request': activeItem == 'approved'? 'Confirm Request':'Still No ideA'}</Table.HeaderCell>
       </Table.Row>
     </Table.Header>
 
@@ -132,8 +144,8 @@ class BookingRequests extends Component {
   )}
 
   </Container>
-  <Button onClick={this.show('mini')}>Mini</Button>
-    <Modal size="mini" open={open} onClose={this.close}>
+  <Button onClick={() => this.show('mini')}>Mini</Button>
+    <Modal size="mini" open={this.open} onClose={this.close}>
       <Modal.Header styleName="center">Approve Request?</Modal.Header>
       <Modal.Actions styleName="modalActions">
         <Button positive fluid>Yes</Button>
@@ -146,7 +158,6 @@ class BookingRequests extends Component {
 }
 
 function mapStateToProps(state){
-  console.log(state.bookingRequests)
   return{
     bookingRequests: state.bookingRequests,
  }

@@ -4,7 +4,7 @@ export const getComplains = () => {
   return dispatch => {
     axios({
       method: 'get',
-      url: '/api/bhawan_app/complaint/rkb',
+      url: '/api/bhawan_app/rkb/complaint/',
     })
       .then(response => {
         let item = response.data.results

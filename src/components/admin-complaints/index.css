@@ -1,0 +1,10 @@
+.center{
+    display: flex !important;
+    justify-content: center;
+}
+.modalActions{
+    display: flex;
+}
+.booking-menu {
+    border-bottom: 1px solid transparent;
+}

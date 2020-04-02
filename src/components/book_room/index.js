@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Button, Form,Input, Container, Icon } from 'semantic-ui-react'
+import { Button, Form,Input, Container, Icon, Segment } from 'semantic-ui-react'
 import { DateInput, TimeInput} from 'semantic-ui-calendar-react';
 import './index.css'
 import { bookRoom } from '../../actions/book-room'
@@ -16,6 +16,8 @@ class BookRoom extends React.Component {
           endTime: '',
           visitors: [''],
           relatives: [''],
+          document: '',
+          documentUrl: ''
         };
       }
     handleChange = (event, {name, value}) => {
@@ -43,7 +45,7 @@ class BookRoom extends React.Component {
                 <label>Relation</label>
                 <Input icon='angle down' value={this.state.relatives[i] || ''} onChange={(event) => this.handleRelativeChange(i, event)}/>
               </Form.Field>
-              <Icon name='close' onClick={this.removeClick.bind(this, i)} />
+                <Icon name='close' onClick={() => this.removeClick(i)} />
              </Form.Group>
          </div>
      )
@@ -99,6 +101,14 @@ class BookRoom extends React.Component {
         message: err
       })
     }
+    handleSelectPicture = e => {
+      if (e.target.files && e.target.files.length ==1) {
+        this.setState({
+          document: e.target.files[0],
+          documentUrl: URL.createObjectURL(e.target.files[0])
+        })
+      }
+    }
     render(){
         return (
             <Container>
@@ -139,12 +149,28 @@ class BookRoom extends React.Component {
                           />
                       </Form.Field>
                     </Form.Group>
-                    {/* {this.state.allVisitors.map(visitor => {
-                      return (visitor)
-                    })} */}
+                    <Form.Group>
                     {this.createForm()}
-                    <Icon onClick={this.increaseVisitor} name="plus" size="big" styleName="plus-icon"/>
-                    <Button primary type='submit' onClick={this.handleSubmit}>Submit</Button>
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Field>
+                        <Icon onClick={this.increaseVisitor} name="plus" size="big" styleName="plus-icon"/>
+                      </Form.Field>
+                      <Form.Field>
+                        <Segment raised>
+                          Upload Documents
+                          <input
+                            type='file'
+                            accept=".pdf"
+                            onChange={this.handleSelectPicture}
+                            count={1}
+                          />
+                        </Segment>
+                      </Form.Field>
+                      <Form.Field>
+                        <Button primary type='submit' onClick={this.handleSubmit}>Submit</Button>
+                      </Form.Field>
+                    </Form.Group>
                   </Form>
               </Container>
         )

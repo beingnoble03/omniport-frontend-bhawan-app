@@ -4,7 +4,7 @@ export const getRoomBookings = () => {
   return dispatch => {
     axios({
       method: 'get',
-      url: '/api/bhawan_app/room_booking/rkb/',
+      url: '/api/bhawan_app/rkb/room_booking/',
     })
       .then(response => {
         let item = response.data

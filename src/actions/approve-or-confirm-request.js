@@ -9,7 +9,7 @@ export const approveOrConfirmRequest = (data, successCallBack, errCallBack) => {
   }
 
     axios
-      .put('/api/bhawan_app/room_booking/rkb/', data, { headers: headers })
+      .put('/api/bhawan_app/rkb/room_booking/', data, { headers: headers })
       .then(res => {
         successCallBack(res)
         const response = {
