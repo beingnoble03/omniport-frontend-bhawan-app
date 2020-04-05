@@ -26,6 +26,11 @@ import RegisterStudent from './register_student/index'
 
 const creators = [
   {
+    name: 'Aman Sharma',
+    role: 'Mentor',
+    link: 'https://github.com/algomaster99/'
+  },
+  {
     name: 'Ritvik Jain',
     role: 'Backend developer',
     link: 'https://github.com/ritvikjain99/'

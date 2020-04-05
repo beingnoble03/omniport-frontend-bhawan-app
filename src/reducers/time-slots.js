@@ -1,8 +1,8 @@
 const initialState = {}
 
-const bookingRequests = (state = initialState, action) => {
+const timeSlots = (state = initialState, action) => {
   switch (action.type) {
-      case 'GET_ALL_ROOM_BOOKINGS':
+      case 'GET_TIME_SLOTS':
           return action.payload
       case 'UPDATE_BOOKINGS':
           console.log("ufvty")
@@ -11,4 +11,4 @@ const bookingRequests = (state = initialState, action) => {
   }
 }
 
-export default bookingRequests
+export default timeSlots

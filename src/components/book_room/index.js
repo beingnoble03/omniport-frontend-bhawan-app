@@ -16,8 +16,8 @@ class BookRoom extends React.Component {
           endTime: '',
           visitors: [''],
           relatives: [''],
-          document: '',
-          documentUrl: ''
+          proof: [],
+          proofUrl: []
         };
       }
     handleChange = (event, {name, value}) => {
@@ -45,6 +45,23 @@ class BookRoom extends React.Component {
                 <label>Relation</label>
                 <Input icon='angle down' value={this.state.relatives[i] || ''} onChange={(event) => this.handleRelativeChange(i, event)}/>
               </Form.Field>
+              <Form.Field>
+                <input
+                type='file'
+                accept='image/*'
+                onChange={(e) => this.handleSelectPicture(e,i)}
+                name={`picture${i}`}
+                id={`uploadPhoto${i}`}
+                />
+                <label
+          htmlFor={`uploadPhoto${i}`}
+        >
+          <Icon
+            styleName='upload-btn'
+            name='upload'
+          />
+        </label>
+              </Form.Field>
                 <Icon name='close' onClick={() => this.removeClick(i)} />
              </Form.Group>
          </div>
@@ -62,7 +79,15 @@ class BookRoom extends React.Component {
  }
 
    addClick(){
-     this.setState(prevState => ({ visitors: [...prevState.visitors, '']}))
+     this.setState(
+       prevState =>
+        ({
+           visitors: [...prevState.visitors, ''],
+           relatives: [...prevState.relatives, ''],
+           proof: [...prevState.proof, ''],
+           proofUrl: [...prevState.proofUrl, '']
+          })
+          )
    }
 
    removeClick(i){
@@ -101,11 +126,15 @@ class BookRoom extends React.Component {
         message: err
       })
     }
-    handleSelectPicture = e => {
+    handleSelectPicture = (e, i) => {
       if (e.target.files && e.target.files.length ==1) {
+        const newProofs = this.state.proof.slice()
+        const newProofUrl = this.state.proofUrl.splice()
+        newProofs[i] = e.target.files[0]
+        newProofUrl[i] = URL.createObjectURL(e.target.files[0])
         this.setState({
-          document: e.target.files[0],
-          documentUrl: URL.createObjectURL(e.target.files[0])
+          proof: newProofs,
+          proofUrl: newProofUrl
         })
       }
     }

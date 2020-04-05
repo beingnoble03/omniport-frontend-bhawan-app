@@ -14,7 +14,7 @@ class Complains extends React.Component {
     componentDidMount(){
         this.props.getComplains()
     }
-    toggleButtonMode = (event, {complain}) => {
+    toggleButtonMode = () => {
         const inButtonMode = this.state.inButtonMode
         if(inButtonMode){
             addComplaint(complain)
@@ -22,6 +22,10 @@ class Complains extends React.Component {
         this.setState({
             inButtonMode: !inButtonMode,
         })
+    }
+    handleComplainAgain = () => {
+      console.log("complain again")
+      // this.props.complainAgain();
     }
     render(){
         const { complains } = this.props
@@ -49,11 +53,11 @@ class Complains extends React.Component {
                         <Table.Cell>
                             <div styleName="complain-description">
                                 <div>{complain.description}</div>
-                                <div onClick={() => this.toggleButtonMode(complain)}>
+                                <div onClick={this.toggleButtonMode}>
                                     {
                                         inButtonMode
                                         ?
-                                        <Button>Complain Again</Button> :
+                                        <Button onClick={() => this.handleComplainAgain(complain.id) }>Complain Again</Button> :
                                         "..."
                                     }
                                 </div>
@@ -61,7 +65,7 @@ class Complains extends React.Component {
                         </Table.Cell>
                         <Table.Cell>{complain.complaintType}</Table.Cell>
                         <Table.Cell>{complain.status}</Table.Cell>
-                      <Table.Cell>{complain.roomNo}</Table.Cell>
+                        <Table.Cell>{complain.roomNo}</Table.Cell>
                         <Table.Cell>{complain.roomNo}</Table.Cell>
                       </Table.Row>
                       )

@@ -10,7 +10,6 @@ class ComplainRegister extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-        convenientTime: "",
         complain: "",
         category: "",
         success: false,
@@ -27,8 +26,6 @@ class ComplainRegister extends React.Component {
       let data = {
         "person": 1,
         "complaintType": this.state.category,
-        "availableFrom": this.state.convenientTime,
-        "availableTill": "23:59",
         "room_no": 343,
         "hostel_code": "rkb",
         "description": this.state.complain
@@ -94,17 +91,6 @@ class ComplainRegister extends React.Component {
                     styleName="complaint"
                     rows="5"
                   />
-                   <Form.Field styleName='field-width'>
-                      <label>Convenient time</label>
-                      <TimeInput
-                          autoComplete='off'
-                          name="convenientTime"
-                          value={this.state.convenientTime}
-                          icon="angle down"
-                          iconPosition="right"
-                          onChange={this.handleChange}
-                      />
-                   </Form.Field>
                    <Button size='medium' styleName="button" onClick={this.handleSubmit} width={3}>Submit</Button>
                 </Form>
                 <Complains />
