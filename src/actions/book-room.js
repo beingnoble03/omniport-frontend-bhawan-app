@@ -4,15 +4,14 @@ import { getCookie } from 'formula_one/src/utils'
 
 export const bookRoom = (data, successCallBack, errCallBack) => {
   const headers = {
-    'Content-Type': 'application/json',
+    'Content-Type': 'multipart/form-data',
     'X-CSRFToken': getCookie('csrftoken')
   }
-
   return dispatch => {
-
     axios
       .post('/api/bhawan_app/rkb/room_booking/', data, { headers: headers })
       .then(res => {
+        console.log(res)
         successCallBack(res)
         const response = {
           status: true,
@@ -25,6 +24,7 @@ export const bookRoom = (data, successCallBack, errCallBack) => {
         })
       })
       .catch(err => {
+        console.log(err)
         errCallBack(err);
         const response = {
           value: 'Sorry! There has been an error in making your Book Request. Please try again!',

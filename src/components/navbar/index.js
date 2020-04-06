@@ -25,7 +25,7 @@ export default class Nav extends Component {
         <React.Fragment>
           <Menu secondary styleName="navCss.upper_menu">
             <Menu.Item>
-              <Header>Kasturba Bhawan</Header>
+              <Header>{this.props.who_am_i.residence}</Header>
             </Menu.Item>
             {!this.props.who_am_i.isAdmin?
           (

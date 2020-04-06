@@ -53,17 +53,20 @@ class BookRoom extends React.Component {
                 name={`picture${i}`}
                 id={`uploadPhoto${i}`}
                 />
-                <label
-          htmlFor={`uploadPhoto${i}`}
+                {/* <label
+                htmlFor={`uploadPhoto${i}`}
         >
           <Icon
             styleName='upload-btn'
             name='upload'
           />
-        </label>
+        </label> */}
               </Form.Field>
+              {this.state.visitors.length>1?
                 <Icon name='close' onClick={() => this.removeClick(i)} />
-             </Form.Group>
+             : null
+            }
+          </Form.Group>
          </div>
      )
     }
@@ -93,25 +96,45 @@ class BookRoom extends React.Component {
    removeClick(i){
       let visitors = [...this.state.visitors];
       let relatives = [...this.state.relatives]
-      visitors.splice(i,1);
+      let proof = [...this.state.proof]
+      let proofUrl = [...this.state.proofUrl]
+      visitors.splice(i,1)
       relatives.splice(i,1)
-      this.setState({ visitors, relatives });
+      proof.splice(i, 1)
+      proofUrl.splice(i, 1)
+      this.setState({
+         visitors,
+         relatives,
+         proof,
+         proofUrl
+        });
    }
 
     handleSubmit = e => {
       const finalVisitor = []
       this.state.visitors.forEach((visitor, index) => {
-        finalVisitor.push({"fullName": visitor, "relation": this.state.relatives[index]})
+        finalVisitor.push(
+          {
+            "fullName": visitor,
+            "relation": this.state.relatives[index],
+            "photoIdentification": this.state.proof[index]
+          }
+        )
       })
-      let data = {
-        "requestedFrom": moment(this.state.fromDate, "DD-MM-YYYY").format("YYYY-MM-DD"),
-        "requestedTill": moment(this.state.endDate, "DD-MM-YYYY").format("YYYY-MM-DD"),
-        "bookedByRoomNo": this.props.who_am_i.roomNumber,
-        "relative": finalVisitor
-      }
-      bookRoom(data, successCallBack, this.errCallBack)
+      let formData = new FormData()
+      formData.append('requestedFrom', moment(this.state.fromDate, "DD-MM-YYYY").format("YYYY-MM-DD"))
+      formData.append('requestedTill', moment(this.state.endDate, "DD-MM-YYYY").format("YYYY-MM-DD"))
+      formData.append('visitor', finalVisitor)
+      // let data = {
+      //   "requestedFrom": moment(this.state.fromDate, "DD-MM-YYYY").format("YYYY-MM-DD"),
+      //   "requestedTill": moment(this.state.endDate, "DD-MM-YYYY").format("YYYY-MM-DD"),
+      //   "bookedByRoomNo": this.props.who_am_i.roomNumber,
+      //   "visitor": finalVisitor
+      // }
+      this.props.bookRoom(formData, this.successCallBack, this.errCallBack)
     }
     successCallBack = res => {
+      console.log(res)
       this.setState({
         success: true,
         error: false,
@@ -120,6 +143,7 @@ class BookRoom extends React.Component {
     }
 
     errCallBack = err => {
+      console.log(err)
       this.setState({
         error: true,
         success: false,
@@ -178,28 +202,17 @@ class BookRoom extends React.Component {
                           />
                       </Form.Field>
                     </Form.Group>
-                    <Form.Group>
                     {this.createForm()}
-                    </Form.Group>
-                    <Form.Group>
+                    {/* <Form.Group> */}
                       <Form.Field>
                         <Icon onClick={this.increaseVisitor} name="plus" size="big" styleName="plus-icon"/>
                       </Form.Field>
-                      <Form.Field>
-                        <Segment raised>
-                          Upload Documents
-                          <input
-                            type='file'
-                            accept=".pdf"
-                            onChange={this.handleSelectPicture}
-                            count={1}
-                          />
-                        </Segment>
-                      </Form.Field>
+                      {/* 
+                       */}
                       <Form.Field>
                         <Button primary type='submit' onClick={this.handleSubmit}>Submit</Button>
                       </Form.Field>
-                    </Form.Group>
+                    {/* </Form.Group> */}
                   </Form>
               </Container>
         )
@@ -208,8 +221,8 @@ class BookRoom extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    bookRoom: () => {
-      dispatch(BookRoom())
+    bookRoom: (data, successCallBack, errCallBack) => {
+      dispatch(bookRoom(data, successCallBack, errCallBack))
     }
   }
 }
