@@ -121,10 +121,22 @@ class BookRoom extends React.Component {
           }
         )
       })
+      console.log(JSON.stringify(finalVisitor))
       let formData = new FormData()
       formData.append('requestedFrom', moment(this.state.fromDate, "DD-MM-YYYY").format("YYYY-MM-DD"))
       formData.append('requestedTill', moment(this.state.endDate, "DD-MM-YYYY").format("YYYY-MM-DD"))
-      formData.append('visitor', finalVisitor)
+      formData.append('visitor', JSON.stringify(finalVisitor))
+      // this.state.visitors.forEach((visitor, index) => {
+      //   formData.append('visitor', JSON.stringify({
+      //     "fullName": visitor,
+      //     "relation": this.state.relatives[index],
+      //     "photoIdentification": this.state.proof[index]
+      //   }))
+      // })
+      console.log("wec")
+      for (var value of formData.values()) {
+        console.log(value);
+     }
       // let data = {
       //   "requestedFrom": moment(this.state.fromDate, "DD-MM-YYYY").format("YYYY-MM-DD"),
       //   "requestedTill": moment(this.state.endDate, "DD-MM-YYYY").format("YYYY-MM-DD"),
