@@ -8,3 +8,6 @@
 .max-content-width {
     width: max-content;
 }
+.min-margin {
+    margin-right: 18px;
+}

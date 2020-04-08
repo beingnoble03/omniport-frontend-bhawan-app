@@ -7,6 +7,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction";
 
 import {getEvents} from '../../actions/events'
+import { setActiveDay } from '../../actions/set-active-day'
 
 class Events extends React.Component {
   componentDidMount() {
@@ -14,6 +15,7 @@ class Events extends React.Component {
   }
   handleDateClick = (arg) => {
     console.log(arg.dateStr)
+    this.props.setActiveDay(arg.dateStr)
   }
 
   render() {
@@ -54,7 +56,11 @@ function mapStateToProps(state){
   return {
     getEvents: ()=> {
       dispatch(getEvents())
+    },
+    setActiveDay: (day) => {
+      dispatch(setActiveDay(day))
     }
+
   }
  }
  export default connect(mapStateToProps, mapDispatchToProps)(Events)

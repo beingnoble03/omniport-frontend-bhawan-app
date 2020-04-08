@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import activeDay from './active-day'
 import authorities from './authorities'
 import facilities from './facilities'
 import complains from './complains'
@@ -8,6 +9,7 @@ import bookingRequests from './roomBookings'
 import timeSlots from './time-slots'
 
 const rootReducers = combineReducers({
+  activeDay: activeDay,
   authorities: authorities,
   facilities: facilities,
   complains: complains,

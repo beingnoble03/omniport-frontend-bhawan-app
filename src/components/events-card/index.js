@@ -42,7 +42,7 @@ class EventsCard extends React.Component {
         }
       ]
     }
-    addEvent(data, this.successCallBack, this.errCallBack)
+    this.props.addEvent(data, this.successCallBack, this.errCallBack)
   }
 
   successCallBack = res => {
@@ -67,18 +67,23 @@ class EventsCard extends React.Component {
     })
   }
   render() {
-    const { events } = this.props
+    const {  dayEvents } = this.props
+
     return (
         <Card>
             <Card.Content>
-                <Card.Header>Todays events</Card.Header>
-                {events.length>0?(events.map(event => {
+                <Card.Header>
+                  {location.pathname == '/bhawan_app/events'?
+                    "On this day": "Todays events"
+                }
+                </Card.Header>
+                {dayEvents.length>0?(dayEvents.map(event => {
                   return (
                     <div styleName="max-content-width">
                     <Card.Description>
                       {event.name}
                       <div styleName="display-flex">
-                        <div>
+                        <div styleName="min-margin">
                           {event.description}
                         </div>
                         <div>
@@ -134,14 +139,25 @@ class EventsCard extends React.Component {
   }
 }
 function mapStateToProps(state){
+  // console.log(state.events.filter(date = state.activeDay))
+  let dayEvents = []
+  if(state.events && state.events.length > 0 && state.activeDay)
+   dayEvents = state.events.filter(function (event) {
+    return event.date == state.activeDay
+  });
   return{
     events: state.events,
+    activeDay: state.activeDay,
+    dayEvents: dayEvents
   }
 }
  const mapDispatchToProps= dispatch => {
   return {
     getEvents: ()=> {
       dispatch(getEvents())
+    },
+    addEvent: (data, successCallBack, errCallBack) => {
+      dispatch(addEvent(data, successCallBack, errCallBack))
     }
   }
  }

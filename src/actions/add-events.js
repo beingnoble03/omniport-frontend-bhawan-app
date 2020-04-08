@@ -8,8 +8,9 @@ export const addEvent = (data, successCallBack, errCallBack) => {
     'X-CSRFToken': getCookie('csrftoken')
   }
 
+  return dispatch => {
     axios
-      .post('/api/bhawan_app/rkb/event/', data, { headers: headers })
+      .post(`/api/bhawan_app/rkb/event/`, data, { headers: headers })
       .then(res => {
         successCallBack(res)
         const response = {
@@ -17,17 +18,16 @@ export const addEvent = (data, successCallBack, errCallBack) => {
           value:
             'Congratulations! Your event has been added succesfully.'
         }
+        console.log("actions")
+        console.log(res.data)
         dispatch({
           type: "ADD_EVENT",
-          payload: response
+          payload: res.data,
         })
       })
       .catch(err => {
         errCallBack(err);
-        const response = {
-          value: 'Sorry! There has been an error in creating your event. Please try again!',
-          status: false
-        };
       }
     )
+  }
 }
