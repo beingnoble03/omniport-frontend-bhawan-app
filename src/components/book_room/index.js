@@ -143,7 +143,7 @@ class BookRoom extends React.Component {
       //   "bookedByRoomNo": this.props.who_am_i.roomNumber,
       //   "visitor": finalVisitor
       // }
-      this.props.bookRoom(formData, this.successCallBack, this.errCallBack)
+      this.props.bookRoom(formData, this.props.who_am_i.residence, this.successCallBack, this.errCallBack)
     }
     successCallBack = res => {
       console.log(res)
@@ -215,16 +215,12 @@ class BookRoom extends React.Component {
                       </Form.Field>
                     </Form.Group>
                     {this.createForm()}
-                    {/* <Form.Group> */}
                       <Form.Field>
                         <Icon onClick={this.increaseVisitor} name="plus" size="big" styleName="plus-icon"/>
                       </Form.Field>
-                      {/* 
-                       */}
                       <Form.Field>
                         <Button primary type='submit' onClick={this.handleSubmit}>Submit</Button>
                       </Form.Field>
-                    {/* </Form.Group> */}
                   </Form>
               </Container>
         )
@@ -233,8 +229,8 @@ class BookRoom extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    bookRoom: (data, successCallBack, errCallBack) => {
-      dispatch(bookRoom(data, successCallBack, errCallBack))
+    bookRoom: (data, residence, successCallBack, errCallBack) => {
+      dispatch(bookRoom(data, residence, successCallBack, errCallBack))
     }
   }
 }

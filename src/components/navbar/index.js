@@ -59,6 +59,8 @@ export default class Nav extends Component {
             <Link to='/bhawan_app/complain'>
               <Menu.Item size='mini'
                  name='complains'
+                 color='blue'
+                 styleName='navCss.navColor'
                  active = {activeSubGroup=='complains'}
                  onClick = {this.handleGroupClick}
               >
@@ -69,23 +71,31 @@ export default class Nav extends Component {
               <Menu.Item
                  size='mini'
                  name='bookings'
+                 color='blue'
+                 styleName='navCss.navColor'
                  active = {activeSubGroup=='bookings'}
                  onClick = {this.handleGroupClick}
               >
                  Guest Room Bookings
               </Menu.Item>
             </Link>
+            <Link to='/bhawan_app/events'>
             <Menu.Item
              size='mini'
              name='events'
+             color='blue'
+             styleName='navCss.navColor'
              active = {activeSubGroup=='events'}
              onClick = {this.handleGroupClick}
             >
               Events
             </Menu.Item>
+            </Link>
             <Menu.Item
              size='mini'
              name='facauth'
+             color='blue'
+             styleName='navCss.navColor'
              active = {activeSubGroup=='facauth'}
              onClick = {this.handleGroupClick}
             >
@@ -94,6 +104,8 @@ export default class Nav extends Component {
             <Menu.Item
              size='mini'
              name='database'
+             color='blue'
+             styleName='navCss.navColor'
              active = {activeSubGroup=='database'}
              onClick = {this.handleGroupClick}
             >
@@ -102,6 +114,8 @@ export default class Nav extends Component {
             <Menu.Item
               size='mini'
               name='register'
+              color='blue'
+              styleName='navCss.navColor'
               active = {activeSubGroup=='register'}
               onClick = {this.handleGroupClick}
             >

@@ -5,7 +5,7 @@ import './index.css'
 import { getFacilities } from '../../actions/facilities'
 class Facility extends React.Component {
   componentDidMount() {
-    this.props.getFacililties()
+    this.props.getFacilities(this.props.who_am_i.residence)
   }
   render(){
     const { facilities } = this.props
@@ -46,8 +46,8 @@ function mapStateToProps (state) {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getFacililties: () => {
-      dispatch(getFacilities())
+    getFacilities: (residence) => {
+      dispatch(getFacilities(residence))
     }
   }
 }

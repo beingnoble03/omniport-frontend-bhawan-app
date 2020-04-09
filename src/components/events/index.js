@@ -11,7 +11,7 @@ import { setActiveDay } from '../../actions/set-active-day'
 
 class Events extends React.Component {
   componentDidMount() {
-    this.props.getEvents()
+    this.props.getEvents(this.props.who_am_i.residence)
   }
   handleDateClick = (arg) => {
     console.log(arg.dateStr)
@@ -54,8 +54,8 @@ function mapStateToProps(state){
 }
  const mapDispatchToProps= dispatch => {
   return {
-    getEvents: ()=> {
-      dispatch(getEvents())
+    getEvents: (residence)=> {
+      dispatch(getEvents(residence))
     },
     setActiveDay: (day) => {
       dispatch(setActiveDay(day))

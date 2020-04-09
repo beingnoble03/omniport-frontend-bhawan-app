@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { getCookie } from 'formula_one/src/utils'
 
-export const bookRoom = (data, successCallBack, errCallBack) => {
+export const bookRoom = (data, residence, successCallBack, errCallBack) => {
   console.log("wec")
       for (var value of data.values()) {
         console.log(value);
@@ -13,7 +13,7 @@ export const bookRoom = (data, successCallBack, errCallBack) => {
   }
   return dispatch => {
     axios
-      .post('/api/bhawan_app/rkb/room_booking/', data, { headers: headers })
+      .post(`/api/bhawan_app/${residence}/room_booking/`, data, { headers: headers })
       .then(res => {
         console.log(res)
         successCallBack(res)

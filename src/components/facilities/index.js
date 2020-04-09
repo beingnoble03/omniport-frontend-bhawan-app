@@ -10,7 +10,7 @@ import moment from 'moment'
 class Facilities extends React.Component {
 
   componentDidMount(){
-    this.props.getFacilities()
+    this.props.getFacilities(this.props.who_am_i.residence)
   }
 
   render() {
@@ -54,8 +54,8 @@ function mapStateToProps(state){
 }
  const mapDispatchToProps= dispatch => {
   return {
-    getFacilities: ()=> {
-      dispatch(getFacilities())
+    getFacilities: (residence) => {
+      dispatch(getFacilities(residence))
     }
   }
  }

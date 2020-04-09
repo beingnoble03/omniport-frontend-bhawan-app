@@ -51,14 +51,36 @@ class App extends React.Component {
   constructor (props) {
     super(props)
     this.divRef = React.createRef()
+    this.state = {
+      loading: true,
+      loaded: false
+    };
   }
 
   componentDidMount() {
-    this.props.whoami()
+    this.props.whoami(this.successCallBack, this.errCallBack)
+  }
+  successCallBack = res => {
+    this.setState({
+      success: true,
+      error: false,
+      message: res.statusText,
+      loaded: true,
+      loading: false
+    })
+  }
+
+  errCallBack = err => {
+    this.setState({
+      error: true,
+      success: false,
+      message: err
+    })
   }
 
   render () {
     const { match, who_am_i } = this.props
+    if(this.state.loaded){
     return (
       <div ref={this.divRef} styleName='blocks.app-wrapper'>
         <Suspense fallback={<Loading />}>
@@ -191,6 +213,12 @@ class App extends React.Component {
         <AppFooter creators={creators} />
       </div>
     )
+                  }
+                else{
+                  return(
+                    <div styleName="blocks.content-div"><Loading /></div>
+                  )
+                }
   }
 }
 function mapStateToProps (state) {
@@ -200,8 +228,8 @@ function mapStateToProps (state) {
 }
 const mapDispatchToProps = dispatch => {
   return {
-    whoami: () => {
-      dispatch(whoami())
+    whoami: (successCallBack, errCallBack) => {
+      dispatch(whoami(successCallBack, errCallBack))
   }
 }
 }

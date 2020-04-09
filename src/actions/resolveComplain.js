@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { getCookie } from 'formula_one/src/utils'
 
-export const resolveComplaint = (id, residence, successCallBack, errCallBack) => {
+export const resolveComplain = (id, data, residence, successCallBack, errCallBack) => {
   const headers = {
     'Content-Type': 'application/json',
     'X-CSRFToken': getCookie('csrftoken')
@@ -10,7 +10,7 @@ export const resolveComplaint = (id, residence, successCallBack, errCallBack) =>
 
   return dispatch => {
     axios
-      .patch(`/api/bhawan_app/${residence}/complaint/${id}`, { headers: headers })
+      .patch(`/api/bhawan_app/${residence}/complaint/${id}/`, data, { headers: headers })
       .then(res => {
         successCallBack(res)
         const response = {

@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import { TimeInput } from 'semantic-ui-calendar-react'
 import {getComplains} from '../../actions/complains'
 import { getTimeSlots, changeTimeSlot } from '../../actions/time-slots'
-import {resolveComplain} from '../../actions/approve-or-confirm-request'
+import {resolveComplain} from '../../actions/resolveComplain'
 import { Menu, Header, Table, Button, Modal, Container, Icon, Dropdown } from 'semantic-ui-react'
 import './index.css'
 const days = [
@@ -36,13 +36,19 @@ class AdminComplains extends Component {
      message: '',
      type: '',
      days: '',
+     activeId: null
     }
 
   componentDidMount() {
-    this.props.getComplains()
+    this.props.getComplains(this.props.who_am_i.residence)
     this.props.getTimeSlots(this.props.who_am_i.residence)
   }
-  show = () => () => this.setState({ open: true })
+  show = (id) => {
+     this.setState({ 
+       open: true,
+       activeId: id
+      })
+  }
 
   close = () => this.setState({ open: false })
 
@@ -86,8 +92,12 @@ class AdminComplains extends Component {
       }
   }
   }
-  resolveComplaint = (id) => {
-    console.log('hvs')
+  resolveComplaint = () => {
+    const body ={
+      "status": "apr"
+    }
+    this.props.resolveComplain(this.state.id, body, this.props.who_am_i.residence, this.successCallBack, this.errCallBack)
+    this.close()
   }
 
   successCallBack = res => {
@@ -157,7 +167,8 @@ class AdminComplains extends Component {
                           <Table.Cell>{complain.phoneNumber}</Table.Cell>
                           <Table.Cell>{complain.roomNo}</Table.Cell>
                           <Table.Cell>Cell</Table.Cell>
-                          <Table.Cell onClick={() => this.resolveComplaint(complain.id)}>Resolve</Table.Cell>
+                          {/* <Table.Cell onClick={() => this.resolveComplaint(complain.id)}>Resolve</Table.Cell> */}
+                          <Table.Cell onClick={() => this.show(complain.id)}>Resolve</Table.Cell>
                       </Table.Row>
                       )
                   })):null
@@ -236,11 +247,11 @@ class AdminComplains extends Component {
                 </Table>
                 )}
                 </Container>
-                <Button onClick={this.show('mini')}>Mini</Button>
+                {/* <Button onClick={this.show('mini')}>Mini</Button> */}
                   <Modal size="mini" open={open} onClose={this.close}>
                     <Modal.Header styleName="center">Approve Request?</Modal.Header>
                     <Modal.Actions styleName="modalActions">
-                      <Button positive fluid>Yes</Button>
+                      <Button positive fluid onClick={this.resolveComplaint}>Yes</Button>
                       <Button negative fluid>No</Button>
                     </Modal.Actions>
                   </Modal>
@@ -258,14 +269,17 @@ function mapStateToProps(state){
 
 const mapDispatchToProps= dispatch => {
     return {
-        getComplains: ()=> {
-          dispatch(getComplains())
+        getComplains: (residence)=> {
+          dispatch(getComplains(residence))
         },
         getTimeSlots: (residence) => {
           dispatch(getTimeSlots(residence))
         },
         changeTimeSlot: (data, prevData, residence, successCallBack, errorCallBack) => {
           dispatch(changeTimeSlot(data, prevData, residence, successCallBack, errorCallBack))
+        },
+        resolveComplain: (id, data, residence, successCallBack, errCallBack) => {
+          dispatch(resolveComplain(id, data, residence, successCallBack, errCallBack))
         }
       }
     }

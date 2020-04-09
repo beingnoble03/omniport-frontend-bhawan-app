@@ -5,6 +5,7 @@ import { TimeInput } from 'semantic-ui-calendar-react';
 import './index.css'
 import { getEvents } from '../../actions/events'
 import { addEvent } from '../../actions/add-events'
+import * as moment from 'moment';
 
 class EventsCard extends React.Component {
   constructor(props) {
@@ -18,7 +19,7 @@ class EventsCard extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getEvents()
+    this.props.getEvents(this.props.who_am_i.residence)
   }
 
   handleChange = (event, {name, value}) => {
@@ -42,7 +43,7 @@ class EventsCard extends React.Component {
         }
       ]
     }
-    this.props.addEvent(data, this.successCallBack, this.errCallBack)
+    this.props.addEvent(data, this.props.who_am_i.residence, this.successCallBack, this.errCallBack)
   }
 
   successCallBack = res => {
@@ -70,6 +71,8 @@ class EventsCard extends React.Component {
     const {  dayEvents } = this.props
 
     return (
+      <React.Fragment>
+        <div styleName="day-heading">{moment(this.props.activeDay, 'YYYY-MM-DD').format('DD/MM/YYYY')}</div>
         <Card>
             <Card.Content>
                 <Card.Header>
@@ -87,7 +90,7 @@ class EventsCard extends React.Component {
                           {event.description}
                         </div>
                         <div>
-                          {event.timings[0].start}
+                        {moment(event.timings[0].start, 'hh:mm:ss').format('hh:mm A')}
                         </div>
                       </div>
                     </Card.Description>
@@ -135,11 +138,11 @@ class EventsCard extends React.Component {
                   }
             </Card.Content>
           </Card>
+        </React.Fragment>
     )
   }
 }
 function mapStateToProps(state){
-  // console.log(state.events.filter(date = state.activeDay))
   let dayEvents = []
   if(state.events && state.events.length > 0 && state.activeDay)
    dayEvents = state.events.filter(function (event) {
@@ -153,11 +156,11 @@ function mapStateToProps(state){
 }
  const mapDispatchToProps= dispatch => {
   return {
-    getEvents: ()=> {
-      dispatch(getEvents())
+    getEvents: (residence)=> {
+      dispatch(getEvents(residence))
     },
-    addEvent: (data, successCallBack, errCallBack) => {
-      dispatch(addEvent(data, successCallBack, errCallBack))
+    addEvent: (data, residence, successCallBack, errCallBack) => {
+      dispatch(addEvent(data, residence, successCallBack, errCallBack))
     }
   }
  }

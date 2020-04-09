@@ -12,7 +12,7 @@ class Complains extends React.Component {
        complainAgainID: null
       }
     componentDidMount(){
-        this.props.getComplains()
+        this.props.getComplains(this.props.who_am_i.residence)
     }
     toggleButtonMode = () => {
         const inButtonMode = this.state.inButtonMode
@@ -88,8 +88,8 @@ function mapStateToProps(state){
 
 const mapDispatchToProps= dispatch => {
     return {
-      getComplains: ()=> {
-        dispatch(getComplains())
+      getComplains: (residence)=> {
+        dispatch(getComplains(residence))
     },
       addComplaint: () => {
         dispatch(addComplaint())

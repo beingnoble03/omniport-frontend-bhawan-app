@@ -1,10 +1,10 @@
 import axios from 'axios'
 
-export const getRoomBookings = () => {
+export const getRoomBookings = (residence) => {
   return dispatch => {
     axios({
       method: 'get',
-      url: '/api/bhawan_app/rkb/room_booking/',
+      url: `/api/bhawan_app/${residence}/room_booking/`,
     })
       .then(response => {
         let item = response.data

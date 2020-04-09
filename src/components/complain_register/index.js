@@ -24,10 +24,7 @@ class ComplainRegister extends React.Component {
     }
     handleSubmit = e => {
       let data = {
-        "person": 1,
         "complaintType": this.state.category,
-        "room_no": 343,
-        "hostel_code": "rkb",
         "description": this.state.complain
       }
       this.props.addComplaint(data,this.props.who_am_i.residence, this.successCallBack, this.errCallBack)
@@ -93,7 +90,7 @@ class ComplainRegister extends React.Component {
                   />
                    <Button size='medium' styleName="button" onClick={this.handleSubmit} width={3}>Submit</Button>
                 </Form>
-                <Complains />
+                <Complains {...this.props}/>
               </React.Fragment>
         )
     }

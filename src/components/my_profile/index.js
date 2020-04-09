@@ -12,7 +12,7 @@ import blocks from '../../css/app.css'
 class MyProfile extends React.Component {
     state = { activeItem: 'upcoming'  }
   componentDidMount(){
-    this.props.getComplains()
+    this.props.getComplains(this.props.who_am_i.residence)
   }
 handleItemClick = (e, { name }) => this.setState({ activeItem: name })
   render() {
@@ -20,12 +20,12 @@ handleItemClick = (e, { name }) => this.setState({ activeItem: name })
     const { complains } = this.props
     return (
       <Container>
-        <Complains />
+        <Complains {...this.props}/>
         <Divider/>
         <Menu compact icon='labeled'>
           <Menu.Item
             name="upcoming"
-            active={activeItem === 'upcoming'} 
+            active={activeItem === 'upcoming'}
             onClick={this.handleItemClick}
             color='blue'
             styleName="facilities.booking-menu"
@@ -59,8 +59,8 @@ function mapStateToProps(state){
 
  const mapDispatchToProps= dispatch => {
   return {
-    getComplains: ()=> {
-      dispatch(getComplains())
+    getComplains: (residence)=> {
+      dispatch(getComplains(residence))
     }
   }
  }

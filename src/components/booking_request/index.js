@@ -12,15 +12,22 @@ class BookingRequests extends Component {
             message: '',
             success: false,
             err: false,
-            activeId: null
+            activeId: null,
+            detailOpen: false,
+            activeBooking: null
           }
 
   componentDidMount() {
-    this.props.getRoomBookings()
+    this.props.getRoomBookings(this.props.who_am_i.residence)
   }
 
   close = () => this.setState({ open: false })
 
+  detailsClose = () => {
+    this.setState({
+      detailOpen: false,
+    })
+  }
   openModal = (activeId) => {
     this.setState({
       activeId: activeId,
@@ -33,24 +40,11 @@ class BookingRequests extends Component {
     this.setState({ activeItem: name })
   }
 
-  fileChange = async e => {
-    this.setState({
-      [e.target.name]: e.target.files[0],
-    })
-    const imageDataUrl = await readFile(e.target.files[0])
-    this.setState({
-      imageSrc: imageDataUrl,
-      open: true,
-    })
-  }
-
   updateBooking = () => {
     const { activeItem, activeId } = this.state
-    // console.log(id)
     const body = {
       "status": activeItem == "pending" ? "fwd": activeItem == "forwarded" ? "apr" : "con"
     }
-    console.log(body)
     this.props.updateBooking(
       activeId,
       body,
@@ -86,8 +80,15 @@ class BookingRequests extends Component {
       this.setState({pastBookingIcon: 'angle down'})
   }
 
+  setActiveBooking = (booking) => {
+    this.setState({
+      detailOpen: true,
+      activeBooking: booking,
+      activeId: booking.id
+    })
+  }
   render() {
-    const { activeItem, open, pastBookingIcon } = this.state
+    const { activeItem, open, pastBookingIcon, detailOpen } = this.state
     const { bookingRequests } = this.props
     return (
         <div>
@@ -147,7 +148,7 @@ class BookingRequests extends Component {
             <Table.Body>
               { bookingRequests.length>0? (bookingRequests.map((request,index) => {
                 return (
-                      <Table.Row>
+                      <Table.Row onClick={() => this.setActiveBooking(request)}>
                         <Table.Cell>{index + 1}</Table.Cell>
                         <Table.Cell>{request.bookedBy}</Table.Cell>
                         <Table.Cell>{request.bookedByRoomNo}</Table.Cell>
@@ -218,6 +219,39 @@ class BookingRequests extends Component {
         <Button negative fluid onClick={this.close}>No</Button>
       </Modal.Actions>
     </Modal>
+
+    {this.state.activeBooking?(
+      <Modal open={detailOpen} onClose={this.detailsClose} closeIcon>
+      <Header icon='hotel' content='Booking Details' />
+      <Modal.Content>
+        <div>Applicant Name - {this.state.activeBooking.bookedBy}</div>
+        <div>Current Status - {this.state.activeBooking.status}</div>
+        <div>From - {this.state.activeBooking.requestedFrom}</div>
+        <div>To - {this.state.activeBooking.requestedTill}</div>
+        <div>Applicants Room No. - {this.state.activeBooking.bookedByRoomNo}</div>
+        <div>Applicants Phone Number - {this.state.activeBooking.phoneNumber}</div>
+        <div>Visitors</div>
+        <div>
+        { this.state.activeBooking.visitor.length>0? (this.state.activeBooking.visitor.map((visitor) => {
+                return (
+                      <div>{visitor.fullName} - {visitor.relation} </div>
+                      )
+                    })):
+                    null
+                }
+        </div>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button color='red'>
+          <Icon name='remove' /> No
+        </Button>
+        <Button color='green'>
+          <Icon name='checkmark' /> Yes
+        </Button>
+      </Modal.Actions>
+    </Modal>
+    ):null}
+
       </div>
     )
   }
@@ -232,8 +266,8 @@ function mapStateToProps(state){
 
 const mapDispatchToProps= dispatch => {
   return {
-    getRoomBookings: ()=> {
-      dispatch(getRoomBookings())
+    getRoomBookings: (residence) => {
+      dispatch(getRoomBookings(residence))
   },
     updateBooking: (id, data, residence, successCallBack, errCallBack) => {
       dispatch(updateBooking(id, data, residence, successCallBack, errCallBack))

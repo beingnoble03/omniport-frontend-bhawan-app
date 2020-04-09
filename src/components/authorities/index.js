@@ -10,7 +10,7 @@ import { getAllAuthorities } from '../../actions/authorities'
 
 class Authorities extends React.Component {
   componentDidMount() {
-    this.props.getAllAuthorities()
+    this.props.getAllAuthorities(this.props.who_am_i.residence)
   }
   render() {
     const {authorities} = this.props
@@ -55,8 +55,8 @@ function mapStateToProps (state) {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getAllAuthorities: () => {
-      dispatch(getAllAuthorities())
+    getAllAuthorities: (residence) => {
+      dispatch(getAllAuthorities(residence))
     }
   }
 }
