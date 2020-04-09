@@ -1,18 +1,18 @@
-import axios from 'axios'
+import axios from "axios";
 
 export const getFacilities = (residence) => {
-  return dispatch => {
+  return (dispatch) => {
     axios({
-      method: 'get',
+      method: "get",
       url: `/api/bhawan_app/${residence}/facility/`,
     })
-      .then(response => {
-        let item = response.data.results
+      .then((response) => {
+        let item = response.data.results;
         dispatch({
-          type: 'GET_FACILITY',
-          payload: item
-        })
+          type: "GET_FACILITY",
+          payload: item,
+        });
       })
-      .catch(error => {})
-  }
-}
+      .catch((error) => {});
+  };
+};

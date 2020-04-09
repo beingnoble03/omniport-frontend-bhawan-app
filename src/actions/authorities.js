@@ -1,18 +1,18 @@
-import axios from 'axios'
+import axios from "axios";
 
 export const getAllAuthorities = (residence) => {
-  return dispatch => {
+  return (dispatch) => {
     axios({
-      method: 'get',
+      method: "get",
       url: `/api/bhawan_app/${residence}/contact/`,
     })
-      .then(response => {
-        let item = response.data.results
+      .then((response) => {
+        let item = response.data.results;
         dispatch({
-          type: 'GET_ALL_AUTHORITIES',
-          payload: item
-        })
+          type: "GET_ALL_AUTHORITIES",
+          payload: item,
+        });
       })
-      .catch(error => {})
-  }
-}
+      .catch((error) => {});
+  };
+};

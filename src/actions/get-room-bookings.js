@@ -1,18 +1,18 @@
-import axios from 'axios'
+import axios from "axios";
 
 export const getRoomBookings = (residence) => {
-  return dispatch => {
+  return (dispatch) => {
     axios({
-      method: 'get',
+      method: "get",
       url: `/api/bhawan_app/${residence}/room_booking/`,
     })
-      .then(response => {
-        let item = response.data
+      .then((response) => {
+        let item = response.data;
         dispatch({
-          type: 'GET_ALL_ROOM_BOOKINGS',
-          payload: item
-        })
+          type: "GET_ALL_ROOM_BOOKINGS",
+          payload: item,
+        });
       })
-      .catch(error => {})
-  }
-}
+      .catch((error) => {});
+  };
+};
