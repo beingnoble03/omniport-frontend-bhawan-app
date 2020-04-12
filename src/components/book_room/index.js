@@ -1,12 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import {
-  Button,
-  Form,
-  Input,
-  Container,
-  Icon,
-} from "semantic-ui-react";
+import { Button, Form, Input, Container, Icon } from "semantic-ui-react";
 import { DateInput, TimeInput } from "semantic-ui-calendar-react";
 import "./index.css";
 import { bookRoom } from "../../actions/book-room";
@@ -120,15 +114,6 @@ class BookRoom extends React.Component {
   }
 
   handleSubmit = (e) => {
-    const finalVisitor = [];
-    this.state.visitors.forEach((visitor, index) => {
-      finalVisitor.push({
-        fullName: visitor,
-        relation: this.state.relatives[index],
-        photoIdentification: this.state.proof[index],
-      });
-    });
-    console.log(JSON.stringify(finalVisitor));
     let formData = new FormData();
     formData.append(
       "requestedFrom",
@@ -138,24 +123,20 @@ class BookRoom extends React.Component {
       "requestedTill",
       moment(this.state.endDate, "DD-MM-YYYY").format("YYYY-MM-DD")
     );
-    formData.append("visitor", JSON.stringify(finalVisitor));
-    // this.state.visitors.forEach((visitor, index) => {
-    //   formData.append('visitor', JSON.stringify({
-    //     "fullName": visitor,
-    //     "relation": this.state.relatives[index],
-    //     "photoIdentification": this.state.proof[index]
-    //   }))
-    // })
+    this.state.visitors.forEach((visitor, index) => {
+      formData.append(
+        "visitors",
+        JSON.stringify({
+          full_name: visitor,
+          relation: this.state.relatives[index],
+          photo_identification: this.state.proof[index],
+        })
+      );
+    });
     console.log("wec");
     for (var value of formData.values()) {
       console.log(value);
     }
-    // let data = {
-    //   "requestedFrom": moment(this.state.fromDate, "DD-MM-YYYY").format("YYYY-MM-DD"),
-    //   "requestedTill": moment(this.state.endDate, "DD-MM-YYYY").format("YYYY-MM-DD"),
-    //   "bookedByRoomNo": this.props.who_am_i.roomNumber,
-    //   "visitor": finalVisitor
-    // }
     this.props.bookRoom(
       formData,
       this.props.who_am_i.residence,
@@ -180,12 +161,16 @@ class BookRoom extends React.Component {
       message: err,
     });
   };
-  handleSelectPicture = (e, i) => {
+  handleSelectPicture = async (e, i) => {
+    const z = e.target.files;
     if (e.target.files && e.target.files.length == 1) {
       const newProofs = this.state.proof.slice();
       const newProofUrl = this.state.proofUrl.splice();
-      newProofs[i] = e.target.files[0];
-      newProofUrl[i] = URL.createObjectURL(e.target.files[0]);
+      const proof = await readFile(z[0]);
+      const proofFile = await dataURLtoFile(proof, "image.png");
+
+      newProofs[i] = proofFile;
+      newProofUrl[i] = URL.createObjectURL(proofFile);
       this.setState({
         proof: newProofs,
         proofUrl: newProofUrl,
@@ -250,6 +235,25 @@ class BookRoom extends React.Component {
       </Container>
     );
   }
+}
+function readFile(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => resolve(reader.result), false);
+    reader.readAsDataURL(file);
+  });
+}
+
+function dataURLtoFile(dataurl, filename) {
+  let arr = dataurl.split(","),
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]),
+    n = bstr.length,
+    u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, { type: mime });
 }
 
 const mapDispatchToProps = (dispatch) => {

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-// import { Link } from 'react-router-dom'
-import { Table, Menu, Button, Icon } from "semantic-ui-react";
+import { Table } from "semantic-ui-react";
 import "./index.css";
+
 export default class PastBookings extends Component {
   render() {
     return (

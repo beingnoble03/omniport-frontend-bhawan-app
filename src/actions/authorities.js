@@ -4,7 +4,7 @@ export const getAllAuthorities = (residence) => {
   return (dispatch) => {
     axios({
       method: "get",
-      url: `/api/bhawan_app/${residence}/contact/`,
+      url: `/api/bhawan_app/${residence}/admin/`,
     })
       .then((response) => {
         let item = response.data.results;

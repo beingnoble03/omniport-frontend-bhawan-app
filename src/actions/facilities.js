@@ -9,10 +9,27 @@ export const getFacilities = (residence) => {
       .then((response) => {
         let item = response.data.results;
         dispatch({
-          type: "GET_FACILITY",
+          type: "GET_FACILITIES",
           payload: item,
         });
       })
       .catch((error) => {});
+  };
+};
+
+export const getFacility = (residence, id, successCallBack, errCallBack) => {
+  return (dispatch) => {
+    axios
+      .get(`/api/bhawan_app/${residence}/facility/${id}`)
+      .then((res) => {
+        successCallBack(res);
+        dispatch({
+          type: "GET_FACILITY",
+          payload: res.data,
+        });
+      })
+      .catch((err) => {
+        errCallBack(err);
+      });
   };
 };

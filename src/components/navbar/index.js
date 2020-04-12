@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Header, Menu, Button, Icon } from "semantic-ui-react";
 import navCss from "./index.css";
 import blocks from "../../css/app.css";
-import { whoami } from "../../actions/who_am_i";
+
 export default class Nav extends Component {
   constructor(props) {
     super(props);

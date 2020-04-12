@@ -1,6 +1,6 @@
 const initialState = {}
 
-const facility = (state = initialState, action) => {
+const facilities = (state = initialState, action) => {
   switch (action.type) {
       case 'GET_FACILITY':
           return action.payload
@@ -9,4 +9,4 @@ const facility = (state = initialState, action) => {
   }
 }
 
-export default facility
+export default facilities

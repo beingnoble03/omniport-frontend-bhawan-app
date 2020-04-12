@@ -15,9 +15,9 @@ const EventsCard = lazy(() => import("./events-card/index"));
 const Events = lazy(() => import("./events/index"));
 const AdminComplains = lazy(() => import("./admin-complaints/index"));
 const BookingRequests = lazy(() => import("./booking_request/index"));
-import AdminFacility from "./admin_facility";
-import MyProfile from "./my_profile/index";
-import Facility from "./facility/index";
+const Facility = lazy(() => import("./facility/index"))
+const MyProfile = lazy(() => import('./my_profile/index'))
+const AdminAuthorities = lazy(() => import('./admin_authorities/index'))
 import { whoami } from "../actions/who_am_i";
 import PastBookings from "./past_bookings_admin/index";
 import main from "formula_one/src/css/app.css";
@@ -137,9 +137,9 @@ class App extends React.Component {
                         )}
                       />
                       <Route
-                        path={`${match.path}admin/facility`}
+                        path={`${match.path}admin/authority`}
                         render={(props) => (
-                          <AdminFacility who_am_i={who_am_i} />
+                          <AdminAuthorities who_am_i={who_am_i} />
                         )}
                       />
                       <Route

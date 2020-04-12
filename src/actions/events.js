@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export const getEvents = (residence) => {
-  console.log("hjbjh");
   return (dispatch) => {
     axios({
       method: "get",
