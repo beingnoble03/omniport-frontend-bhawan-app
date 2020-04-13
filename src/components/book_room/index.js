@@ -129,9 +129,9 @@ class BookRoom extends React.Component {
         JSON.stringify({
           full_name: visitor,
           relation: this.state.relatives[index],
-          photo_identification: this.state.proof[index],
         })
       );
+      formData.append(`visitors${index}`, this.state.proof[index], 'hey.png')
     });
     console.log("wec");
     for (var value of formData.values()) {
