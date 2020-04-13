@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { TimeInput } from "semantic-ui-calendar-react";
-import { getComplains } from "../../actions/complains";
+import {
+  getPendingComplains,
+  getResolvedComplains,
+} from "../../actions/complains";
 import { getTimeSlots, changeTimeSlot } from "../../actions/time-slots";
 import { resolveComplain } from "../../actions/resolveComplain";
+import { statusComplainsUrl } from "../../urls";
 import {
   Menu,
   Header,
@@ -53,7 +57,12 @@ class AdminComplains extends Component {
   };
 
   componentDidMount() {
-    this.props.getComplains(this.props.who_am_i.residence);
+    this.props.getPendingComplains(
+      statusComplainsUrl(this.props.who_am_i.residence, ["pending"])
+    );
+    this.props.getResolvedComplains(
+      statusComplainsUrl(this.props.who_am_i.residence, ["resolved", "unresolved"])
+    );
     this.props.getTimeSlots(this.props.who_am_i.residence);
   }
   show = (id) => {
@@ -111,7 +120,7 @@ class AdminComplains extends Component {
   }
   resolveComplaint = () => {
     const body = {
-      status: "apr",
+      status: "res",
     };
     this.props.resolveComplain(
       this.state.activeId,
@@ -163,17 +172,34 @@ class AdminComplains extends Component {
     this.setState({ activeItem: name });
   };
   handlePaginationChange = (e, { activePage }) => {
-     this.setState({ activePage });
-     this.props.getComplains(this.props.who_am_i.residence);
-  }
-  handlePastPaginationChange = (e, { activePage }) => {
     this.setState({ activePage });
-    this.props.getComplains(this.props.who_am_i.residence);
- }
+    this.props.getPendingComplains(
+      `${statusComplainsUrl(
+        this.props.who_am_i.residence,
+        ["PENDING"]
+      )}&page=${activePage}`
+    );
+  };
+  handlePastPaginationChange = (e, { activePage }) => {
+    this.setState({ activeAprPage: activePage });
+    this.props.getResolvedComplains(
+      `${statusComplainsUrl(
+        this.props.who_am_i.residence,
+        ["RESOLVED", "UNRESOLVED" ]
+      )}&page=${activePage}`
+    );
+  };
 
   render() {
-    const { open, pastComplainIcon, activeItem, activePage, activeRejPage, activeAprPage } = this.state;
-    const { complains } = this.props;
+    const {
+      open,
+      pastComplainIcon,
+      activeItem,
+      activePage,
+      activeRejPage,
+      activeAprPage,
+    } = this.state;
+    const { pendingComplains, resolvedComplains } = this.props;
     return (
       <React.Fragment>
         <Container>
@@ -194,11 +220,13 @@ class AdminComplains extends Component {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {complains.results && complains.results.length > 0
-                ? complains.results.map((complain, index) => {
+              {pendingComplains.results && pendingComplains.results.length > 0
+                ? pendingComplains.results.map((complain, index) => {
                     return (
                       <Table.Row>
-                        <Table.Cell>{index + 1}</Table.Cell>
+                        <Table.Cell>
+                          {5 * (activePage - 1) + index + 1}
+                        </Table.Cell>
                         <Table.Cell>{complain.description}</Table.Cell>
                         <Table.Cell>{complain.complainant}</Table.Cell>
                         <Table.Cell>{complain.complaintType}</Table.Cell>
@@ -214,11 +242,11 @@ class AdminComplains extends Component {
                 : null}
             </Table.Body>
           </Table>
-          {complains.count > 1 ? (
+          {pendingComplains.count > 5 ? (
             <Pagination
               activePage={activePage}
               onPageChange={this.handlePaginationChange}
-              totalPages={complains.count}
+              totalPages={Math.ceil(pendingComplains.count / 5)}
             />
           ) : null}
 
@@ -276,11 +304,14 @@ class AdminComplains extends Component {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {complains.results && complains.results.length > 0
-                    ? complains.results.map((complain, index) => {
+                  {resolvedComplains.results &&
+                  resolvedComplains.results.length > 0
+                    ? resolvedComplains.results.map((complain, index) => {
                         return (
                           <Table.Row>
-                            <Table.Cell>{index + 1}</Table.Cell>
+                            <Table.Cell>
+                              {5 * (activeAprPage - 1) + index + 1}
+                            </Table.Cell>
                             <Table.Cell>{complain.description}</Table.Cell>
                             <Table.Cell>{complain.complainant}</Table.Cell>
                             <Table.Cell>{complain.complaintType}</Table.Cell>
@@ -293,18 +324,18 @@ class AdminComplains extends Component {
                     : null}
                 </Table.Body>
               </Table>
-              {complains.count > 1 ? (
-            <Pagination
-              activePage={activeAprPage}
-              onPageChange={this.handlePastPaginationChange}
-              totalPages={complains.count}
-            />
-          ) : null}
+              {resolvedComplains.count > 5 ? (
+                <Pagination
+                  activePage={activeAprPage}
+                  onPageChange={this.handlePastPaginationChange}
+                  totalPages={Math.ceil(resolvedComplains.count / 5)}
+                />
+              ) : null}
             </React.Fragment>
           )}
         </Container>
         <Modal size="mini" open={open} onClose={this.close}>
-          <Modal.Header styleName="center">Approve Request?</Modal.Header>
+          <Modal.Header styleName="center">Resolve Complain?</Modal.Header>
           <Modal.Actions styleName="modalActions">
             <Button positive fluid onClick={this.resolveComplaint}>
               Yes
@@ -321,15 +352,19 @@ class AdminComplains extends Component {
 
 function mapStateToProps(state) {
   return {
-    complains: state.complains,
+    pendingComplains: state.pendingComplains,
+    resolvedComplains: state.resolvedComplains,
     timeSlots: state.timeSlots,
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getComplains: (residence) => {
-      dispatch(getComplains(residence));
+    getPendingComplains: (url) => {
+      dispatch(getPendingComplains(url));
+    },
+    getResolvedComplains: (url) => {
+      dispatch(getResolvedComplains(url));
     },
     getTimeSlots: (residence) => {
       dispatch(getTimeSlots(residence));

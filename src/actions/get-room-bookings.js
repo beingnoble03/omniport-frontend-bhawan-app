@@ -1,15 +1,49 @@
 import axios from "axios";
 
-export const getRoomBookings = (residence) => {
+export const getRoomBookings = (url) => {
   return (dispatch) => {
     axios({
       method: "get",
-      url: `/api/bhawan_app/${residence}/room_booking/`,
+      url: url,
     })
       .then((response) => {
         let item = response.data;
         dispatch({
           type: "GET_ALL_ROOM_BOOKINGS",
+          payload: item,
+        });
+      })
+      .catch((error) => {});
+  };
+};
+
+export const getPresentRoomBookings = (url) => {
+  return (dispatch) => {
+    axios({
+      method: "get",
+      url: url,
+    })
+      .then((response) => {
+        let item = response.data;
+        dispatch({
+          type: "GET_PRESENT_ROOM_BOOKINGS",
+          payload: item,
+        });
+      })
+      .catch((error) => {});
+  };
+};
+
+export const getPastRoomBookings = (url) => {
+  return (dispatch) => {
+    axios({
+      method: "get",
+      url: url,
+    })
+      .then((response) => {
+        let item = response.data;
+        dispatch({
+          type: "GET_PAST_ROOM_BOOKINGS",
           payload: item,
         });
       })

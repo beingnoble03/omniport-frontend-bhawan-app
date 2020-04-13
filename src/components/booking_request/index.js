@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getRoomBookings } from "../../actions/get-room-bookings";
+import {
+  getRoomBookings,
+  getPresentRoomBookings,
+  getPastRoomBookings,
+} from "../../actions/get-room-bookings";
 import { updateBooking } from "../../actions/book-room";
+import { bookingsUrl, statusBookingsUrl } from "../../urls";
 import {
   Menu,
   Header,
@@ -10,8 +15,16 @@ import {
   Modal,
   Container,
   Icon,
+  Pagination,
 } from "semantic-ui-react";
 import "./index.css";
+const bookingStatus = {
+  pen: "PENDING",
+  apr: "CONFIRMED",
+  fwd: "FORWARDED",
+  cnf: "CONFIRMED",
+  rej: "REJECTED",
+};
 
 class BookingRequests extends Component {
   state = {
@@ -25,10 +38,17 @@ class BookingRequests extends Component {
     detailOpen: false,
     activeBooking: null,
     activePastItem: "confirmed",
+    activePage: 1,
   };
 
   componentDidMount() {
-    this.props.getRoomBookings(this.props.who_am_i.residence);
+    this.props.getRoomBookings(bookingsUrl(this.props.who_am_i.residence));
+    this.props.getPresentRoomBookings(
+      statusBookingsUrl(this.props.who_am_i.residence, bookingStatus.pen)
+    );
+    this.props.getPastRoomBookings(
+      statusBookingsUrl(this.props.who_am_i.residence, bookingStatus.cnf)
+    );
   }
 
   close = () => this.setState({ open: false });
@@ -47,9 +67,15 @@ class BookingRequests extends Component {
 
   handleItemClick = (e, { name }) => {
     this.setState({ activeItem: name });
+    this.props.getPresentRoomBookings(
+      statusBookingsUrl(this.props.who_am_i.residence, name)
+    );
   };
   handlePastItemClick = (e, { name }) => {
     this.setState({ activePastItem: name });
+    this.props.getPastRoomBookings(
+      statusBookingsUrl(this.props.who_am_i.residence, name)
+    );
   };
   updateBooking = () => {
     const { activeItem, activeId } = this.state;
@@ -59,12 +85,11 @@ class BookingRequests extends Component {
           ? "fwd"
           : activeItem == "forwarded"
           ? "apr"
-          : "con",
+          : "cnf",
     };
     this.props.updateBooking(
-      activeId,
+      bookingsUrl(`${this.props.who_am_i.residence}${activeId}`),
       body,
-      this.props.who_am_i.residence,
       this.successCallBack,
       this.errCallBack
     );
@@ -103,6 +128,14 @@ class BookingRequests extends Component {
       activeId: booking.id,
     });
   };
+  handlePaginationChange = (e, { activePage }) => {
+    this.setState({ activePage });
+    this.props.getPendingComplains(
+      `${statusComplainsUrl(this.props.who_am_i.residence, [
+        "PENDING",
+      ])}&page=${activePage}`
+    );
+  };
   render() {
     const {
       activeItem,
@@ -111,7 +144,11 @@ class BookingRequests extends Component {
       pastBookingIcon,
       detailOpen,
     } = this.state;
-    const { bookingRequests } = this.props;
+    const {
+      bookingRequests,
+      presentBookingRequests,
+      pastBookingRequests,
+    } = this.props;
     return (
       <div>
         <Container>
@@ -176,8 +213,9 @@ class BookingRequests extends Component {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {bookingRequests.length > 0
-                ? bookingRequests.map((request, index) => {
+              {presentBookingRequests.results &&
+              presentBookingRequests.results.length > 0
+                ? presentBookingRequests.results.map((request, index) => {
                     return (
                       <Table.Row onClick={() => this.setActiveBooking(request)}>
                         <Table.Cell>{index + 1}</Table.Cell>
@@ -195,7 +233,7 @@ class BookingRequests extends Component {
                               ? "Approve"
                               : activeItem == "approved"
                               ? "Confirm"
-                              : "Still"}
+                              : "Confirmed"}
                           </span>
                         </Table.Cell>
                       </Table.Row>
@@ -204,6 +242,13 @@ class BookingRequests extends Component {
                 : null}
             </Table.Body>
           </Table>
+          {presentBookingRequests.count > 5 ? (
+            <Pagination
+              activePage={activePage}
+              onPageChange={this.handlePaginationChange}
+              totalPages={Math.ceil(presentBookingRequests.count / 5)}
+            />
+          ) : null}
 
           <Header as="h4">
             Past Bookings
@@ -236,8 +281,6 @@ class BookingRequests extends Component {
                   <Table.Row>
                     <Table.HeaderCell>ID</Table.HeaderCell>
                     <Table.HeaderCell>Applicant Name</Table.HeaderCell>
-                    <Table.HeaderCell>Occupancy</Table.HeaderCell>
-                    <Table.HeaderCell>No ofRooms</Table.HeaderCell>
                     <Table.HeaderCell>Applicant Room</Table.HeaderCell>
                     <Table.HeaderCell>No of Visitors</Table.HeaderCell>
                     <Table.HeaderCell>From </Table.HeaderCell>
@@ -246,22 +289,34 @@ class BookingRequests extends Component {
                   </Table.Row>
                 </Table.Header>
 
-                <Table.Body>
-                  <Table.Row>
-                    <Table.Cell>Cell</Table.Cell>
-                    <Table.Cell>Cell</Table.Cell>
-                    <Table.Cell>Cell</Table.Cell>
-                    <Table.Cell>Cell</Table.Cell>
-                    <Table.Cell>Cell</Table.Cell>
-                    <Table.Cell>Cell</Table.Cell>
-                    <Table.Cell>Cell</Table.Cell>
-                    <Table.Cell>Cell</Table.Cell>
-                    <Table.Cell>Cell</Table.Cell>
-                  </Table.Row>
-                </Table.Body>
+                {pastBookingRequests.results &&
+                pastBookingRequests.results.length > 0
+                  ? pastBookingRequests.results.map((request, index) => {
+                      return (
+                        <Table.Row
+                          onClick={() => this.setActiveBooking(request)}
+                        >
+                          <Table.Cell>{index + 1}</Table.Cell>
+                          <Table.Cell>{request.bookedBy}</Table.Cell>
+                          <Table.Cell>{request.bookedByRoomNo}</Table.Cell>
+                          <Table.Cell>{request.visitor.length}</Table.Cell>
+                          <Table.Cell>{request.requestedFrom}</Table.Cell>
+                          <Table.Cell>{request.requestedTill}</Table.Cell>
+                          <Table.Cell>{request.phoneNumber}</Table.Cell>
+                        </Table.Row>
+                      );
+                    })
+                  : null}
               </Table>
             </Table.Cell>
           )}
+          {pastBookingRequests.count > 5 ? (
+            <Pagination
+              activePage={activeAprPage}
+              onPageChange={this.handlePastPaginationChange}
+              totalPages={Math.ceil(pastBookingRequests.count / 5)}
+            />
+          ) : null}
         </Container>
         <Modal size="mini" open={open} onClose={this.close}>
           <Modal.Header styleName="center">Approve Request?</Modal.Header>
@@ -320,6 +375,8 @@ class BookingRequests extends Component {
 function mapStateToProps(state) {
   return {
     bookingRequests: state.bookingRequests,
+    presentBookingRequests: state.presentBookingRequests,
+    pastBookingRequests: state.pastBookingRequests,
     // bookingOptions: state.bookingOptions
   };
 }
@@ -328,6 +385,12 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getRoomBookings: (residence) => {
       dispatch(getRoomBookings(residence));
+    },
+    getPresentRoomBookings: (url) => {
+      dispatch(getPresentRoomBookings(url));
+    },
+    getPastRoomBookings: (url) => {
+      dispatch(getPastRoomBookings(url));
     },
     updateBooking: (id, data, residence, successCallBack, errCallBack) => {
       dispatch(

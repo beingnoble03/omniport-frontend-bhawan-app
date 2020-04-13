@@ -8,6 +8,10 @@ import events from './events'
 import bookingRequests from './roomBookings'
 import timeSlots from './time-slots'
 import facility from './facility'
+import pendingComplains from './pendingComplains'
+import resolvedComplains from './resolvedComplains'
+import pastBookingRequests from './past-bookings'
+import presentBookingRequests from './present-bookings'
 
 const rootReducers = combineReducers({
   activeDay: activeDay,
@@ -18,7 +22,11 @@ const rootReducers = combineReducers({
   events: events,
   bookingRequests: bookingRequests,
   timeSlots: timeSlots,
-  facility: facility
+  facility: facility,
+  pendingComplains: pendingComplains,
+  resolvedComplains: resolvedComplains,
+  pastBookingRequests: pastBookingRequests,
+  presentBookingRequests: presentBookingRequests,
 })
 
 export default rootReducers

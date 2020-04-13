@@ -41,22 +41,18 @@ export const bookRoom = (data, residence, successCallBack, errCallBack) => {
   };
 };
 export const updateBooking = (
-  id,
+  url,
   data,
-  residence,
   successCallBack,
   errCallBack
 ) => {
-  console.log("vfhg");
-  console.log(data);
-  console.log(id + " " + residence);
   const headers = {
     "Content-Type": "application/json",
     "X-CSRFToken": getCookie("csrftoken"),
   };
   return (dispatch) => {
     axios
-      .patch(`/api/bhawan_app/${residence}/room_booking/${id}/`, data, {
+      .patch(url, data, {
         headers: headers,
       })
       .then((res) => {
