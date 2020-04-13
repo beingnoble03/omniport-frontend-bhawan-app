@@ -45,8 +45,8 @@ class Complains extends React.Component {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {complains.length > 0
-              ? complains.map((complain, index) => {
+            {(complains.results && complains.results.length > 0)
+              ? complains.results.map((complain, index) => {
                   return (
                     <Table.Row>
                       <Table.Cell>{index + 1}</Table.Cell>

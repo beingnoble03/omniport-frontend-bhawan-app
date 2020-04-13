@@ -110,21 +110,24 @@ class EventsCard extends React.Component {
                   );
                 })
               : "No event today"}
-            <Header as="h5" onClick={this.toggleAddEvent}>
-              {!this.state.addEvent ? <span>+</span> : null}
-              Add event
-            </Header>
-            {this.state.addEvent ? (
-              <Form>
-                <Form.Field
-                  name="event"
-                  placeholder="Event"
-                  control={Input}
-                  onChange={this.handleChange}
-                  label="First name"
-                  placeholder="First name"
-                  required
-                />
+              {this.props.who_am_i.residence?
+              (
+                <React.Fragment>
+                <Header as="h5" onClick={this.toggleAddEvent}>
+                  {!this.state.addEvent ? <span>+</span> : null}
+                  Add event
+                </Header>
+                {this.state.addEvent ? (
+                <Form>
+                  <Form.Field
+                    name="event"
+                    placeholder="Event"
+                    control={Input}
+                    onChange={this.handleChange}
+                    label="First name"
+                    placeholder="First name"
+                    required
+                  />
                 <Form.Field
                   name="venue"
                   placeholder="Venue"
@@ -147,6 +150,8 @@ class EventsCard extends React.Component {
                 </Button>
               </Form>
             ) : null}
+            </React.Fragment>
+              ):null}
           </Card.Content>
         </Card>
         </Link>

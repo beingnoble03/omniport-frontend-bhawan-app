@@ -16,8 +16,8 @@ class BookRoom extends React.Component {
       endTime: "",
       visitors: [""],
       relatives: [""],
-      proof: [],
-      proofUrl: [],
+      proof: [""],
+      proofUrl: [""],
     };
   }
   handleChange = (event, { name, value }) => {
@@ -29,6 +29,8 @@ class BookRoom extends React.Component {
     this.setState((prevState) => ({
       visitors: [...prevState.visitors, ""],
       relatives: [...prevState.relatives, ""],
+      proof: [...prevState.proof, ""],
+      proofUrl: [...prevState.proofUrl, ""],
     }));
   };
 
@@ -126,11 +128,10 @@ class BookRoom extends React.Component {
     this.state.visitors.forEach((visitor, index) => {
       formData.append(
         "visitors",
-        JSON.stringify({
+        {
           full_name: visitor,
           relation: this.state.relatives[index],
         })
-      );
       formData.append(`visitors${index}`, this.state.proof[index], 'hey.png')
     });
     console.log("wec");
@@ -164,8 +165,8 @@ class BookRoom extends React.Component {
   handleSelectPicture = async (e, i) => {
     const z = e.target.files;
     if (e.target.files && e.target.files.length == 1) {
-      const newProofs = this.state.proof.slice();
-      const newProofUrl = this.state.proofUrl.splice();
+      const newProofs = this.state.proof;
+      const newProofUrl = this.state.proofUrl;
       const proof = await readFile(z[0]);
       const proofFile = await dataURLtoFile(proof, "image.png");
 

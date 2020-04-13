@@ -13,6 +13,7 @@ import {
   Container,
   Icon,
   Dropdown,
+  Pagination,
 } from "semantic-ui-react";
 import "./index.css";
 const days = [
@@ -46,6 +47,9 @@ class AdminComplains extends Component {
     type: "",
     days: "",
     activeId: null,
+    activeItem: "apr",
+    activePage: 1,
+    activeAprPage: 1,
   };
 
   componentDidMount() {
@@ -110,7 +114,7 @@ class AdminComplains extends Component {
       status: "apr",
     };
     this.props.resolveComplain(
-      this.state.id,
+      this.state.activeId,
       body,
       this.props.who_am_i.residence,
       this.successCallBack,
@@ -155,8 +159,20 @@ class AdminComplains extends Component {
     );
   };
 
+  handleItemClick = (e, { name }) => {
+    this.setState({ activeItem: name });
+  };
+  handlePaginationChange = (e, { activePage }) => {
+     this.setState({ activePage });
+     this.props.getComplains(this.props.who_am_i.residence);
+  }
+  handlePastPaginationChange = (e, { activePage }) => {
+    this.setState({ activePage });
+    this.props.getComplains(this.props.who_am_i.residence);
+ }
+
   render() {
-    const { open, pastComplainIcon } = this.state;
+    const { open, pastComplainIcon, activeItem, activePage, activeRejPage, activeAprPage } = this.state;
     const { complains } = this.props;
     return (
       <React.Fragment>
@@ -178,8 +194,8 @@ class AdminComplains extends Component {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {complains.length > 0
-                ? complains.map((complain, index) => {
+              {complains.results && complains.results.length > 0
+                ? complains.results.map((complain, index) => {
                     return (
                       <Table.Row>
                         <Table.Cell>{index + 1}</Table.Cell>
@@ -189,7 +205,6 @@ class AdminComplains extends Component {
                         <Table.Cell>{complain.phoneNumber}</Table.Cell>
                         <Table.Cell>{complain.roomNo}</Table.Cell>
                         <Table.Cell>Cell</Table.Cell>
-                        {/* <Table.Cell onClick={() => this.resolveComplaint(complain.id)}>Resolve</Table.Cell> */}
                         <Table.Cell onClick={() => this.show(complain.id)}>
                           Resolve
                         </Table.Cell>
@@ -199,6 +214,14 @@ class AdminComplains extends Component {
                 : null}
             </Table.Body>
           </Table>
+          {complains.count > 1 ? (
+            <Pagination
+              activePage={activePage}
+              onPageChange={this.handlePaginationChange}
+              totalPages={complains.count}
+            />
+          ) : null}
+
           <Header as="h4">
             Select slot for
             <Dropdown
@@ -233,58 +256,60 @@ class AdminComplains extends Component {
             <Button onClick={this.changeTiming}>Change</Button>
           </Header>
           <Header as="h4">
-            Past Bookings
+            Past Complains
             <Icon name={pastComplainIcon} onClick={this.togglePastIcon} />
           </Header>
           {pastComplainIcon === "angle down" && (
-            <Table celled>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>ID</Table.HeaderCell>
-                  <Table.HeaderCell>Complaint</Table.HeaderCell>
-                  <Table.HeaderCell>Applicant Name</Table.HeaderCell>
-                  <Table.HeaderCell>Complaint Type</Table.HeaderCell>
-                  <Table.HeaderCell>Contact Number</Table.HeaderCell>
-                  <Table.HeaderCell>Applicant Room</Table.HeaderCell>
-                  <Table.HeaderCell>
-                    Unsuccesful attempts to solve
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>Mark as resolved</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {complains.length > 0
-                  ? complains.map((complain, index) => {
-                      return (
-                        <Table.Row>
-                          <Table.Cell>{index + 1}</Table.Cell>
-                          <Table.Cell>{complain.description}</Table.Cell>
-                          <Table.Cell>{complain.complainant}</Table.Cell>
-                          <Table.Cell>{complain.complaintType}</Table.Cell>
-                          <Table.Cell>{complain.phoneNumber}</Table.Cell>
-                          <Table.Cell>{complain.roomNo}</Table.Cell>
-                          <Table.Cell>Cell</Table.Cell>
-                          <Table.Cell
-                            onClick={() => this.resolveComplaint(complain.id)}
-                          >
-                            Resolve
-                          </Table.Cell>
-                        </Table.Row>
-                      );
-                    })
-                  : null}
-              </Table.Body>
-            </Table>
+            <React.Fragment>
+              <Table celled>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>ID</Table.HeaderCell>
+                    <Table.HeaderCell>Complaint</Table.HeaderCell>
+                    <Table.HeaderCell>Applicant Name</Table.HeaderCell>
+                    <Table.HeaderCell>Complaint Type</Table.HeaderCell>
+                    <Table.HeaderCell>Contact Number</Table.HeaderCell>
+                    <Table.HeaderCell>Applicant Room</Table.HeaderCell>
+                    <Table.HeaderCell>
+                      Unsuccesful attempts to solve
+                    </Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {complains.results && complains.results.length > 0
+                    ? complains.results.map((complain, index) => {
+                        return (
+                          <Table.Row>
+                            <Table.Cell>{index + 1}</Table.Cell>
+                            <Table.Cell>{complain.description}</Table.Cell>
+                            <Table.Cell>{complain.complainant}</Table.Cell>
+                            <Table.Cell>{complain.complaintType}</Table.Cell>
+                            <Table.Cell>{complain.phoneNumber}</Table.Cell>
+                            <Table.Cell>{complain.roomNo}</Table.Cell>
+                            <Table.Cell>Cell</Table.Cell>
+                          </Table.Row>
+                        );
+                      })
+                    : null}
+                </Table.Body>
+              </Table>
+              {complains.count > 1 ? (
+            <Pagination
+              activePage={activeAprPage}
+              onPageChange={this.handlePastPaginationChange}
+              totalPages={complains.count}
+            />
+          ) : null}
+            </React.Fragment>
           )}
         </Container>
-        {/* <Button onClick={this.show('mini')}>Mini</Button> */}
         <Modal size="mini" open={open} onClose={this.close}>
           <Modal.Header styleName="center">Approve Request?</Modal.Header>
           <Modal.Actions styleName="modalActions">
             <Button positive fluid onClick={this.resolveComplaint}>
               Yes
             </Button>
-            <Button negative fluid>
+            <Button negative fluid onClick={this.close}>
               No
             </Button>
           </Modal.Actions>

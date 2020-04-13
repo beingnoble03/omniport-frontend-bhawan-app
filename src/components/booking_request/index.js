@@ -24,6 +24,7 @@ class BookingRequests extends Component {
     activeId: null,
     detailOpen: false,
     activeBooking: null,
+    activePastItem: "confirmed",
   };
 
   componentDidMount() {
@@ -47,7 +48,9 @@ class BookingRequests extends Component {
   handleItemClick = (e, { name }) => {
     this.setState({ activeItem: name });
   };
-
+  handlePastItemClick = (e, { name }) => {
+    this.setState({ activePastItem: name });
+  };
   updateBooking = () => {
     const { activeItem, activeId } = this.state;
     const body = {
@@ -101,7 +104,13 @@ class BookingRequests extends Component {
     });
   };
   render() {
-    const { activeItem, open, pastBookingIcon, detailOpen } = this.state;
+    const {
+      activeItem,
+      activePastItem,
+      open,
+      pastBookingIcon,
+      detailOpen,
+    } = this.state;
     const { bookingRequests } = this.props;
     return (
       <div>
@@ -201,35 +210,57 @@ class BookingRequests extends Component {
             <Icon name={pastBookingIcon} onClick={this.togglePastIcon} />
           </Header>
           {pastBookingIcon === "angle down" && (
-            <Table celled>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>ID</Table.HeaderCell>
-                  <Table.HeaderCell>Applicant Name</Table.HeaderCell>
-                  <Table.HeaderCell>Occupancy</Table.HeaderCell>
-                  <Table.HeaderCell>No ofRooms</Table.HeaderCell>
-                  <Table.HeaderCell>Applicant Room</Table.HeaderCell>
-                  <Table.HeaderCell>No of Visitors</Table.HeaderCell>
-                  <Table.HeaderCell>From </Table.HeaderCell>
-                  <Table.HeaderCell>To</Table.HeaderCell>
-                  <Table.HeaderCell>Contact Number</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
+            <Table.Cell>
+              <Menu compact icon="labeled">
+                <Menu.Item
+                  name="confirmed"
+                  active={activePastItem === "confirmed"}
+                  onClick={this.handlePastItemClick}
+                  color="blue"
+                  styleName="booking-menu"
+                >
+                  Confirmed
+                </Menu.Item>
+                <Menu.Item
+                  name="rejected"
+                  active={activePastItem === "rejected"}
+                  onClick={this.handlePastItemClick}
+                  color="blue"
+                  styleName="booking-menu"
+                >
+                  Rejected
+                </Menu.Item>
+              </Menu>
+              <Table celled>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>ID</Table.HeaderCell>
+                    <Table.HeaderCell>Applicant Name</Table.HeaderCell>
+                    <Table.HeaderCell>Occupancy</Table.HeaderCell>
+                    <Table.HeaderCell>No ofRooms</Table.HeaderCell>
+                    <Table.HeaderCell>Applicant Room</Table.HeaderCell>
+                    <Table.HeaderCell>No of Visitors</Table.HeaderCell>
+                    <Table.HeaderCell>From </Table.HeaderCell>
+                    <Table.HeaderCell>To</Table.HeaderCell>
+                    <Table.HeaderCell>Contact Number</Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
 
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell>Cell</Table.Cell>
-                  <Table.Cell>Cell</Table.Cell>
-                  <Table.Cell>Cell</Table.Cell>
-                  <Table.Cell>Cell</Table.Cell>
-                  <Table.Cell>Cell</Table.Cell>
-                  <Table.Cell>Cell</Table.Cell>
-                  <Table.Cell>Cell</Table.Cell>
-                  <Table.Cell>Cell</Table.Cell>
-                  <Table.Cell>Cell</Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table>
+                <Table.Body>
+                  <Table.Row>
+                    <Table.Cell>Cell</Table.Cell>
+                    <Table.Cell>Cell</Table.Cell>
+                    <Table.Cell>Cell</Table.Cell>
+                    <Table.Cell>Cell</Table.Cell>
+                    <Table.Cell>Cell</Table.Cell>
+                    <Table.Cell>Cell</Table.Cell>
+                    <Table.Cell>Cell</Table.Cell>
+                    <Table.Cell>Cell</Table.Cell>
+                    <Table.Cell>Cell</Table.Cell>
+                  </Table.Row>
+                </Table.Body>
+              </Table>
+            </Table.Cell>
           )}
         </Container>
         <Modal size="mini" open={open} onClose={this.close}>

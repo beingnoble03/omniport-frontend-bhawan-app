@@ -7,7 +7,7 @@ export const getComplains = (residence) => {
       url: `/api/bhawan_app/${residence}/complaint/`,
     })
       .then((response) => {
-        let item = response.data.results;
+        let item = response.data;
         dispatch({
           type: "GET_ALL_COMPLAINS",
           payload: item,
