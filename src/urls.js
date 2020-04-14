@@ -25,6 +25,10 @@ export const statusComplainsUrl = (residence, statuses) => {
     return `${baseApiUrl()}${residence}/complaint/${allStatus}&`
 }
 
+export const increaseUnsuccesfulComplainsUrl = (residence, id) => {
+  return `${baseApiUrl()}${residence}/complaint/${id}/unsuccessful/`
+}
+
 export const bookingsUrl = (residence) => {
   return `${baseApiUrl()}${residence}/room_booking/`
 }

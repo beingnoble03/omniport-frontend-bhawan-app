@@ -4,10 +4,11 @@ import { TimeInput } from "semantic-ui-calendar-react";
 import {
   getPendingComplains,
   getResolvedComplains,
+  increaseUnsuccefulAttempts
 } from "../../actions/complains";
 import { getTimeSlots, changeTimeSlot } from "../../actions/time-slots";
 import { resolveComplain } from "../../actions/resolveComplain";
-import { statusComplainsUrl } from "../../urls";
+import { statusComplainsUrl, increaseUnsuccesfulComplainsUrl } from "../../urls";
 import {
   Menu,
   Header,
@@ -20,6 +21,11 @@ import {
   Pagination,
 } from "semantic-ui-react";
 import "./index.css";
+const bookingStatus = {
+  pen: "PENDING",
+  unr: "UNRESOLVED",
+  res: "RESOLVED",
+};
 const days = [
   { key: "mon", text: "Monday", value: "mon" },
   { key: "tue", text: "Tuesday", value: "tue" },
@@ -189,7 +195,9 @@ class AdminComplains extends Component {
       )}&page=${activePage}`
     );
   };
-
+  increaseUnsuccesfulComplains = (id) => {
+    this.props.increaseUnsuccefulAttempts(increaseUnsuccesfulComplainsUrl(this.props.who_am_i.residence, id))
+  }
   render() {
     const {
       open,
@@ -232,7 +240,7 @@ class AdminComplains extends Component {
                         <Table.Cell>{complain.complaintType}</Table.Cell>
                         <Table.Cell>{complain.phoneNumber}</Table.Cell>
                         <Table.Cell>{complain.roomNo}</Table.Cell>
-                        <Table.Cell>Cell</Table.Cell>
+                        <Table.Cell onClick={() => this.increaseUnsuccesfulComplains(complain.id)}>{complain.failedAttempts}</Table.Cell>
                         <Table.Cell onClick={() => this.show(complain.id)}>
                           Resolve
                         </Table.Cell>
@@ -317,7 +325,7 @@ class AdminComplains extends Component {
                             <Table.Cell>{complain.complaintType}</Table.Cell>
                             <Table.Cell>{complain.phoneNumber}</Table.Cell>
                             <Table.Cell>{complain.roomNo}</Table.Cell>
-                            <Table.Cell>Cell</Table.Cell>
+                            <Table.Cell>{complain.failedAttempts}</Table.Cell>
                           </Table.Row>
                         );
                       })
@@ -384,6 +392,11 @@ const mapDispatchToProps = (dispatch) => {
           successCallBack,
           errorCallBack
         )
+      );
+    },
+    increaseUnsuccefulAttempts: (url) => {
+      dispatch(
+        increaseUnsuccefulAttempts(url)
       );
     },
     resolveComplain: (id, data, residence, successCallBack, errCallBack) => {

@@ -48,3 +48,20 @@ export const getResolvedComplains = (url) => {
       .catch((error) => {});
   };
 };
+export const increaseUnsuccefulAttempts = (url) => {
+  return (dispatch) => {
+    axios({
+      method: "get",
+      url: url,
+    })
+      .then((response) => {
+        let item = response.data;
+        dispatch({
+          type: "GET_RESOLVED_COMPLAINS",
+          payload: item,
+        });
+      })
+      .catch((error) => {});
+  };
+};
+
