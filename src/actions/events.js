@@ -1,14 +1,12 @@
 import axios from "axios";
 
-export const getEvents = (residence) => {
+export const getEvents = (url) => {
   return (dispatch) => {
     axios({
       method: "get",
-      url: `/api/bhawan_app/${residence}/event/`,
+      url: url,
     })
       .then((response) => {
-        console.log("iurt");
-        console.log(response);
         let item = response.data.results;
         dispatch({
           type: "GET_ALL_EVENTS",
@@ -16,7 +14,6 @@ export const getEvents = (residence) => {
         });
       })
       .catch((error) => {
-        console.log("jnk");
       });
   };
 };

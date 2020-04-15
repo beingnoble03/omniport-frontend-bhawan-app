@@ -5,6 +5,7 @@ import { Card, Form, Button, Input, Header } from "semantic-ui-react";
 import { TimeInput } from "semantic-ui-calendar-react";
 import "./index.css";
 import { getEvents } from "../../actions/events";
+import { eventsBookingsUrl } from "../../urls"
 import { addEvent } from "../../actions/add-events";
 import * as moment from "moment";
 
@@ -20,7 +21,7 @@ class EventsCard extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getEvents(this.props.who_am_i.residence);
+    this.props.getEvents(eventsBookingsUrl(this.props.who_am_i.residence));
   }
 
   handleChange = (event, { name, value }) => {
@@ -33,7 +34,7 @@ class EventsCard extends React.Component {
     this.toggleAddEvent();
     let data = {
       name: this.state.event,
-      date: "2020-02-13",
+      date: this.props.activeDay,
       description: this.state.venue,
       timings: [
         {
@@ -46,7 +47,7 @@ class EventsCard extends React.Component {
     };
     this.props.addEvent(
       data,
-      this.props.who_am_i.residence,
+      eventsBookingsUrl(this.props.who_am_i.residence),
       this.successCallBack,
       this.errCallBack
     );
@@ -173,11 +174,11 @@ function mapStateToProps(state) {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    getEvents: (residence) => {
-      dispatch(getEvents(residence));
+    getEvents: (url) => {
+      dispatch(getEvents(url));
     },
-    addEvent: (data, residence, successCallBack, errCallBack) => {
-      dispatch(addEvent(data, residence, successCallBack, errCallBack));
+    addEvent: (data, url, successCallBack, errCallBack) => {
+      dispatch(addEvent(data, url, successCallBack, errCallBack));
     },
   };
 };

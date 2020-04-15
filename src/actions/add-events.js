@@ -2,14 +2,14 @@ import axios from "axios";
 
 import { getCookie } from "formula_one/src/utils";
 
-export const addEvent = (data, residence, successCallBack, errCallBack) => {
+export const addEvent = (data, url, successCallBack, errCallBack) => {
   let headers = {
     "Content-Type": "application/json",
     "X-CSRFToken": getCookie("csrftoken"),
   };
   return (dispatch) => {
     axios
-      .post(`/api/bhawan_app/${residence}/event/`, data, { headers: headers })
+      .post(url, data, { headers: headers })
       .then((res) => {
         successCallBack(res);
         const response = {

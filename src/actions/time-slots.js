@@ -18,7 +18,6 @@ export const getTimeSlots = (residence) => {
         });
       })
       .catch((err) => {
-        console.log(err);
       });
   };
 };
@@ -42,10 +41,8 @@ export const changeTimeSlot = (
           headers: headers,
         })
         .then((res) => {
-          console.log(res);
         })
         .catch((err) => {
-          console.log(err);
         });
     };
   } else {
@@ -55,10 +52,8 @@ export const changeTimeSlot = (
           headers: headers,
         })
         .then((res) => {
-          console.log(res);
         })
         .catch((err) => {
-          console.log(err);
         });
     };
   }

@@ -37,3 +37,7 @@ export const statusBookingsUrl = (residence, status) => {
   status = status.toUpperCase()
   return `${baseApiUrl()}${residence}/room_booking/?status=${status}`
 }
+
+export const eventsBookingsUrl = ( residence ) => {
+  return `${baseApiUrl()}${residence}/event/`
+}

@@ -8,13 +8,13 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 import {getEvents} from '../../actions/events'
 import { setActiveDay } from '../../actions/set-active-day'
+import { eventsBookingsUrl } from "../../urls"
 
 class Events extends React.Component {
   componentDidMount() {
-    this.props.getEvents(this.props.who_am_i.residence)
+    this.props.getEvents(eventsBookingsUrl(this.props.who_am_i.residence))
   }
   handleDateClick = (arg) => {
-    console.log(arg.dateStr)
     this.props.setActiveDay(arg.dateStr)
   }
 
@@ -54,8 +54,8 @@ function mapStateToProps(state){
 }
  const mapDispatchToProps= dispatch => {
   return {
-    getEvents: (residence)=> {
-      dispatch(getEvents(residence))
+    getEvents: (url)=> {
+      dispatch(getEvents(url))
     },
     setActiveDay: (day) => {
       dispatch(setActiveDay(day))
