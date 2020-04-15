@@ -43,7 +43,7 @@ const creators = [
   {
     name: "Kashish Jagyasi",
     role: "Designer",
-    link: "aalu",
+    link: "https://link.medium.com/eoXeYayNH5",
   },
 ];
 
