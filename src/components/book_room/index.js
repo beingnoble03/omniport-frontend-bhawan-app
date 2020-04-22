@@ -87,15 +87,6 @@ class BookRoom extends React.Component {
     this.setState({ relatives });
   }
 
-  addClick() {
-    this.setState((prevState) => ({
-      visitors: [...prevState.visitors, ""],
-      relatives: [...prevState.relatives, ""],
-      proof: [...prevState.proof, ""],
-      proofUrl: [...prevState.proofUrl, ""],
-    }));
-  }
-
   removeClick(i) {
     let visitors = [...this.state.visitors];
     let relatives = [...this.state.relatives];

@@ -5,7 +5,7 @@ import { Card, Form, Button, Input, Header } from "semantic-ui-react";
 import { TimeInput } from "semantic-ui-calendar-react";
 import "./index.css";
 import { getEvents } from "../../actions/events";
-import { eventsBookingsUrl } from "../../urls"
+import { eventsUrl } from "../../urls"
 import { addEvent } from "../../actions/add-events";
 import * as moment from "moment";
 
@@ -21,7 +21,7 @@ class EventsCard extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getEvents(eventsBookingsUrl(this.props.who_am_i.residence));
+    this.props.getEvents(eventsUrl(this.props.who_am_i.residence));
   }
 
   handleChange = (event, { name, value }) => {
@@ -47,7 +47,7 @@ class EventsCard extends React.Component {
     };
     this.props.addEvent(
       data,
-      eventsBookingsUrl(this.props.who_am_i.residence),
+      eventsUrl(this.props.who_am_i.residence),
       this.successCallBack,
       this.errCallBack
     );

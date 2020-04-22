@@ -6,8 +6,9 @@ const complains = (state = initialState, action) => {
           return action.payload
       case 'ADD_COMPLAINT':
         {
-        state.unshift(action.payload)
-        return state
+          state.results.unshift(action.payload)
+          state.results.pop()
+          return state
         }
     default:
       return state

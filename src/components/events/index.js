@@ -8,11 +8,11 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 import {getEvents} from '../../actions/events'
 import { setActiveDay } from '../../actions/set-active-day'
-import { eventsBookingsUrl } from "../../urls"
+import { eventsUrl } from "../../urls"
 
 class Events extends React.Component {
   componentDidMount() {
-    this.props.getEvents(eventsBookingsUrl(this.props.who_am_i.residence))
+    this.props.getEvents(eventsUrl(this.props.who_am_i.residence))
   }
   handleDateClick = (arg) => {
     this.props.setActiveDay(arg.dateStr)

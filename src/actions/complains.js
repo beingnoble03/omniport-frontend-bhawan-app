@@ -64,4 +64,3 @@ export const increaseUnsuccefulAttempts = (url) => {
       .catch((error) => {});
   };
 };
-

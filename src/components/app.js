@@ -18,6 +18,7 @@ const BookingRequests = lazy(() => import("./booking_request/index"));
 const Facility = lazy(() => import("./facility/index"));
 const MyProfile = lazy(() => import("./my_profile/index"));
 const AdminAuthorities = lazy(() => import("./admin_authorities/index"));
+const AddFacility = lazy(() => import("./add-facility/index"))
 import { whoami } from "../actions/who_am_i";
 import PastBookings from "./past_bookings_admin/index";
 import main from "formula_one/src/css/app.css";
@@ -113,6 +114,10 @@ class App extends React.Component {
                           render={(props) => (
                             <ComplainRegister who_am_i={who_am_i} />
                           )}
+                        />
+                        <Route
+                          path={`${match.path}add/facility`}
+                          render={(props) => <AddFacility who_am_i={who_am_i} />}
                         />
                         <Route
                           path={`${match.path}facility`}

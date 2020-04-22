@@ -8,26 +8,12 @@ import "./index.css";
 
 class Complains extends React.Component {
   state = {
-    inButtonMode: false,
     complainAgainID: null,
     activePage: 1,
   };
   componentDidMount() {
     this.props.getComplains(complainsUrl(this.props.who_am_i.residence));
   }
-  toggleButtonMode = () => {
-    const inButtonMode = this.state.inButtonMode;
-    if (inButtonMode) {
-      addComplaint(complain);
-    }
-    this.setState({
-      inButtonMode: !inButtonMode,
-    });
-  };
-  handleComplainAgain = () => {
-    console.log("complain again");
-    // this.props.complainAgain();
-  };
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage });
     this.props.getComplains(
@@ -36,7 +22,7 @@ class Complains extends React.Component {
   };
   render() {
     const { complains } = this.props;
-    const { inButtonMode, activePage } = this.state;
+    const { activePage } = this.state;
 
     return (
       <React.Fragment>
@@ -57,25 +43,10 @@ class Complains extends React.Component {
               ? complains.results.map((complain, index) => {
                   return (
                     <Table.Row>
-                      <Table.Cell>{index + 1}</Table.Cell>
                       <Table.Cell>
-                        <div styleName="complain-description">
-                          <div>{complain.description}</div>
-                          <div onClick={this.toggleButtonMode}>
-                            {inButtonMode ? (
-                              <Button
-                                onClick={() =>
-                                  this.handleComplainAgain(complain.id)
-                                }
-                              >
-                                Complain Again
-                              </Button>
-                            ) : (
-                              "..."
-                            )}
-                          </div>
-                        </div>
+                        {5 * (activePage - 1) + index + 1}
                       </Table.Cell>
+                      <Table.Cell>{complain.description}</Table.Cell>
                       <Table.Cell>{complain.complaintType}</Table.Cell>
                       <Table.Cell>{complain.status}</Table.Cell>
                       <Table.Cell>{complain.roomNo}</Table.Cell>

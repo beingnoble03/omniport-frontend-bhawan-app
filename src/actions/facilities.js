@@ -33,3 +33,19 @@ export const getFacility = (residence, id, successCallBack, errCallBack) => {
       });
   };
 };
+
+export const addFacility = (url, successCallBack, errCallBack) => {
+  return (dispatch) => {
+    axios.post(url, data)
+    .then(res => {
+      successCallBack(res);
+      dispatch({
+        type: "ADD_FACILITY",
+        payload:res.data,
+            });
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+}

@@ -38,6 +38,10 @@ export const statusBookingsUrl = (residence, status) => {
   return `${baseApiUrl()}${residence}/room_booking/?status=${status}`
 }
 
-export const eventsBookingsUrl = ( residence ) => {
+export const eventsUrl = ( residence ) => {
   return `${baseApiUrl()}${residence}/event/`
+}
+
+export const facilitiesUrl = (residence) => {
+  return `${baseApiUrl()}${residence}/facility`
 }
