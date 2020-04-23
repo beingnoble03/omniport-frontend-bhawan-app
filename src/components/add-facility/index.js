@@ -1,10 +1,11 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import {
   Header,
   Image,
   Container,
   Button,
+  Modal,
   Form,
   Dropdown,
   TextArea,
@@ -12,20 +13,27 @@ import {
   Input,
   Icon,
 } from "semantic-ui-react";
+import { CustomCropper } from 'formula_one'
+import getCroppedImage from '../get-cropped-image'
 import { TimeInput } from "semantic-ui-calendar-react";
 import { addFacility } from "../../actions/facilities";
-import { facilitiesUrl } from "../../urls"
+import { facilitiesUrl } from "../../urls";
 import "./index.css";
 import * as moment from "moment";
 
+const IMAGE_STYLE = {
+  maxHeight: '100%',
+  maxWidth: '100%',
+}
+
 const options = [
-  { key: "mon", text: "Monday", value: "Monday" },
-  { key: "tue", text: "Tuesday", value: "Tuesday" },
-  { key: "wed", text: "Wednesday", value: "Wednesday" },
-  { key: "thurs", text: "Thursday", value: "Thursday" },
-  { key: "fri", text: "Friday", value: "Friday" },
-  { key: "sat", text: "Saturday", value: "Saturday" },
-  { key: "sun", text: "Sunday", value: "Sunday" },
+  { key: "mon", text: "Monday", value: "mon" },
+  { key: "tue", text: "Tuesday", value: "tue" },
+  { key: "wed", text: "Wednesday", value: "wed" },
+  { key: "thurs", text: "Thursday", value: "thu" },
+  { key: "fri", text: "Friday", value: "fri" },
+  { key: "sat", text: "Saturday", value: "sat" },
+  { key: "sun", text: "Sunday", value: "sun" },
 ];
 
 class Facility extends React.Component {
@@ -37,9 +45,47 @@ class Facility extends React.Component {
       descriptions: [""],
       information: "",
       name: "",
+      days: [[]],
+      validImage: true,
+      imageCrop: true,
+      imageSrc: null,
+      pixel: null,
+      crop :{
+        aspect: 1,
+      },
+      open: false,
     };
   }
+
+  fileChange = async e => {
+    this.setState({
+      [e.target.name]: e.target.files[0],
+    })
+    const imageDataUrl = await readFile(e.target.files[0])
+    this.setState({
+      imageSrc: imageDataUrl,
+      open: true,
+    })
+  }
+  showCroppedImage = async () => {
+    const croppedImage = await getCroppedImage(
+      this.state.imageSrc,
+      this.state.pixelCrop
+    )
+
+    var file = dataURLtoFile(croppedImage, 'image.png')
+    this.setState({ croppedImage: file })
+  }
+
   submitData() {
+    const { croppedImage } = this.state
+    let image = null
+
+    !croppedImage ? (image = false) : (image = true)
+
+    this.setState({
+      imageCrop: image,
+    })
     if (
       this.state.information &&
       this.state.descriptions &&
@@ -47,18 +93,35 @@ class Facility extends React.Component {
       this.state.endTime
     ) {
       let formData = new FormData();
-      formData.append("name", this.state.name)
-      formData.append("description", this.state.information)
-      for( var i = 0; i<this.state.startTime.length;i++){
-      formData.append("timings", {
-        "day": "mon",
-        "start": this.state.startTime[i],
-        "end": this.state.endTime[i],
-        "description": this.state.descriptions[i],
-      })
+      formData.append("name", this.state.name);
+      formData.append("description", this.state.information);
+      for (var i = 0; i < this.state.days.length; i++) {
+        for(var j = 0; j < this.state.days[i].length; j++){
+          formData.append("timings", {
+            day: this.state.days[i][j],
+            start: this.state.startTime[i],
+            end: this.state.endTime[i],
+            description: this.state.descriptions[i],
+          });
+        }
+      }
     }
-    }
-    this.props.addFacility(facilitiesUrl(this.props.who_am_i.residence), formData)
+    formData.append('image', croppedImage)
+    this.props.addFacility(
+      facilitiesUrl(this.props.who_am_i.residence),
+      formData
+    );
+  }
+  handleOpen = () => {
+    this.setState({
+      open: true,
+    })
+  }
+
+  handleClose = () => {
+    this.setState({
+      open: false,
+    })
   }
   createForm = () => {
     return this.state.descriptions.map((description, i) => (
@@ -77,10 +140,14 @@ class Facility extends React.Component {
           <Form.Field>
             <label>Days</label>
             <Dropdown
+              name="days"
               placeholder="Select Day"
               multiple
               selection
               options={options}
+              value={this.state.days[i]}
+              onChange={(event, { value }) =>
+              this.handleDaysChange(event, i, value)}
             />
           </Form.Field>
           <Form.Field>
@@ -119,10 +186,12 @@ class Facility extends React.Component {
     descriptions.splice(i, 1);
     startTime.splice(i, 1);
     endTime.splice(i, 1);
+    days.splice(i,1);
     this.setState({
       descriptions,
       startTime,
       endTime,
+      days
     });
   };
 
@@ -130,6 +199,12 @@ class Facility extends React.Component {
     let descriptions = [...this.state.descriptions];
     descriptions[i] = event.target.value;
     this.setState({ descriptions });
+  }
+
+  handleDaysChange(event, i ,value) {
+    let days = [...this.state.days];
+    days[i] = value;
+    this.setState({ days });
   }
 
   handleStartTimeChange(event, i, value) {
@@ -148,6 +223,8 @@ class Facility extends React.Component {
     this.setState((prevState) => ({
       descriptions: [...prevState.descriptions, ""],
       startTime: [...prevState.startTime, ""],
+      endTime: [...prevState.endTime, ""],
+      days: [...prevState.days, []]
     }));
   };
 
@@ -198,24 +275,31 @@ class Facility extends React.Component {
         <Grid divided="vertically">
           <Grid.Row columns={2}>
             <Grid.Column>
-              <Image
-                src="https://react.semantic-ui.com/images/wireframe/image.png"
-                size="medium"
+            <Form.Field required>
+              <label>Image:</label>
+              <input
+                type="file"
+                onChange={this.fileChange}
+                name="uploadedFile"
+                onClick={this.handleOpen}
               />
+            </Form.Field>
             </Grid.Column>
             <Grid.Column>
               <Container>
                 <div>
                   <Header as="h5">Add Information</Header>
                   <Form>
-                  <Form.Field>
-            <label>Name</label>
-            <Input
-              icon="angle down"
-              value={name}
-              onChange={(event) => this.handleDescriptionsChange(i, event)}
-            />
-          </Form.Field>
+                    <Form.Field>
+                      <label>Name</label>
+                      <Input
+                        icon="angle down"
+                        value={name}
+                        onChange={(event) =>
+                          this.handleDescriptionsChange(i, event)
+                        }
+                      />
+                    </Form.Field>
                     <TextArea
                       name="information"
                       value={information}
@@ -239,6 +323,38 @@ class Facility extends React.Component {
                     </Form.Group>
                   </Form>
                 </div>
+                <Modal
+              dimmer="blurring"
+              size="tiny"
+              open={this.state.open}
+              onClose={this.handleClose}
+            >
+              <Modal.Header>Crop project's photo</Modal.Header>
+              <Modal.Content image>
+                {this.state.imageSrc && (
+                  <Fragment>
+                    <CustomCropper
+                      imageStyle={IMAGE_STYLE}
+                      src={this.state.imageSrc}
+                      crop={this.state.crop}
+                      onChange={crop => {
+                        this.setState({ crop })
+                      }}
+                      onComplete={(crop, pixelCrop) => {
+                        this.setState({ pixelCrop }, () =>
+                          this.showCroppedImage()
+                        )
+                      }}
+                    />
+                  </Fragment>
+                )}
+              </Modal.Content>
+              <Modal.Actions>
+                <Button positive type="submit" onClick={this.handleClose}>
+                  Done
+                </Button>
+              </Modal.Actions>
+            </Modal>
               </Container>
             </Grid.Column>
           </Grid.Row>
@@ -248,6 +364,25 @@ class Facility extends React.Component {
   }
 }
 
+function readFile(file) {
+  return new Promise(resolve => {
+    const reader = new FileReader()
+    reader.addEventListener('load', () => resolve(reader.result), false)
+    reader.readAsDataURL(file)
+  })
+}
+
+function dataURLtoFile(dataurl, filename) {
+  let arr = dataurl.split(','),
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]),
+    n = bstr.length,
+    u8arr = new Uint8Array(n)
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n)
+  }
+  return new File([u8arr], filename, { type: mime })
+}
 const mapDispatchToProps = (dispatch) => {
   return {
     addFacility: (url, successCallBack, errCallBack) => {

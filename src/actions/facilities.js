@@ -45,6 +45,7 @@ export const addFacility = (url, successCallBack, errCallBack) => {
             });
     })
     .catch((err) => {
+      errCallBack();
       console.log(err);
     })
   }
