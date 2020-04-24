@@ -2,7 +2,7 @@ const initialState = {}
 
 const facilities = (state = initialState, action) => {
   switch (action.type) {
-      case 'GET_FACILITY':
+      case 'GET_FACILITIES':
           return action.payload
     default:
       return state

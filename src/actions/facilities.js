@@ -1,10 +1,12 @@
 import axios from "axios";
 
-export const getFacilities = (residence) => {
+import { getCookie } from "formula_one/src/utils";
+
+export const getFacilities = (url) => {
   return (dispatch) => {
     axios({
       method: "get",
-      url: `/api/bhawan_app/${residence}/facility/`,
+      url: url,
     })
       .then((response) => {
         let item = response.data.results;
@@ -34,19 +36,52 @@ export const getFacility = (residence, id, successCallBack, errCallBack) => {
   };
 };
 
-export const addFacility = (url, successCallBack, errCallBack) => {
-  return (dispatch) => {
-    axios.post(url, data)
-    .then(res => {
-      successCallBack(res);
-      dispatch({
-        type: "ADD_FACILITY",
-        payload:res.data,
-            });
-    })
-    .catch((err) => {
-      errCallBack();
-      console.log(err);
-    })
+export const addFacility = (url, data, successCallBack, errCallBack) => {
+  console.log("wec");
+  for (var value of data.values()) {
+    console.log(value);
   }
-}
+  const headers = {
+    "Content-Type": "multipart/form-data",
+    "X-CSRFToken": getCookie("csrftoken"),
+  };
+  return (dispatch) => {
+    axios
+      .post(url, data, { headers: headers })
+      .then((res) => {
+        successCallBack(res);
+        dispatch({
+          type: "ADD_FACILITY",
+          payload: res.data,
+        });
+      })
+      .catch((err) => {
+        errCallBack();
+        console.log(err);
+      });
+  };
+};
+export const editFacility = (url, data, successCallBack, errCallBack) => {
+  console.log("wec");
+  for (var value of data.values()) {
+    console.log(value);
+  }
+  const headers = {
+    "Content-Type": "application/json",
+    "X-CSRFToken": getCookie("csrftoken"),
+  };
+  return (dispatch) => {
+    axios
+      .patch(url, data, { headers: headers })
+      .then((res) => {
+        successCallBack(res);
+        dispatch({
+          type: "EDIT_FACILITY",
+          payload: res.data,
+        });
+      })
+      .catch((err) => {
+        errCallBack();
+      });
+  };
+};

@@ -3,10 +3,6 @@ import axios from "axios";
 import { getCookie } from "formula_one/src/utils";
 
 export const bookRoom = (data, residence, successCallBack, errCallBack) => {
-  console.log("wec");
-  for (var value of data.values()) {
-    console.log(value);
-  }
   const headers = {
     "Content-Type": "multipart/form-data",
     "X-CSRFToken": getCookie("csrftoken"),

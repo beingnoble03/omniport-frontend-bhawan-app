@@ -43,5 +43,9 @@ export const eventsUrl = ( residence ) => {
 }
 
 export const facilitiesUrl = (residence) => {
-  return `${baseApiUrl()}${residence}/facility`
+  return `${baseApiUrl()}${residence}/facility/`
+}
+
+export const facilityUrl = (residence, id) => {
+  return `${baseApiUrl()}${residence}/facility/${id}/`
 }

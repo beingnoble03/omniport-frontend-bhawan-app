@@ -8,12 +8,25 @@ import {
   Form,
   Dropdown,
   TextArea,
+  Input,
+  Icon,
   Grid,
 } from "semantic-ui-react";
 import { TimeInput } from "semantic-ui-calendar-react";
-import { getFacility } from "../../actions/facilities";
+import { getFacility, getFacilities, editFacility } from "../../actions/facilities";
+import { facilitiesUrl, facilityUrl } from "../../urls";
 import "./index.css";
 import * as moment from "moment";
+
+const options = [
+  { key: "mon", text: "Monday", value: "Monday" },
+  { key: "tue", text: "Tuesday", value: "Tuesday" },
+  { key: "wed", text: "Wednesday", value: "Wednesday" },
+  { key: "thurs", text: "Thursday", value: "Thursday" },
+  { key: "fri", text: "Friday", value: "Friday" },
+  { key: "sat", text: "Saturday", value: "Saturday" },
+  { key: "sun", text: "Sunday", value: "Sunday" },
+];
 
 class Facility extends React.Component {
   constructor(props) {
@@ -22,17 +35,16 @@ class Facility extends React.Component {
       id: this.props.id || 1,
       editMode: false,
       information: "",
-      timing: [],
-      startBreakfast: "",
-      endBreakfast: "",
-      startLunch: "",
-      endLunch: "",
-      startDinner: "",
-      endDinner: "",
+      startTime: [""],
+      endTime: [""],
+      descriptions: [""],
+      name: "",
+      days: [[]],
     };
   }
 
   componentDidMount() {
+    this.props.getFacilities(facilitiesUrl(this.props.who_am_i.residence));
     this.props.getFacility(
       this.props.who_am_i.residence,
       this.state.id,
@@ -40,8 +52,156 @@ class Facility extends React.Component {
       this.errCallBack
     );
   }
+
+  createForm = () => {
+    return this.state.descriptions.map((description, i) => (
+      <div key={i}>
+        <Form.Group>
+          <Form.Field>
+            <label>Description</label>
+            <Input
+              icon="angle down"
+              value={description || ""}
+              onChange={(event) => this.handleDescriptionsChange(i, event)}
+            />
+          </Form.Field>
+        </Form.Group>
+        <Form.Group>
+          <Form.Field>
+            <label>Days</label>
+            <Dropdown
+              name="days"
+              placeholder="Select Day"
+              multiple
+              selection
+              options={options}
+              value={this.state.days[i]}
+              onChange={(event, { value }) =>
+                this.handleDaysChange(event, i, value)
+              }
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Start time</label>
+            <TimeInput
+              name="startTime"
+              value={this.state.startTime[i]}
+              onChange={(event, { value }) =>
+                this.handleStartTimeChange(event, i, value)
+              }
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>End time</label>
+            <TimeInput
+              name="endTime"
+              value={this.state.endTime[i]}
+              onChange={(event, { value }) =>
+                this.handleEndTimeChange(event, i, value)
+              }
+            />
+          </Form.Field>
+          {this.state.descriptions.length > 1 ? (
+            <Icon name="close" onClick={() => removeClick(i)} />
+          ) : null}
+        </Form.Group>
+      </div>
+    ));
+  };
+
+  submitData = () => {
+    console.log("uygwe");
+    const {  information, startTime, endTime } = this.state;
+
+    if (information && descriptions && startTime && endTime) {
+      let formData = new FormData();
+      formData.append("name", this.state.name);
+      formData.append("description", this.state.information);
+      let timings = [];
+      for (var i = 0; i < this.state.days.length; i++) {
+        for (var j = 0; j < this.state.days[i].length; j++) {
+          timings.push({
+            day: this.state.days[i][j],
+            start: this.state.startTime[i],
+            end: this.state.endTime[i],
+            description: this.state.descriptions[i],
+          })
+        }
+      }
+      let data = null;
+      if(timing.length>0){
+      data = {
+        "name": this.state.name,
+        "description": this.state.information,
+        "timings": timings
+      }
+    }
+    else {
+      data = {
+        "name": this.state.name,
+        "description": this.state.information,
+      }
+    }
+      this.props.editFacility(
+        facilityUrl(this.props.who_am_i.residence, this.state.id),
+        data,
+        this.successCallBack,
+        this.errCallBack
+      );
+    }
+  };
+
+  removeClick = (i) => {
+    console.log("eve");
+    let descriptions = [...this.state.descriptions];
+    let startTime = [...this.state.startTime];
+    let endTime = [...this.state.endTime];
+    descriptions.splice(i, 1);
+    startTime.splice(i, 1);
+    endTime.splice(i, 1);
+    days.splice(i, 1);
+    this.setState({
+      descriptions,
+      startTime,
+      endTime,
+      days,
+    });
+  };
+
+  handleDescriptionsChange(i, event) {
+    let descriptions = [...this.state.descriptions];
+    descriptions[i] = event.target.value;
+    this.setState({ descriptions });
+  }
+
+  handleDaysChange(event, i, value) {
+    let days = [...this.state.days];
+    days[i] = value;
+    this.setState({ days });
+  }
+
+  handleStartTimeChange(event, i, value) {
+    let startTime = [...this.state.startTime];
+    startTime[i] = value;
+    this.setState({ startTime });
+  }
+
+  handleEndTimeChange(event, i, value) {
+    let endTime = [...this.state.endTime];
+    endTime[i] = value;
+    this.setState({ endTime });
+  }
+
+  addClick = () => {
+    this.setState((prevState) => ({
+      descriptions: [...prevState.descriptions, ""],
+      startTime: [...prevState.startTime, ""],
+      endTime: [...prevState.endTime, ""],
+      days: [...prevState.days, []],
+    }));
+  };
+
   successCallBack = (res) => {
-    console.log(res);
     this.setState({
       success: true,
       error: false,
@@ -54,8 +214,8 @@ class Facility extends React.Component {
       start: [],
       end: [],
       description: [],
-    })
-  }
+    });
+  };
 
   errCallBack = (err) => {
     this.setState({
@@ -76,28 +236,37 @@ class Facility extends React.Component {
       this.setState({ [name]: value });
     }
   };
+  handleFacilityChange = (id) => {
+    this.setState({
+      id,
+    });
+    this.props.getFacility(
+      this.props.who_am_i.residence,
+      id,
+      this.successCallBack,
+      this.errCallBack
+    );
+  };
 
   render() {
-    const { facility } = this.props;
+    const { facility, facilities } = this.props;
     const { information } = this.state;
-    const options = [
-      { key: "mon", text: "Monday", value: "Monday" },
-      { key: "tue", text: "Tuesday", value: "Tuesday" },
-      { key: "wed", text: "Wednesday", value: "Wednesday" },
-      { key: "thurs", text: "Thursday", value: "Thursday" },
-      { key: "fri", text: "Friday", value: "Friday" },
-      { key: "sat", text: "Saturday", value: "Saturday" },
-      { key: "sun", text: "Sunday", value: "Sunday" },
-    ];
+
     return (
       <Grid.Column>
         <div>
-          <Button styleName="button_margin">Mess</Button>
-          <Button styleName="button_margin">Canteen</Button>
-          <Button styleName="button_margin">Mess</Button>
-          <Button styleName="button_margin">Canteen</Button>
-          <Button styleName="button_margin">Mess</Button>
-          <Button styleName="button_margin">Canteen</Button>
+          {facilities && facilities.length > 0
+            ? facilities.map((allFacility, index) => {
+                return (
+                  <Button
+                    styleName="button_margin"
+                    onClick={() => this.handleFacilityChange(allFacility.id)}
+                  >
+                    {allFacility.name}
+                  </Button>
+                );
+              })
+            : null}
         </div>
         {facility ? (
           <React.Fragment>
@@ -126,48 +295,15 @@ class Facility extends React.Component {
                             placeholder="Tell us more"
                             fluid
                           />
-                          {facility.timings && facility.timings.length > 0
-                            ? facility.timings.map((timing, index) => {
-                                return (
-                                  <div>
-                                    <Header as="h4">
-                                      {timing.description}
-                                    </Header>
-                                    <Form.Group>
-                                      <Form.Field>
-                                        <Dropdown
-                                          placeholder="Select Day"
-                                          multiple
-                                          selection
-                                          options={options}
-                                          // onChange={}
-                                        />
-                                      </Form.Field>
-                                      <Form.Field>
-                                        <TimeInput
-                                          name="startBreakfast"
-                                          value={this.state.startBreakfast}
-                                          icon="angle down"
-                                          iconPosition="right"
-                                          onChange={this.handleChange}
-                                          placeholder="Time from"
-                                        />
-                                      </Form.Field>
-                                      <Form.Field>
-                                        <TimeInput
-                                          name="endBreakfast"
-                                          value={this.state.endBreakfast}
-                                          icon="angle down"
-                                          iconPosition="right"
-                                          onChange={this.handleChange}
-                                          placeholder="Time To"
-                                        />
-                                      </Form.Field>
-                                    </Form.Group>
-                                  </div>
-                                );
-                              })
-                            : null}
+                          {this.createForm()}
+                          <Form.Field>
+                            <Icon
+                              onClick={this.addClick}
+                              name="plus"
+                              size="big"
+                              styleName="plus-icon"
+                            />
+                          </Form.Field>
                           <Form.Group>
                             <Form.Button onClick={this.toggleEditMode}>
                               Save Changes
@@ -200,7 +336,13 @@ class Facility extends React.Component {
                               );
                             })
                           : null}
-                        <span onClick={this.toggleEditMode}>Edit</span>
+                        <Button
+                          basic
+                          color="blue"
+                          onClick={this.toggleEditMode}
+                        >
+                          Edit
+                        </Button>
                       </div>
                     )}
                   </Container>
@@ -217,13 +359,20 @@ class Facility extends React.Component {
 function mapStateToProps(state) {
   return {
     facility: state.facility,
+    facilities: state.facilities,
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getFacilities: (url) => {
+      dispatch(getFacilities(url));
+    },
     getFacility: (residence, id, successCallBack, errCallBack) => {
       dispatch(getFacility(residence, id, successCallBack, errCallBack));
+    },
+    editFacility: (url, data, successCallBack, errCallBack) => {
+      dispatch(editFacility(url, data, successCallBack, errCallBack))
     },
   };
 };
