@@ -57,7 +57,7 @@ export const increaseUnsuccefulAttempts = (url) => {
       .then((response) => {
         let item = response.data;
         dispatch({
-          type: "GET_RESOLVED_COMPLAINS",
+          type: "INCREASE_UNSUCCESFUL_ATTEMPT",
           payload: item,
         });
       })

@@ -6,6 +6,30 @@ export const baseNavUrl = forwardLink => {
   return `${config.baseUrl}${forwardLink}`
 }
 
+export const homePageUrl = () => {
+  return `${baseNavUrl('/')}`
+}
+
+export const facilityPageUrl = () => {
+  return `${baseNavUrl('/facility/')}`
+}
+
+export const complainUrl = () => {
+  return `${baseNavUrl('/complain/')}`
+}
+
+export const adminComplainUrl = () => {
+  return `${baseNavUrl('/admin/complain/')}`
+}
+
+export const bookingUrl = () => {
+  return `${baseNavUrl('/book_room/')}`
+}
+
+export const eventUrl = () => {
+  return `${baseNavUrl('/events/')}`
+}
+
 // Backend URLs
 
 export const baseApiUrl = () => {
@@ -33,6 +57,14 @@ export const bookingsUrl = (residence) => {
   return `${baseApiUrl()}${residence}/room_booking/`
 }
 
+export const constantsUrl = () => {
+  return `${baseApiUrl()}constants/`
+}
+
+export const who_am_iUrl = () => {
+  return `${baseApiUrl()}personal_info/`
+}
+
 export const statusBookingsUrl = (residence, status) => {
   status = status.toUpperCase()
   return `${baseApiUrl()}${residence}/room_booking/?status=${status}`
@@ -40,6 +72,10 @@ export const statusBookingsUrl = (residence, status) => {
 
 export const eventsUrl = ( residence ) => {
   return `${baseApiUrl()}${residence}/event/`
+}
+
+export const timeSlotsUrl = ( residence ) => {
+  return `${baseApiUrl()}${residence}/time_slot/`
 }
 
 export const facilitiesUrl = (residence) => {

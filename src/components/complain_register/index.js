@@ -2,17 +2,20 @@ import React from "react";
 import {
   Button,
   Form,
-  Select,
   TextArea,
   Message,
   Icon,
-  Input,
+  Header,
   Dropdown,
+  Pagination,
+  Table,
 } from "semantic-ui-react";
 import { TimeInput } from "semantic-ui-calendar-react";
 import "./index.css";
 import { connect } from "react-redux";
+import { getComplains } from "../../actions/complains";
 import { addComplaint } from "../../actions/add_complaint";
+import { complainsUrl } from "../../urls";
 import Complains from "../complains/index";
 
 class ComplainRegister extends React.Component {
@@ -24,13 +27,27 @@ class ComplainRegister extends React.Component {
       success: false,
       error: false,
       message: "",
+      activePage: 1,
     };
   }
+
+  componentDidMount() {
+    this.props.getComplains(complainsUrl(this.props.who_am_i.residence));
+  }
+
   handleChange = (event, { name, value }) => {
     if (this.state.hasOwnProperty(name)) {
       this.setState({ [name]: value });
     }
   };
+
+  handlePaginationChange = (e, { activePage }) => {
+    this.setState({ activePage });
+    this.props.getComplains(
+      `${complainsUrl(this.props.who_am_i.residence)}?page=${activePage}`
+    );
+  };
+
   handleSubmit = (e) => {
     let data = {
       complaintType: this.state.category,
@@ -45,6 +62,7 @@ class ComplainRegister extends React.Component {
   };
 
   successCallBack = (res) => {
+    console.log("tvwu");
     this.setState({
       success: true,
       error: false,
@@ -56,6 +74,7 @@ class ComplainRegister extends React.Component {
   };
 
   errCallBack = (err) => {
+    console.log(err);
     this.setState({
       error: true,
       success: false,
@@ -63,11 +82,16 @@ class ComplainRegister extends React.Component {
     });
   };
   render() {
-    const options = [
-      { key: "1", text: "Toilet", value: "toi" },
-      { key: "2", text: "Electric", value: "ele" },
-      { key: "3", text: "Carpentary", value: "car" },
-    ];
+    const { complains, constants } = this.props;
+    const { activePage } = this.state;
+    let options = [];
+    for (var i in constants.complaint_types) {
+      options.push({
+        key: (constants.complaint_types[i]).toString(),
+        text: i.toString(),
+        value: (constants.complaint_types[i]).toString(),
+      });
+    }
     return (
       <React.Fragment>
         {this.state.error && (
@@ -109,7 +133,46 @@ class ComplainRegister extends React.Component {
             Submit
           </Button>
         </Form>
-        <Complains {...this.props} />
+        <React.Fragment>
+          <Header as="h3">My Complains</Header>
+          <Table celled>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>ID</Table.HeaderCell>
+                <Table.HeaderCell>Complaint</Table.HeaderCell>
+                <Table.HeaderCell>Complain Type</Table.HeaderCell>
+                <Table.HeaderCell>Complain Status</Table.HeaderCell>
+                <Table.HeaderCell>Complain Date</Table.HeaderCell>
+                <Table.HeaderCell>Applicant Room</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {complains.results && complains.results.length > 0
+                ? complains.results.map((complain, index) => {
+                    return (
+                      <Table.Row>
+                        <Table.Cell>
+                          {5 * (activePage - 1) + index + 1}
+                        </Table.Cell>
+                        <Table.Cell>{complain.description}</Table.Cell>
+                        <Table.Cell>{complain.complaintType}</Table.Cell>
+                        <Table.Cell>{complain.status}</Table.Cell>
+                        <Table.Cell>{complain.roomNo}</Table.Cell>
+                        <Table.Cell>{complain.roomNo}</Table.Cell>
+                      </Table.Row>
+                    );
+                  })
+                : null}
+            </Table.Body>
+          </Table>
+          {complains.count > 5 ? (
+            <Pagination
+              activePage={activePage}
+              onPageChange={this.handlePaginationChange}
+              totalPages={Math.ceil(complains.count / 10)}
+            />
+          ) : null}
+        </React.Fragment>
       </React.Fragment>
     );
   }
@@ -122,6 +185,9 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getComplains: (url) => {
+      dispatch(getComplains(url));
+    },
     addComplaint: (data, residence, successCallBack, errCallBack) => {
       dispatch(addComplaint(data, residence, successCallBack, errCallBack));
     },

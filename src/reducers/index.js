@@ -3,6 +3,7 @@ import activeDay from './active-day'
 import authorities from './authorities'
 import facilities from './facilities'
 import complains from './complains'
+import constants from './constants'
 import who_am_i from './who-am-i'
 import events from './events'
 import bookingRequests from './roomBookings'
@@ -16,6 +17,7 @@ import presentBookingRequests from './present-bookings'
 const rootReducers = combineReducers({
   activeDay: activeDay,
   authorities: authorities,
+  constants: constants,
   facilities: facilities,
   complains: complains,
   who_am_i: who_am_i,

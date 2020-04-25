@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Card, Container } from "semantic-ui-react";
 import { getFacilities } from "../../actions/facilities";
+import { facilitiesUrl } from "../../urls"
 import facilities from "./index.css";
 import blocks from "../../css/app.css";
 import moment from "moment";
@@ -15,7 +16,7 @@ class Facilities extends React.Component {
     };
   }
   componentDidMount() {
-    this.props.getFacilities(this.props.who_am_i.residence);
+    this.props.getFacilities(facilitiesUrl(this.props.who_am_i.residence));
   }
   increaseCount = () => {
     const max_length = this.state.max_length + 3;
@@ -37,7 +38,7 @@ class Facilities extends React.Component {
             ? facilities.map((facility, index) => {
                 if (index < this.state.max_length)
                   return (
-                    <Link to="/bhawan_app/facility/1/">
+                    <Link to="/bhawan_app/facility/">
                       <Card
                         styleName="blocks.card-border blocks.color-black"
                         onClick={() => this.handleRedirect(facility.id)}
@@ -77,8 +78,8 @@ function mapStateToProps(state) {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    getFacilities: (residence) => {
-      dispatch(getFacilities(residence));
+    getFacilities: (url) => {
+      dispatch(getFacilities(url));
     },
   };
 };

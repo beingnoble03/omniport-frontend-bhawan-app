@@ -111,13 +111,14 @@ class EventsCard extends React.Component {
                   );
                 })
               : "No event today"}
-              {this.props.who_am_i.residence?
-              (
-                <React.Fragment>
-                <Header as="h5" onClick={this.toggleAddEvent}>
-                  {!this.state.addEvent ? <span>+</span> : null}
-                  Add event
-                </Header>
+
+                  {this.props.who_am_i.isAdmin?
+                  (
+                    <Header as="h5" onClick={this.toggleAddEvent}>
+                        {!this.state.addEvent ? <span>+</span> : null}
+                          Add event
+                        </Header>
+                  ):null}
                 {this.state.addEvent ? (
                 <Form>
                   <Form.Field
@@ -151,8 +152,7 @@ class EventsCard extends React.Component {
                 </Button>
               </Form>
             ) : null}
-            </React.Fragment>
-              ):null}
+            
           </Card.Content>
         </Card>
         </Link>

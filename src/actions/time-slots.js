@@ -17,15 +17,15 @@ export const getTimeSlots = (residence) => {
           payload: res.data.results,
         });
       })
-      .catch((err) => {
-      });
+      .catch((err) => {});
   };
 };
 
 export const changeTimeSlot = (
   data,
-  prevData,
-  residence,
+  found,
+  foundId,
+  url,
   successCallBack,
   errorCallBack
 ) => {
@@ -33,47 +33,33 @@ export const changeTimeSlot = (
     "Content-Type": "application/json",
     "X-CSRFToken": getCookie("csrftoken"),
   };
-  const found = search(prevData, data.complaintType, data.timing.day);
   if (!found) {
     return (dispatch) => {
       axios
-        .post(`/api/bhawan_app/${residence}/time_slot/`, data, {
+        .post(url, data, {
           headers: headers,
         })
         .then((res) => {
+          dispatch({
+            type: "ADD_TIME_SLOT",
+            payload: item,
+          });
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     };
   } else {
     return (dispatch) => {
       axios
-        .patch(`/api/bhawan_app/${residence}/time_slot/${found.id}/`, data, {
+        .patch(`${url}${foundId}/`, data, {
           headers: headers,
         })
         .then((res) => {
+          dispatch({
+            type: "EDIT_TIME_SLOT",
+            payload: item,
+          });
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     };
   }
 };
-
-function search(source, complaintType, day) {
-  let index;
-  let entry;
-
-  for (index = 0; index < source.length; ++index) {
-    entry = source[index];
-    if (
-      entry &&
-      entry.complaintType &&
-      entry.complaintType === complaintType &&
-      entry.timing[0].day === day
-    ) {
-      return entry;
-    }
-  }
-
-  return false;
-}

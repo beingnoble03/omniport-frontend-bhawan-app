@@ -38,7 +38,6 @@ class Authorities extends React.Component {
                   return (
                     <Card
                       styleName="card"
-                      onClick={() => this.handleRedirect(authority.id)}
                     >
                       <Card.Content styleName="top-card">
                         <Header as="h5" styleName="zero-margin">

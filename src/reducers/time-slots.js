@@ -1,14 +1,22 @@
-const initialState = {}
+const initialState = {};
 
 const timeSlots = (state = initialState, action) => {
   switch (action.type) {
-      case 'GET_TIME_SLOTS':
-          return action.payload
-      case 'UPDATE_BOOKINGS':
-          console.log("ufvty")
+    case "GET_TIME_SLOTS": {
+      return action.payload;
+    }
+    case "ADD_TIME_SLOT": {
+      console.log("ywybj")
+      return [...state, action.payload];
+    }
+    case "EDIT_TIME_SLOT": {
+      console.log("hjbvdfj");
+      console.log(action.payload);
+      return state;
+    }
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default timeSlots
+export default timeSlots;

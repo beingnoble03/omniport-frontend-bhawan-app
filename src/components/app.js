@@ -18,12 +18,15 @@ const BookingRequests = lazy(() => import("./booking_request/index"));
 const Facility = lazy(() => import("./facility/index"));
 const MyProfile = lazy(() => import("./my_profile/index"));
 const AdminAuthorities = lazy(() => import("./admin_authorities/index"));
-const AddFacility = lazy(() => import("./add-facility/index"))
+const AddFacility = lazy(() => import("./add-facility/index"));
 import { whoami } from "../actions/who_am_i";
+import { getConstants } from "../actions/get-constants"
+import { constantsUrl } from "../urls"
 import PastBookings from "./past_bookings_admin/index";
 import main from "formula_one/src/css/app.css";
 import blocks from "../css/app.css";
 import RegisterStudent from "./register_student/index";
+import { getComplains } from "../actions/complains";
 
 const creators = [
   {
@@ -60,6 +63,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.props.whoami(this.successCallBack, this.errCallBack);
+    this.props.getConstants(constantsUrl());
   }
   successCallBack = (res) => {
     this.setState({
@@ -80,7 +84,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { match, who_am_i } = this.props;
+    const { match, who_am_i, constants } = this.props;
     if (this.state.loaded) {
       if (who_am_i.residence) {
         return (
@@ -107,17 +111,33 @@ class App extends React.Component {
                       <Switch>
                         <Route
                           path={`${match.path}book_room`}
-                          render={(props) => <BookRoom who_am_i={who_am_i} />}
+                          exact
+                          render={(props) => ( !who_am_i.isAdmin ? (
+                              <BookRoom who_am_i={who_am_i} />
+                            ) : (
+                              <BookingRequests who_am_i={who_am_i} />
+                            )
+                          )}
                         />
                         <Route
                           path={`${match.path}complain`}
-                          render={(props) => (
-                            <ComplainRegister who_am_i={who_am_i} />
+                          exact
+                          render={(props) => ((!who_am_i.isAdmin) ? (
+                              <ComplainRegister
+                                who_am_i={who_am_i}
+                                constants={constants}
+                                {...props}
+                              />
+                            ) : (
+                              <AdminComplains who_am_i={who_am_i} {...props} />
+                            )
                           )}
                         />
                         <Route
                           path={`${match.path}add/facility`}
-                          render={(props) => <AddFacility who_am_i={who_am_i} />}
+                          render={(props) => (
+                            <AddFacility who_am_i={who_am_i} />
+                          )}
                         />
                         <Route
                           path={`${match.path}facility`}
@@ -137,12 +157,6 @@ class App extends React.Component {
                           render={(props) => <Events who_am_i={who_am_i} />}
                         />
                         <Route
-                          path={`${match.path}admin/complains`}
-                          render={(props) => (
-                            <AdminComplains who_am_i={who_am_i} />
-                          )}
-                        />
-                        <Route
                           path={`${match.path}admin/authority`}
                           render={(props) => (
                             <AdminAuthorities who_am_i={who_am_i} />
@@ -152,12 +166,6 @@ class App extends React.Component {
                           path={`${match.path}admin/database`}
                           render={(props) => (
                             <StudentDatabase who_am_i={who_am_i} />
-                          )}
-                        />
-                        <Route
-                          path={`${match.path}admin/bookings`}
-                          render={(props) => (
-                            <BookingRequests who_am_i={who_am_i} />
                           )}
                         />
                         <Route
@@ -222,12 +230,16 @@ class App extends React.Component {
 function mapStateToProps(state) {
   return {
     who_am_i: state.who_am_i,
+    constants: state.constants,
   };
 }
 const mapDispatchToProps = (dispatch) => {
   return {
     whoami: (successCallBack, errCallBack) => {
       dispatch(whoami(successCallBack, errCallBack));
+    },
+    getConstants: (url) => {
+      dispatch(getConstants(url));
     },
   };
 };
