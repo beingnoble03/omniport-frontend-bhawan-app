@@ -17,6 +17,7 @@ import { getComplains } from "../../actions/complains";
 import { addComplaint } from "../../actions/add_complaint";
 import { complainsUrl } from "../../urls";
 import Complains from "../complains/index";
+import * as moment from "moment";
 
 class ComplainRegister extends React.Component {
   constructor(props) {
@@ -71,6 +72,7 @@ class ComplainRegister extends React.Component {
       complain: "",
       category: "",
     });
+    this.props.getComplains(complainsUrl(this.props.who_am_i.residence));
   };
 
   errCallBack = (err) => {
@@ -87,9 +89,9 @@ class ComplainRegister extends React.Component {
     let options = [];
     for (var i in constants.complaint_types) {
       options.push({
-        key: (constants.complaint_types[i]).toString(),
-        text: i.toString(),
-        value: (constants.complaint_types[i]).toString(),
+        key: i.toString(),
+        text: (constants.complaint_types[i]).toString(),
+        value: i.toString(),
       });
     }
     return (
@@ -97,7 +99,7 @@ class ComplainRegister extends React.Component {
         {this.state.error && (
           <Message warning>
             <Icon name="warning" />
-            Okay
+            Your complain could not be made. Please try again
           </Message>
         )}
         {this.state.success && (
@@ -155,9 +157,9 @@ class ComplainRegister extends React.Component {
                           {5 * (activePage - 1) + index + 1}
                         </Table.Cell>
                         <Table.Cell>{complain.description}</Table.Cell>
-                        <Table.Cell>{complain.complaintType}</Table.Cell>
-                        <Table.Cell>{complain.status}</Table.Cell>
-                        <Table.Cell>{complain.roomNo}</Table.Cell>
+                        <Table.Cell>{constants.complaint_types[complain.complaintType]}</Table.Cell>
+                        <Table.Cell>{constants.statues.COMLAINT_STATUSES[complain.status]}</Table.Cell>
+                        <Table.Cell>{moment(complain.datetimeCreated.substring(0,10), "YYYY-MM-DD").format("DD/MM/YY")}</Table.Cell>
                         <Table.Cell>{complain.roomNo}</Table.Cell>
                       </Table.Row>
                     );

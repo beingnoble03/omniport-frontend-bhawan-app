@@ -20,8 +20,8 @@ const MyProfile = lazy(() => import("./my_profile/index"));
 const AdminAuthorities = lazy(() => import("./admin_authorities/index"));
 const AddFacility = lazy(() => import("./add-facility/index"));
 import { whoami } from "../actions/who_am_i";
-import { getConstants } from "../actions/get-constants"
-import { constantsUrl } from "../urls"
+import { getConstants } from "../actions/get-constants";
+import { constantsUrl } from "../urls";
 import PastBookings from "./past_bookings_admin/index";
 import main from "formula_one/src/css/app.css";
 import blocks from "../css/app.css";
@@ -112,26 +112,32 @@ class App extends React.Component {
                         <Route
                           path={`${match.path}book_room`}
                           exact
-                          render={(props) => ( !who_am_i.isAdmin ? (
-                              <BookRoom who_am_i={who_am_i} />
+                          render={(props) =>
+                            !who_am_i.isAdmin ? (
+                              <BookRoom who_am_i={who_am_i} constants={constants} />
                             ) : (
-                              <BookingRequests who_am_i={who_am_i} />
+                              <BookingRequests who_am_i={who_am_i} constants={constants} />
                             )
-                          )}
+                          }
                         />
                         <Route
                           path={`${match.path}complain`}
                           exact
-                          render={(props) => ((!who_am_i.isAdmin) ? (
+                          render={(props) =>
+                            !who_am_i.isAdmin ? (
                               <ComplainRegister
                                 who_am_i={who_am_i}
                                 constants={constants}
                                 {...props}
                               />
                             ) : (
-                              <AdminComplains who_am_i={who_am_i} {...props} />
+                              <AdminComplains
+                                who_am_i={who_am_i}
+                                constants={constants}
+                                {...props}
+                              />
                             )
-                          )}
+                          }
                         />
                         <Route
                           path={`${match.path}add/facility`}
@@ -201,7 +207,7 @@ class App extends React.Component {
                       <Route
                         path={`${match.path}`}
                         exact
-                        render={(props) => <Authorities who_am_i={who_am_i} />}
+                        render={(props) => <Authorities who_am_i={who_am_i}  constants={constants}/>}
                       />
                     </Grid.Column>
                   </Grid.Row>

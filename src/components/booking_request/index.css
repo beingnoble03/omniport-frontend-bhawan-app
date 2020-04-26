@@ -8,3 +8,9 @@
 .booking-menu {
     border-bottom: 1px solid transparent;
 }
+.forward {
+    color: #00661D;
+}
+.reject {
+    color: #D33E20;
+}

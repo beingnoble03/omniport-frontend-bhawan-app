@@ -37,10 +37,6 @@ export const getFacility = (residence, id, successCallBack, errCallBack) => {
 };
 
 export const addFacility = (url, data, successCallBack, errCallBack) => {
-  console.log("wec");
-  for (var value of data.values()) {
-    console.log(value);
-  }
   const headers = {
     "Content-Type": "multipart/form-data",
     "X-CSRFToken": getCookie("csrftoken"),
@@ -62,10 +58,6 @@ export const addFacility = (url, data, successCallBack, errCallBack) => {
   };
 };
 export const editFacility = (url, data, successCallBack, errCallBack) => {
-  console.log("wec");
-  for (var value of data.values()) {
-    console.log(value);
-  }
   const headers = {
     "Content-Type": "application/json",
     "X-CSRFToken": getCookie("csrftoken"),
@@ -81,7 +73,7 @@ export const editFacility = (url, data, successCallBack, errCallBack) => {
         });
       })
       .catch((err) => {
-        errCallBack();
+        errCallBack(err);
       });
   };
 };

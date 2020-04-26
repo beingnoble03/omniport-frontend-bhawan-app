@@ -27,7 +27,7 @@ class Authorities extends React.Component {
     console.log(id);
   };
   render() {
-    const { authorities } = this.props;
+    const { authorities, constants } = this.props;
     return (
       <Container>
         <Header as="h5">Authorities</Header>
@@ -41,7 +41,7 @@ class Authorities extends React.Component {
                     >
                       <Card.Content styleName="top-card">
                         <Header as="h5" styleName="zero-margin">
-                          Chief warden
+                          {constants.designations[authority.designation]}
                         </Header>
                         <Card.Content styleName="small-font">
                           {authority.name}

@@ -48,19 +48,23 @@ export const getResolvedComplains = (url) => {
       .catch((error) => {});
   };
 };
-export const increaseUnsuccefulAttempts = (url) => {
+export const increaseUnsuccefulAttempts = (url, successCallBack, errCallBack) => {
   return (dispatch) => {
     axios({
       method: "get",
       url: url,
     })
       .then((response) => {
+        console.log("gvsrcjh")
+        successCallBack(response)
         let item = response.data;
-        dispatch({
-          type: "INCREASE_UNSUCCESFUL_ATTEMPT",
-          payload: item,
-        });
+        // dispatch({
+        //   type: "INCREASE_UNSUCCESFUL_ATTEMPT",
+        //   payload: item,
+        // });
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log("jghsvdjh")
+        errCallBack(error)});
   };
 };

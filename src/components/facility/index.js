@@ -19,13 +19,13 @@ import "./index.css";
 import * as moment from "moment";
 
 const options = [
-  { key: "mon", text: "Monday", value: "Monday" },
-  { key: "tue", text: "Tuesday", value: "Tuesday" },
-  { key: "wed", text: "Wednesday", value: "Wednesday" },
-  { key: "thurs", text: "Thursday", value: "Thursday" },
-  { key: "fri", text: "Friday", value: "Friday" },
-  { key: "sat", text: "Saturday", value: "Saturday" },
-  { key: "sun", text: "Sunday", value: "Sunday" },
+  { key: "mon", text: "Monday", value: "mon" },
+  { key: "tue", text: "Tuesday", value: "tue" },
+  { key: "wed", text: "Wednesday", value: "wed" },
+  { key: "thu", text: "Thursday", value: "thu" },
+  { key: "fri", text: "Friday", value: "fri" },
+  { key: "sat", text: "Saturday", value: "sat" },
+  { key: "sun", text: "Sunday", value: "sun" },
 ];
 
 class Facility extends React.Component {
@@ -111,7 +111,7 @@ class Facility extends React.Component {
 
   submitData = () => {
     console.log("uygwe");
-    const {  information, startTime, endTime } = this.state;
+    const {  information, startTime, endTime, descriptions } = this.state;
 
     if (information && descriptions && startTime && endTime) {
       let formData = new FormData();
@@ -129,16 +129,14 @@ class Facility extends React.Component {
         }
       }
       let data = null;
-      if(timing.length>0){
+      if(timings.length>0){
       data = {
-        "name": this.state.name,
         "description": this.state.information,
         "timings": timings
       }
     }
     else {
       data = {
-        "name": this.state.name,
         "description": this.state.information,
       }
     }
@@ -149,6 +147,7 @@ class Facility extends React.Component {
         this.errCallBack
       );
     }
+    this.toggleEditMode();
   };
 
   removeClick = (i) => {
@@ -305,7 +304,7 @@ class Facility extends React.Component {
                             />
                           </Form.Field>
                           <Form.Group>
-                            <Form.Button onClick={this.toggleEditMode}>
+                            <Form.Button onClick={this.submitData}>
                               Save Changes
                             </Form.Button>
                             <Form.Button onClick={this.toggleEditMode}>
@@ -313,6 +312,7 @@ class Facility extends React.Component {
                             </Form.Button>
                           </Form.Group>
                         </Form>
+                        * Filling any timing will rewrite the old timigs with new one
                       </div>
                     ) : (
                       <div>

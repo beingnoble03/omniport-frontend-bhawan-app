@@ -40,12 +40,15 @@ export const changeTimeSlot = (
           headers: headers,
         })
         .then((res) => {
+          successCallBack();
           dispatch({
             type: "ADD_TIME_SLOT",
             payload: item,
           });
         })
-        .catch((err) => {});
+        .catch((err) => {
+          errorCallBack(err);
+        });
     };
   } else {
     return (dispatch) => {
@@ -54,12 +57,11 @@ export const changeTimeSlot = (
           headers: headers,
         })
         .then((res) => {
-          dispatch({
-            type: "EDIT_TIME_SLOT",
-            payload: item,
-          });
+          successCallBack();
         })
-        .catch((err) => {});
+        .catch((err) => {
+          errorCallBack();
+        });
     };
   }
 };

@@ -57,6 +57,10 @@ export const bookingsUrl = (residence) => {
   return `${baseApiUrl()}${residence}/room_booking/`
 }
 
+export const specificBookingUrl = (residence, id) => {
+  return `${baseApiUrl()}${residence}/room_booking/${id}/`
+}
+
 export const constantsUrl = () => {
   return `${baseApiUrl()}constants/`
 }

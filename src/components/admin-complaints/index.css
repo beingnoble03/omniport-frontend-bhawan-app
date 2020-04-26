@@ -8,3 +8,10 @@
 .complain-menu {
     border-bottom: 1px solid transparent;
 }
+.resolve-style {
+    color: #00661D;
+    cursor: pointer;
+}
+.cursor {
+    cursor: pointer;
+}

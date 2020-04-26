@@ -24,14 +24,10 @@ import {
   Dropdown,
   Pagination,
 } from "semantic-ui-react";
+import { toast } from 'react-semantic-toasts'
 import "./index.css";
 import * as moment from "moment";
 
-const bookingStatus = {
-  pen: "PENDING",
-  unr: "UNRESOLVED",
-  res: "RESOLVED",
-};
 const days = [
   { key: "mon", text: "Monday", value: "mon" },
   { key: "tue", text: "Tuesday", value: "tue" },
@@ -149,7 +145,7 @@ class AdminComplains extends Component {
     }
     this.setState({
       found: false,
-      foundType: false
+      foundType: false,
     });
   }
 
@@ -161,10 +157,28 @@ class AdminComplains extends Component {
       this.state.activeId,
       body,
       this.props.who_am_i.residence,
-      this.successCallBack,
+      this.resolveSuccessCallBack,
       this.errCallBack
     );
     this.close();
+  };
+
+  resolveSuccessCallBack = (res) => {
+    console.log("vgefj");
+    this.setState({
+      success: true,
+      error: false,
+      message: "",
+    });
+    this.props.getPendingComplains(
+      statusComplainsUrl(this.props.who_am_i.residence, ["pending"])
+    );
+    this.props.getResolvedComplains(
+      statusComplainsUrl(this.props.who_am_i.residence, [
+        "resolved",
+        "unresolved",
+      ])
+    );
   };
 
   successCallBack = (res) => {
@@ -183,7 +197,6 @@ class AdminComplains extends Component {
     });
   };
   changeTiming = () => {
-
     let dayTiming = [];
     for (var index = 0; index < this.props.timeSlots.length; index++) {
       if (this.props.timeSlots[index].complaintType === this.state.type) {
@@ -191,22 +204,21 @@ class AdminComplains extends Component {
         break;
       }
     }
-    if(this.state.foundType) {
-    for (var index = 0; index < dayTiming.length; index++) {
-      if (dayTiming[index].day === this.state.days) {
-        dayTiming[index].start = this.state.from;
-        dayTiming[index].end = this.state.to;
-        break;
+    if (this.state.foundType) {
+      for (var index = 0; index < dayTiming.length; index++) {
+        if (dayTiming[index].day === this.state.days) {
+          dayTiming[index].start = this.state.from;
+          dayTiming[index].end = this.state.to;
+          break;
+        }
       }
+    } else {
+      dayTiming.push({
+        day: this.state.days,
+        start: this.state.from,
+        end: this.state.to,
+      });
     }
-  }
-  else {
-    dayTiming.push({
-      day: this.state.days,
-      start: this.state.from,
-      end: this.state.to,
-    })
-  }
     const data = {
       complaintType: this.state.type,
       timing: dayTiming,
@@ -216,14 +228,31 @@ class AdminComplains extends Component {
       this.state.found,
       this.state.foundId,
       timeSlotsUrl(this.props.who_am_i.residence),
-      this.successCallBack,
+      this.timeSlotSuccessCallBack,
       this.errorCallBack
     );
+  };
+  timeSlotSuccessCallBack = (res) => {
+    this.setState({
+      success: true,
+      error: false,
+      message: "",
+    });
+    toast({
+      type: 'success',
+      title: 'Time Slot changed',
+      description: "Time Slot Changed",
+      animation: 'fade up',
+      icon: 'smile outline',
+      time: 4000
+    })
+    this.props.getTimeSlots();
   };
 
   handleItemClick = (e, { name }) => {
     this.setState({ activeItem: name });
   };
+
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage });
     this.props.getPendingComplains(
@@ -232,6 +261,7 @@ class AdminComplains extends Component {
       ])}&page=${activePage}`
     );
   };
+
   handlePastPaginationChange = (e, { activePage }) => {
     this.setState({ activeAprPage: activePage });
     this.props.getResolvedComplains(
@@ -241,11 +271,15 @@ class AdminComplains extends Component {
       ])}&page=${activePage}`
     );
   };
+
   increaseUnsuccesfulComplains = (id) => {
     this.props.increaseUnsuccefulAttempts(
-      increaseUnsuccesfulComplainsUrl(this.props.who_am_i.residence, id)
+      increaseUnsuccesfulComplainsUrl(this.props.who_am_i.residence, id),
+      this.resolveSuccessCallBack,
+      this.errCallBack
     );
   };
+
   render() {
     const {
       open,
@@ -255,7 +289,7 @@ class AdminComplains extends Component {
       activeRejPage,
       activeAprPage,
     } = this.state;
-    const { pendingComplains, resolvedComplains } = this.props;
+    const { pendingComplains, resolvedComplains, constants } = this.props;
     return (
       <React.Fragment>
         <Container>
@@ -266,6 +300,7 @@ class AdminComplains extends Component {
                 <Table.HeaderCell>ID</Table.HeaderCell>
                 <Table.HeaderCell>Complaint</Table.HeaderCell>
                 <Table.HeaderCell>Applicant Name</Table.HeaderCell>
+                <Table.HeaderCell>Complaint Date</Table.HeaderCell>
                 <Table.HeaderCell>Complaint Type</Table.HeaderCell>
                 <Table.HeaderCell>Contact Number</Table.HeaderCell>
                 <Table.HeaderCell>Applicant Room</Table.HeaderCell>
@@ -285,7 +320,8 @@ class AdminComplains extends Component {
                         </Table.Cell>
                         <Table.Cell>{complain.description}</Table.Cell>
                         <Table.Cell>{complain.complainant}</Table.Cell>
-                        <Table.Cell>{complain.complaintType}</Table.Cell>
+                        <Table.Cell>{moment(complain.datetimeCreated.substring(0,10), "YYYY-MM-DD").format("DD/MM/YY")}</Table.Cell>
+                        <Table.Cell>{constants.complaint_types[complain.complaintType]}</Table.Cell>
                         <Table.Cell>{complain.phoneNumber}</Table.Cell>
                         <Table.Cell>{complain.roomNo}</Table.Cell>
                         <Table.Cell
@@ -294,9 +330,10 @@ class AdminComplains extends Component {
                           }
                         >
                           {complain.failedAttempts}
+                          <span styleName="cursor"> + </span>
                         </Table.Cell>
                         <Table.Cell onClick={() => this.show(complain.id)}>
-                          Resolve
+                          <span styleName="resolve-style">Resolve</span>
                         </Table.Cell>
                       </Table.Row>
                     );
@@ -357,12 +394,14 @@ class AdminComplains extends Component {
                     <Table.HeaderCell>ID</Table.HeaderCell>
                     <Table.HeaderCell>Complaint</Table.HeaderCell>
                     <Table.HeaderCell>Applicant Name</Table.HeaderCell>
+                    <Table.HeaderCell>Complaint Date</Table.HeaderCell>
                     <Table.HeaderCell>Complaint Type</Table.HeaderCell>
                     <Table.HeaderCell>Contact Number</Table.HeaderCell>
                     <Table.HeaderCell>Applicant Room</Table.HeaderCell>
                     <Table.HeaderCell>
                       Unsuccesful attempts to solve
                     </Table.HeaderCell>
+                    <Table.HeaderCell>Complain Status</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -376,10 +415,12 @@ class AdminComplains extends Component {
                             </Table.Cell>
                             <Table.Cell>{complain.description}</Table.Cell>
                             <Table.Cell>{complain.complainant}</Table.Cell>
-                            <Table.Cell>{complain.complaintType}</Table.Cell>
+                            <Table.Cell>{moment(complain.datetimeCreated.substring(0,10), "YYYY-MM-DD").format("DD/MM/YY")}</Table.Cell>
+                            <Table.Cell>{constants.complaint_types[complain.complaintType]}</Table.Cell>
                             <Table.Cell>{complain.phoneNumber}</Table.Cell>
                             <Table.Cell>{complain.roomNo}</Table.Cell>
                             <Table.Cell>{complain.failedAttempts}</Table.Cell>
+                            <Table.Cell>{constants.statues.COMLAINT_STATUSES[complain.status]}</Table.Cell>
                           </Table.Row>
                         );
                       })
@@ -450,8 +491,8 @@ const mapDispatchToProps = (dispatch) => {
         )
       );
     },
-    increaseUnsuccefulAttempts: (url) => {
-      dispatch(increaseUnsuccefulAttempts(url));
+    increaseUnsuccefulAttempts: (url, successCallBack, errCallBack) => {
+      dispatch(increaseUnsuccefulAttempts(url, successCallBack, errCallBack));
     },
     resolveComplain: (id, data, residence, successCallBack, errCallBack) => {
       dispatch(

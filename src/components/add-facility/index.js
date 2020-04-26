@@ -15,7 +15,7 @@ import {
 import { CustomCropper } from "formula_one";
 import getCroppedImage from "../get-cropped-image";
 import { TimeInput } from "semantic-ui-calendar-react";
-import { addFacility } from "../../actions/facilities";
+import { getFacilities, addFacility } from "../../actions/facilities";
 import { facilitiesUrl } from "../../urls";
 import "./index.css";
 import * as moment from "moment";
@@ -56,6 +56,10 @@ class Facility extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.props.getFacilities(facilitiesUrl(this.props.who_am_i.residence));
+  }
+
   fileChange = async (e) => {
     this.setState({
       [e.target.name]: e.target.files[0],
@@ -78,7 +82,7 @@ class Facility extends React.Component {
 
   submitData = () => {
     console.log("uygwe");
-    const { croppedImage, information, startTime, endTime } = this.state;
+    const { croppedImage, information, startTime, endTime, descriptions } = this.state;
     let image = null;
 
     !croppedImage ? (image = false) : (image = true);
@@ -93,12 +97,12 @@ class Facility extends React.Component {
       for (var i = 0; i < this.state.days.length; i++) {
         for (var j = 0; j < this.state.days[i].length; j++) {
           console.log(this.state.days[i][j]);
-          formData.append("timings", {
+          formData.append("timings[]", JSON.stringify({
             day: this.state.days[i][j],
             start: this.state.startTime[i],
             end: this.state.endTime[i],
             description: this.state.descriptions[i],
-          });
+          }));
         }
       }
       formData.append("displayPicture", croppedImage);
@@ -251,6 +255,7 @@ class Facility extends React.Component {
 
   render() {
     const { information, name } = this.state;
+    const {  facilities } = this.props;
     const options = [
       { key: "mon", text: "Monday", value: "Monday" },
       { key: "tue", text: "Tuesday", value: "Tuesday" },
@@ -262,14 +267,6 @@ class Facility extends React.Component {
     ];
     return (
       <Grid.Column>
-        <div>
-          <Button styleName="button_margin">Mess</Button>
-          <Button styleName="button_margin">Canteen</Button>
-          <Button styleName="button_margin">Mess</Button>
-          <Button styleName="button_margin">Canteen</Button>
-          <Button styleName="button_margin">Mess</Button>
-          <Button styleName="button_margin">Canteen</Button>
-        </div>
         <Header as="h2">XYZ</Header>
         <Grid divided="vertically">
           <Grid.Row columns={2}>
@@ -311,7 +308,7 @@ class Facility extends React.Component {
                         onClick={this.addClick}
                         name="plus"
                         size="big"
-                        // styleName="plus-icon"
+                        styleName="plus-icon"
                       />
                     </Form.Field>
                     <Form.Group>
@@ -381,12 +378,22 @@ function dataURLtoFile(dataurl, filename) {
   }
   return new File([u8arr], filename, { type: mime });
 }
+
+function mapStateToProps(state) {
+  return {
+    facilities: state.facilities,
+  };
+}
+
 const mapDispatchToProps = (dispatch) => {
   return {
+    getFacilities: (url) => {
+      dispatch(getFacilities(url));
+    },
     addFacility: (url, data, successCallBack, errCallBack) => {
       dispatch(addFacility(url, data, successCallBack, errCallBack));
     },
   };
 };
 
-export default connect(null, mapDispatchToProps)(Facility);
+export default connect(mapStateToProps, mapDispatchToProps)(Facility);
