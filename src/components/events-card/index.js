@@ -5,7 +5,7 @@ import { Card, Form, Button, Input, Header } from "semantic-ui-react";
 import { TimeInput } from "semantic-ui-calendar-react";
 import "./index.css";
 import { getEvents } from "../../actions/events";
-import { eventsUrl } from "../../urls"
+import { eventsUrl, eventUrl } from "../../urls";
 import { addEvent } from "../../actions/add-events";
 import * as moment from "moment";
 
@@ -84,42 +84,44 @@ class EventsCard extends React.Component {
             {moment(this.props.activeDay, "YYYY-MM-DD").format("DD/MM/YYYY")}
           </div>
         ) : null}
-        <Link to='/bhawan_app/events'>
-        <Card>
-          <Card.Content>
-            <Card.Header>
-              {location.pathname == "/bhawan_app/events"
-                ? "On this day"
-                : "Todays events"}
-            </Card.Header>
-            {dayEvents.length > 0
-              ? dayEvents.map((event) => {
-                  return (
-                    <div styleName="max-content-width">
-                      <Card.Description>
-                        {event.name}
-                        <div styleName="display-flex">
-                          <div styleName="min-margin">{event.description}</div>
-                          <div>
-                            {moment(event.timings[0].start, "hh:mm:ss").format(
-                              "hh:mm A"
-                            )}
+        <Link to="/bhawan_app/events">
+          <Card>
+            <Card.Content>
+              <Card.Header>
+                {location.pathname === eventUrl
+                  ? "On this day"
+                  : "Todays events"}
+              </Card.Header>
+              {dayEvents.length > 0
+                ? dayEvents.map((event) => {
+                    return (
+                      <div styleName="max-content-width">
+                        <Card.Description>
+                          {event.name}
+                          <div styleName="display-flex">
+                            <div styleName="min-margin">
+                              {event.description}
+                            </div>
+                            <div>
+                              {moment(
+                                event.timings[0].start,
+                                "hh:mm:ss"
+                              ).format("hh:mm A")}
+                            </div>
                           </div>
-                        </div>
-                      </Card.Description>
-                    </div>
-                  );
-                })
-              : "No event today"}
-
-                  {this.props.who_am_i.isAdmin?
-                  (
-                    <Header as="h5" onClick={this.toggleAddEvent}>
-                        {!this.state.addEvent ? <span>+</span> : null}
-                          Add event
-                        </Header>
-                  ):null}
-                {this.state.addEvent ? (
+                        </Card.Description>
+                      </div>
+                    );
+                  })
+                : "No event today"}
+              {this.props.who_am_i.isAdmin &&
+              location.pathname === "/bhawan_app/events" ? (
+                <Header as="h5" onClick={this.toggleAddEvent}>
+                  {!this.state.addEvent ? <span>+</span> : null}
+                  Add event
+                </Header>
+              ) : null}
+              {this.state.addEvent ? (
                 <Form>
                   <Form.Field
                     name="event"
@@ -130,31 +132,30 @@ class EventsCard extends React.Component {
                     placeholder="First name"
                     required
                   />
-                <Form.Field
-                  name="venue"
-                  placeholder="Venue"
-                  control={Input}
-                  onChange={this.handleChange}
-                  label="Venue"
-                  placeholder="Venue"
-                  required
-                />
-                <Form.Field required>
-                  <label>Time</label>
-                  <TimeInput
-                    name="time"
-                    value={this.state.time}
+                  <Form.Field
+                    name="venue"
+                    placeholder="Venue"
+                    control={Input}
                     onChange={this.handleChange}
+                    label="Venue"
+                    placeholder="Venue"
+                    required
                   />
-                </Form.Field>
-                <Button type="submit" fluid onClick={this.handleSubmit}>
-                  Submit
-                </Button>
-              </Form>
-            ) : null}
-            
-          </Card.Content>
-        </Card>
+                  <Form.Field required>
+                    <label>Time</label>
+                    <TimeInput
+                      name="time"
+                      value={this.state.time}
+                      onChange={this.handleChange}
+                    />
+                  </Form.Field>
+                  <Button type="submit" fluid onClick={this.handleSubmit}>
+                    Submit
+                  </Button>
+                </Form>
+              ) : null}
+            </Card.Content>
+          </Card>
         </Link>
       </React.Fragment>
     );

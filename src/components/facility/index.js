@@ -13,7 +13,11 @@ import {
   Grid,
 } from "semantic-ui-react";
 import { TimeInput } from "semantic-ui-calendar-react";
-import { getFacility, getFacilities, editFacility } from "../../actions/facilities";
+import {
+  getFacility,
+  getFacilities,
+  editFacility,
+} from "../../actions/facilities";
 import { facilitiesUrl, facilityUrl } from "../../urls";
 import "./index.css";
 import * as moment from "moment";
@@ -44,6 +48,7 @@ class Facility extends React.Component {
   }
 
   componentDidMount() {
+    this.props.setNavigation("Facilities");
     this.props.getFacilities(facilitiesUrl(this.props.who_am_i.residence));
     this.props.getFacility(
       this.props.who_am_i.residence,
@@ -111,7 +116,7 @@ class Facility extends React.Component {
 
   submitData = () => {
     console.log("uygwe");
-    const {  information, startTime, endTime, descriptions } = this.state;
+    const { information, startTime, endTime, descriptions } = this.state;
 
     if (information && descriptions && startTime && endTime) {
       let formData = new FormData();
@@ -125,21 +130,20 @@ class Facility extends React.Component {
             start: this.state.startTime[i],
             end: this.state.endTime[i],
             description: this.state.descriptions[i],
-          })
+          });
         }
       }
       let data = null;
-      if(timings.length>0){
-      data = {
-        "description": this.state.information,
-        "timings": timings
+      if (timings.length > 0) {
+        data = {
+          description: this.state.information,
+          timings: timings,
+        };
+      } else {
+        data = {
+          description: this.state.information,
+        };
       }
-    }
-    else {
-      data = {
-        "description": this.state.information,
-      }
-    }
       this.props.editFacility(
         facilityUrl(this.props.who_am_i.residence, this.state.id),
         data,
@@ -294,6 +298,7 @@ class Facility extends React.Component {
                             placeholder="Tell us more"
                             fluid
                           />
+                          <Header as="h3">Timings</Header>
                           {this.createForm()}
                           <Form.Field>
                             <Icon
@@ -312,7 +317,8 @@ class Facility extends React.Component {
                             </Form.Button>
                           </Form.Group>
                         </Form>
-                        * Filling any timing will rewrite the old timigs with new one
+                        * Filling any timing will rewrite the old timigs with
+                        new one
                       </div>
                     ) : (
                       <div>
@@ -336,13 +342,15 @@ class Facility extends React.Component {
                               );
                             })
                           : null}
-                        <Button
-                          basic
-                          color="blue"
-                          onClick={this.toggleEditMode}
-                        >
-                          Edit
-                        </Button>
+                        {this.props.who_am_i.isAdmin && (
+                          <Button
+                            basic
+                            color="blue"
+                            onClick={this.toggleEditMode}
+                          >
+                            Edit
+                          </Button>
+                        )}
                       </div>
                     )}
                   </Container>
@@ -372,7 +380,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(getFacility(residence, id, successCallBack, errCallBack));
     },
     editFacility: (url, data, successCallBack, errCallBack) => {
-      dispatch(editFacility(url, data, successCallBack, errCallBack))
+      dispatch(editFacility(url, data, successCallBack, errCallBack));
     },
   };
 };

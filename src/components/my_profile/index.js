@@ -12,12 +12,13 @@ import blocks from '../../css/app.css'
 class MyProfile extends React.Component {
     state = { activeItem: 'upcoming'  }
   componentDidMount(){
+    this.props.setNavigation("Profile");
     this.props.getComplains(this.props.who_am_i.residence)
   }
 handleItemClick = (e, { name }) => this.setState({ activeItem: name })
   render() {
     const { activeItem } = this.state
-    const { complains } = this.props
+    const { complains, who_am_i, constants } = this.props
     return (
       <Container>
         <Complains {...this.props}/>
@@ -43,9 +44,9 @@ handleItemClick = (e, { name }) => this.setState({ activeItem: name })
           </Menu.Item>
         </Menu>
         {activeItem ==='past'? (
-          <PastBookings />
+          <PastBookings who_am_i={who_am_i} />
         ):
-        (<UpcomingBookings />)
+        (<UpcomingBookings who_am_i={who_am_i} constants={constants} />)
         }
       </Container>
     )

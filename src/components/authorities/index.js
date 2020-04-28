@@ -29,8 +29,8 @@ class Authorities extends React.Component {
   render() {
     const { authorities, constants } = this.props;
     return (
-      <Container>
-        <Header as="h5">Authorities</Header>
+      <Container styleName="top-margin">
+        <h2>Authorities</h2>
         <Card.Group itemsPerRow={3}>
           {authorities.length > 0
             ? authorities.map((authority, index) => {
@@ -60,15 +60,15 @@ class Authorities extends React.Component {
                         <Container styleName="authority-info">
                           <Card.Content>
                             <span styleName="bold">Room no: </span>
-                            <span styleName="details">anushka</span>
+                            <span styleName="details">{authority.roomNumber}</span>
                           </Card.Content>
                           <Card.Content>
                             <span styleName="bold">Email: </span>
-                            <span styleName="details">anu@gmail.com</span>
+                            <span styleName="details">{authority.emailAddress}</span>
                           </Card.Content>
                           <Card.Content>
                             <span styleName="bold">Phone no: </span>
-                            <span styleName="details">6377893833</span>
+                        <span styleName="details">{authority.phoneNumber}</span>
                           </Card.Content>
                         </Container>
                       </Card.Content>

@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Card, Container } from "semantic-ui-react";
+import { Card, Container, Button } from "semantic-ui-react";
 import { getFacilities } from "../../actions/facilities";
-import { facilitiesUrl } from "../../urls"
+import { facilitiesUrl } from "../../urls";
 import facilities from "./index.css";
 import blocks from "../../css/app.css";
 import moment from "moment";
@@ -16,6 +16,7 @@ class Facilities extends React.Component {
     };
   }
   componentDidMount() {
+    this.props.setNavigation("Home");
     this.props.getFacilities(facilitiesUrl(this.props.who_am_i.residence));
   }
   increaseCount = () => {
@@ -28,11 +29,18 @@ class Facilities extends React.Component {
     console.log(id);
   };
   render() {
-    const { facilities } = this.props;
+    const { facilities, who_am_i } = this.props;
 
     return (
       <Container>
-        <h2>Facilities</h2>
+        <h2>
+          Facilities
+          {(who_am_i.isAdmin && !who_am_i.isStudent) &&
+          <Link to="bhawan_app/add/facility/">
+            <Button styleName="blocks.active-button">Add Faciilty</Button>
+          </Link>
+          }
+        </h2>
         <Card.Group itemsPerRow={3}>
           {facilities.length > 0
             ? facilities.map((facility, index) => {

@@ -3,14 +3,49 @@ import { Link } from "react-router-dom";
 import { Header, Menu, Button, Icon } from "semantic-ui-react";
 import navCss from "./index.css";
 import blocks from "../../css/app.css";
+import {
+  homePageUrl,
+  adminComplainUrl,
+  bookingUrl,
+  eventUrl,
+} from "../../urls";
 
 export default class Nav extends Component {
   constructor(props) {
     super(props);
     this.state = {
       activeItem: "home",
-      activeSubGroup: "complains",
+      activeSubGroup: "facauth",
     };
+  }
+
+  componentDidMount() {
+    switch (location.pathname) {
+      case homePageUrl(): {
+        this.setState({
+          activeSubGroup: "facauth",
+        });
+        return;
+      }
+      case adminComplainUrl(): {
+        this.setState({
+          activeSubGroup: "complains",
+        });
+        return;
+      }
+      case bookingUrl(): {
+        this.setState({
+          activeSubGroup: "bookings",
+        });
+        return;
+      }
+      case eventUrl(): {
+        this.setState({
+          activeSubGroup: "events",
+        });
+        return;
+      }
+    }
   }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
@@ -26,7 +61,7 @@ export default class Nav extends Component {
           <Menu.Item>
             <Header>{this.props.who_am_i.residence}</Header>
           </Menu.Item>
-          {!this.props.who_am_i.isAdmin ? (
+          {this.props.who_am_i.isStudent ? (
             <Menu.Menu position="right">
               <Menu.Item styleName="blocks.zero-padding">
                 <Link to="/bhawan_app/book_room/">
@@ -57,9 +92,9 @@ export default class Nav extends Component {
             </Menu.Menu>
           ) : null}
         </Menu>
-        {this.props.who_am_i.isAdmin ? (
+        {this.props.who_am_i.isAdmin && !this.props.who_am_i.isStudent ? (
           <Menu size="mini" secondary styleName="navCss.lower_menu">
-            <Link to="/bhawan_app/complain">
+            <Link to="/bhawan_app/admin_complain">
               <Menu.Item
                 size="mini"
                 name="complains"
@@ -95,17 +130,19 @@ export default class Nav extends Component {
                 Events
               </Menu.Item>
             </Link>
-            <Menu.Item
-              size="mini"
-              name="facauth"
-              color="blue"
-              styleName="navCss.navColor"
-              active={activeSubGroup == "facauth"}
-              onClick={this.handleGroupClick}
-            >
-              Facilities and Authorities
-            </Menu.Item>
-            <Menu.Item
+            <Link to="/bhawan_app/">
+              <Menu.Item
+                size="mini"
+                name="facauth"
+                color="blue"
+                styleName="navCss.navColor"
+                active={activeSubGroup == "facauth"}
+                onClick={this.handleGroupClick}
+              >
+                Facilities and Authorities
+              </Menu.Item>
+            </Link>
+            {/* <Menu.Item
               size="mini"
               name="database"
               color="blue"
@@ -124,13 +161,16 @@ export default class Nav extends Component {
               onClick={this.handleGroupClick}
             >
               Register New Student
-            </Menu.Item>
+            </Menu.Item> */}
           </Menu>
         ) : (
           <Menu size="mini" secondary styleName="navCss.lower_menu">
             <Menu.Item size="mini">
-              <Icon name="angle left" /> <Icon name="angle right" />
-              Home
+              {/* <Link to={homePageUrl()}>
+                <Icon name="angle left" />
+              </Link>{" "}
+              <Icon name="angle right" /> */}
+              {this.props.activeNav}
             </Menu.Item>
           </Menu>
         )}

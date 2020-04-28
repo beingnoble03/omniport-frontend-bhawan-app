@@ -12,6 +12,7 @@ import { eventsUrl } from "../../urls"
 
 class Events extends React.Component {
   componentDidMount() {
+    this.props.setNavigation("Events");
     this.props.getEvents(eventsUrl(this.props.who_am_i.residence))
   }
   handleDateClick = (arg) => {

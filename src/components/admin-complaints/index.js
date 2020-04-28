@@ -68,6 +68,7 @@ class AdminComplains extends Component {
   };
 
   componentDidMount() {
+    this.props.setNavigation("Student Complains")
     this.props.getPendingComplains(
       statusComplainsUrl(this.props.who_am_i.residence, ["pending"])
     );

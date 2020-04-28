@@ -10,7 +10,6 @@ import {
   Pagination,
   Table,
 } from "semantic-ui-react";
-import { TimeInput } from "semantic-ui-calendar-react";
 import "./index.css";
 import { connect } from "react-redux";
 import { getComplains } from "../../actions/complains";
@@ -33,6 +32,7 @@ class ComplainRegister extends React.Component {
   }
 
   componentDidMount() {
+    this.props.setNavigation("Register a Complain");
     this.props.getComplains(complainsUrl(this.props.who_am_i.residence));
   }
 

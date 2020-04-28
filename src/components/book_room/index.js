@@ -20,6 +20,9 @@ class BookRoom extends React.Component {
       proofUrl: [],
     };
   }
+  componentDidMount() {
+    this.props.setNavigation("Book a Room");
+  }
   handleChange = (event, { name, value }) => {
     if (this.state.hasOwnProperty(name)) {
       this.setState({ [name]: value });
@@ -52,7 +55,8 @@ class BookRoom extends React.Component {
               onChange={(event) => this.handleRelativeChange(i, event)}
             />
           </Form.Field>
-          <Form.Field>
+          <Form.Field >
+            <label>Identity Proof</label>
             <input
               type="file"
               accept="image/*"
@@ -60,14 +64,6 @@ class BookRoom extends React.Component {
               name={`picture${i}`}
               id={`uploadPhoto${i}`}
             />
-            {/* <label
-                htmlFor={`uploadPhoto${i}`}
-        >
-          <Icon
-            styleName='upload-btn'
-            name='upload'
-          />
-        </label> */}
           </Form.Field>
           {this.state.visitors.length > 1 ? (
             <Icon name="close" onClick={() => this.removeClick(i)} />
@@ -171,6 +167,15 @@ class BookRoom extends React.Component {
   render() {
     return (
       <Container>
+        {this.state.error && (
+          <Message warning>
+            <Icon name="warning" />
+            Your Booking Request could not be made. Please try again
+          </Message>
+        )}
+        {this.state.success && (
+          <Message positive>Your Booking Request has been made succesfully</Message>
+        )}
         <Form>
           <Form.Group>
             <Form.Field>
@@ -182,28 +187,10 @@ class BookRoom extends React.Component {
               />
             </Form.Field>
             <Form.Field>
-              <label>From time</label>
-              <TimeInput
-                name="fromTime"
-                value={this.state.fromTime}
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-          </Form.Group>
-          <Form.Group>
-            <Form.Field>
               <label>Until Date</label>
               <DateInput
                 name="endDate"
                 value={this.state.endDate}
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Until Time</label>
-              <TimeInput
-                name="endTime"
-                value={this.state.endTime}
                 onChange={this.handleChange}
               />
             </Form.Field>

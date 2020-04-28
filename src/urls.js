@@ -10,24 +10,27 @@ export const homePageUrl = () => {
   return `${baseNavUrl('/')}`
 }
 
+export const profilePageUrl = () => {
+  return `${baseNavUrl('/profile')}`
+}
 export const facilityPageUrl = () => {
-  return `${baseNavUrl('/facility/')}`
+  return `${baseNavUrl('/facility')}`
 }
 
 export const complainUrl = () => {
-  return `${baseNavUrl('/complain/')}`
+  return `${baseNavUrl('/complain')}`
 }
 
 export const adminComplainUrl = () => {
-  return `${baseNavUrl('/admin/complain/')}`
+  return `${baseNavUrl('/admin_complain')}`
 }
 
 export const bookingUrl = () => {
-  return `${baseNavUrl('/book_room/')}`
+  return `${baseNavUrl('/book_room')}`
 }
 
 export const eventUrl = () => {
-  return `${baseNavUrl('/events/')}`
+  return `${baseNavUrl('/events')}`
 }
 
 // Backend URLs
@@ -53,8 +56,8 @@ export const increaseUnsuccesfulComplainsUrl = (residence, id) => {
   return `${baseApiUrl()}${residence}/complaint/${id}/unsuccessful/`
 }
 
-export const bookingsUrl = (residence) => {
-  return `${baseApiUrl()}${residence}/room_booking/`
+export const bookingsUrl = (residence, past) => {
+  return `${baseApiUrl()}${residence}/room_booking/?past=${past}`
 }
 
 export const specificBookingUrl = (residence, id) => {
@@ -69,9 +72,9 @@ export const who_am_iUrl = () => {
   return `${baseApiUrl()}personal_info/`
 }
 
-export const statusBookingsUrl = (residence, status) => {
+export const statusBookingsUrl = (residence, status, past) => {
   status = status.toUpperCase()
-  return `${baseApiUrl()}${residence}/room_booking/?status=${status}`
+  return `${baseApiUrl()}${residence}/room_booking/?status=${status}&past=${past}`
 }
 
 export const eventsUrl = ( residence ) => {

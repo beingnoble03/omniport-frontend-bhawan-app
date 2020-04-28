@@ -53,23 +53,9 @@ export const updateBooking = (
       })
       .then((res) => {
         successCallBack(res);
-        const response = {
-          status: true,
-          value:
-            "Congratulations! The room booking status has changes succesfully made succesfully.",
-        };
-        dispatch({
-          type: "UPADTE_BOOKING",
-          payload: response,
-        });
       })
       .catch((err) => {
         errCallBack(err);
-        const response = {
-          value:
-            "Sorry! There has been an error in making your Book Request. Please try again!",
-          status: false,
-        };
       });
   };
 };

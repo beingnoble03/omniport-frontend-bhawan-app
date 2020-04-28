@@ -97,7 +97,7 @@ class Facility extends React.Component {
       for (var i = 0; i < this.state.days.length; i++) {
         for (var j = 0; j < this.state.days[i].length; j++) {
           console.log(this.state.days[i][j]);
-          formData.append("timings[]", JSON.stringify({
+          formData.append("timings", JSON.stringify({
             day: this.state.days[i][j],
             start: this.state.startTime[i],
             end: this.state.endTime[i],

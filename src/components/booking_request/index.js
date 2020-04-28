@@ -20,14 +20,6 @@ import {
 } from "semantic-ui-react";
 import "./index.css";
 
-const bookingStatus = {
-  pen: "PENDING",
-  apr: "CONFIRMED",
-  fwd: "FORWARDED",
-  cnf: "CONFIRMED",
-  rej: "REJECTED",
-};
-
 class BookingRequests extends Component {
   state = {
     open: false,
@@ -49,13 +41,15 @@ class BookingRequests extends Component {
     this.props.getPresentRoomBookings(
       statusBookingsUrl(
         this.props.who_am_i.residence,
-        this.props.constants.statues.BOOKING_STATUSES.pen
+        this.props.constants.statues.BOOKING_STATUSES.pen,
+        false,
       )
     );
     this.props.getPastRoomBookings(
       statusBookingsUrl(
         this.props.who_am_i.residence,
-        this.props.constants.statues.BOOKING_STATUSES.cnf
+        this.props.constants.statues.BOOKING_STATUSES.cnf,
+        true,
       )
     );
   }
@@ -83,13 +77,13 @@ class BookingRequests extends Component {
   handleItemClick = (e, { name }) => {
     this.setState({ activeItem: name, activePage: 1 });
     this.props.getPresentRoomBookings(
-      statusBookingsUrl(this.props.who_am_i.residence, name)
+      statusBookingsUrl(this.props.who_am_i.residence, name, false)
     );
   };
   handlePastItemClick = (e, { name }) => {
     this.setState({ activePastItem: name, activeAprPage: 1 });
     this.props.getPastRoomBookings(
-      statusBookingsUrl(this.props.who_am_i.residence, name)
+      statusBookingsUrl(this.props.who_am_i.residence, name, true)
     );
   };
 
@@ -138,13 +132,15 @@ class BookingRequests extends Component {
     this.props.getPresentRoomBookings(
       statusBookingsUrl(
         this.props.who_am_i.residence,
-        this.props.constants.statues.BOOKING_STATUSES[this.state.activeItem]
+        this.props.constants.statues.BOOKING_STATUSES[this.state.activeItem],
+        false,
       )
     );
     this.props.getPastRoomBookings(
       statusBookingsUrl(
         this.props.who_am_i.residence,
-        this.props.constants.statues.BOOKING_STATUSES[this.state.activePastItem]
+        this.props.constants.statues.BOOKING_STATUSES[this.state.activePastItem],
+        true,
       )
     );
   };
@@ -176,7 +172,8 @@ class BookingRequests extends Component {
     this.props.getPresentRoomBookings(
       `${statusBookingsUrl(
         this.props.who_am_i.residence,
-        this.state.activeItem
+        this.state.activeItem,
+        false,
       )}&page=${activePage}`
     );
   };
@@ -185,7 +182,8 @@ class BookingRequests extends Component {
     this.props.getPresentRoomBookings(
       `${statusBookingsUrl(
         this.props.who_am_i.residence,
-        this.state.activePastItem
+        this.state.activePastItem,
+        true
       )}&page=${activePage}`
     );
   };
