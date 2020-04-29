@@ -59,7 +59,7 @@ export default class Nav extends Component {
       <React.Fragment>
         <Menu secondary styleName="navCss.upper_menu">
           <Menu.Item>
-            <Header>{this.props.who_am_i.residence}</Header>
+            <Header>{this.props.constants.hostels[this.props.who_am_i.residence]}</Header>
           </Menu.Item>
           {this.props.who_am_i.isStudent ? (
             <Menu.Menu position="right">

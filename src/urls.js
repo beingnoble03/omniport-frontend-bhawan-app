@@ -60,6 +60,10 @@ export const bookingsUrl = (residence, past) => {
   return `${baseApiUrl()}${residence}/room_booking/?past=${past}`
 }
 
+export const yellowPagesUrl = (searchObject) => {
+  return `/api/yellow_pages/person/?search=${searchObject}`
+}
+
 export const specificBookingUrl = (residence, id) => {
   return `${baseApiUrl()}${residence}/room_booking/${id}/`
 }
@@ -91,4 +95,7 @@ export const facilitiesUrl = (residence) => {
 
 export const facilityUrl = (residence, id) => {
   return `${baseApiUrl()}${residence}/facility/${id}/`
+}
+export const authoritiesUrl = (residence) => {
+  return `${baseApiUrl()}${residence}/admin/`
 }

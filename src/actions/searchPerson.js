@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const getConstants = (url, successCallBack, errCallBack) => {
+export const searchPerson = (url, successCallBack) => {
   return (dispatch) => {
     axios({
       method: "get",
@@ -10,12 +10,11 @@ export const getConstants = (url, successCallBack, errCallBack) => {
         successCallBack(response);
         let item = response.data;
         dispatch({
-          type: "GET_ALL_CONSTANTS",
+          type: "SEARCH_PERSON_RESULTS",
           payload: item,
         });
       })
       .catch((error) => {
-        errCallBack(error);
       });
   };
 };

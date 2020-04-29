@@ -23,12 +23,6 @@ import { whoami } from "../actions/who_am_i";
 import { getConstants } from "../actions/get-constants";
 import {
   constantsUrl,
-  homePageUrl,
-  bookingUrl,
-  complainUrl,
-  eventUrl,
-  profilePageUrl,
-  facilityPageUrl,
 } from "../urls";
 import PastBookings from "./past_bookings_admin/index";
 import main from "formula_one/src/css/app.css";
@@ -65,6 +59,8 @@ class App extends React.Component {
     this.divRef = React.createRef();
     this.state = {
       loading: true,
+      consLoading: true,
+      consLoaded: false,
       loaded: false,
       activeNav: "Home",
     };
@@ -72,7 +68,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.props.whoami(this.successCallBack, this.errCallBack);
-    this.props.getConstants(constantsUrl());
+    this.props.getConstants(constantsUrl(), this.consSuccessCallBack, this.errCallBack);
   }
   setNavigation = (activeNav) => {
     this.setState({
@@ -89,17 +85,28 @@ class App extends React.Component {
     });
   };
 
+  consSuccessCallBack = (res) => {
+    this.setState({
+      success: true,
+      error: false,
+      message: res.statusText,
+      consLoaded: true,
+      consLoading: false,
+    })
+  }
   errCallBack = (err) => {
     this.setState({
       error: true,
       success: false,
       message: err,
+      loading: true,
+      loaded: false,
     });
   };
 
   render() {
     const { match, who_am_i, constants } = this.props;
-    if (this.state.loaded) {
+    if (this.state.loaded && this.state.consLoaded) {
       if (who_am_i.residence) {
         return (
           <div ref={this.divRef} styleName="blocks.app-wrapper">
@@ -116,7 +123,7 @@ class App extends React.Component {
                 <Route
                   path={`${match.path}`}
                   render={(props) => (
-                    <Nav who_am_i={who_am_i} activeNav={this.state.activeNav} />
+                    <Nav who_am_i={who_am_i} constants={constants} activeNav={this.state.activeNav} />
                   )}
                 />
               </Switch>
@@ -218,9 +225,9 @@ class App extends React.Component {
                           )}
                         />
                         <Route
-                          path={`${match.path}admin/authority`}
+                          path={`${match.path}authority/:id`}
                           render={(props) => (
-                            <AdminAuthorities who_am_i={who_am_i} />
+                            <AdminAuthorities who_am_i={who_am_i} constants={constants} {...props} />
                           )}
                         />
                         <Route
@@ -300,8 +307,8 @@ const mapDispatchToProps = (dispatch) => {
     whoami: (successCallBack, errCallBack) => {
       dispatch(whoami(successCallBack, errCallBack));
     },
-    getConstants: (url) => {
-      dispatch(getConstants(url));
+    getConstants: (url,successCallBack, errCallBack) => {
+      dispatch(getConstants(url,successCallBack, errCallBack));
     },
   };
 };

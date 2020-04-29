@@ -8,7 +8,9 @@ import main from "./index.css";
 import * as moment from "moment";
 class UpcomingBookings extends React.Component {
   componentDidMount() {
-    this.props.getRoomBookings(bookingsUrl(this.props.who_am_i.residence, false));
+    this.props.getRoomBookings(
+      bookingsUrl(this.props.who_am_i.residence, false)
+    );
   }
   render() {
     const { bookingRequests, constants } = this.props;
@@ -20,7 +22,12 @@ class UpcomingBookings extends React.Component {
                 <Card fluid>
                   <Card.Content styleName="blocks.card-border">
                     <Header as="h4" styleName="blocks.zero-bottom-margin">
-                      {this.props.who_am_i.residence} Room
+                      {
+                        this.props.constants.hostels[
+                          this.props.who_am_i.residence
+                        ]
+                      }{" "}
+                      Room
                     </Header>
                     <span>
                       {constants.statues.BOOKING_STATUSES[request.status]}

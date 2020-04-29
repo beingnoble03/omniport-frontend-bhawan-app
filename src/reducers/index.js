@@ -12,6 +12,7 @@ import facility from './facility'
 import pendingComplains from './pendingComplains'
 import resolvedComplains from './resolvedComplains'
 import pastBookingRequests from './past-bookings'
+import searchPersonResults from './searchPerson'
 import presentBookingRequests from './present-bookings'
 
 const rootReducers = combineReducers({
@@ -29,6 +30,7 @@ const rootReducers = combineReducers({
   resolvedComplains: resolvedComplains,
   pastBookingRequests: pastBookingRequests,
   presentBookingRequests: presentBookingRequests,
+  searchPersonResults: searchPersonResults,
 })
 
 export default rootReducers
