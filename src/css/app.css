@@ -23,6 +23,16 @@
   flex-grow: 1;
 }
 
+.student-complains {
+  background-color: #304FFE !important;
+  color: #FFFFFF !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  border-radius: 4px !important;
+  margin-top: 18px;
+}
+
+
 .active-button {
   background-color: #304FFE !important;
   color: #FFFFFF !important;

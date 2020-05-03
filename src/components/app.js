@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { connect } from "react-redux";
 import { Switch, Route, Link } from "react-router-dom";
-import { Grid, Button } from "semantic-ui-react";
+import { Grid, Button, GridColumn } from "semantic-ui-react";
 
 import { AppHeader, AppFooter, Loading } from "formula_one";
 const Nav = lazy(() => import("./navbar/index"));
@@ -137,22 +137,82 @@ class App extends React.Component {
               <div styleName="blocks.app-container">
                 <Grid container>
                   <Grid.Row>
+                    <GridColumn width={16}>
+                      <Route
+                        path={`${match.path}profile`}
+                        render={(props) => (
+                          <MyProfile
+                            who_am_i={who_am_i}
+                            constants={constants}
+                            setNavigation={this.setNavigation}
+                          />
+                        )}
+                      />
+                      <Route
+                        path={`${match.path}book_room`}
+                        exact
+                        render={(props) =>
+                          !who_am_i.isStudent && (
+                            <BookingRequests
+                              who_am_i={who_am_i}
+                              constants={constants}
+                            />
+                          )
+                        }
+                      />
+                      <Route
+                        path={`${match.path}facility`}
+                        render={(props) => (
+                          <Facility
+                            who_am_i={who_am_i}
+                            setNavigation={this.setNavigation}
+                          />
+                        )}
+                      />
+                      <Route
+                        path={`${match.path}admin_complain`}
+                        exact
+                        render={(props) => (
+                          <AdminComplains
+                            who_am_i={who_am_i}
+                            constants={constants}
+                            setNavigation={this.setNavigation}
+                            {...props}
+                          />
+                        )}
+                      />
+                      <Route
+                        path={`${match.path}create-authority`}
+                        render={(props) => (
+                          <AdminAuthorities
+                            who_am_i={who_am_i}
+                            constants={constants}
+                            {...props}
+                          />
+                        )}
+                      />
+                      <Route
+                        path={`${match.path}edit-authority`}
+                        render={(props) => (
+                          <EditAuthorities
+                            who_am_i={who_am_i}
+                            constants={constants}
+                            {...props}
+                          />
+                        )}
+                      />
+                    </GridColumn>
                     <Grid.Column width={12} floated="left">
                       <Switch>
                         <Route
                           path={`${match.path}book_room`}
                           exact
                           render={(props) =>
-                            who_am_i.isStudent ? (
+                            who_am_i.isStudent && (
                               <BookRoom
                                 who_am_i={who_am_i}
                                 constants={constants}
                                 setNavigation={this.setNavigation}
-                              />
-                            ) : (
-                              <BookingRequests
-                                who_am_i={who_am_i}
-                                constants={constants}
                               />
                             )
                           }
@@ -175,25 +235,7 @@ class App extends React.Component {
                             <AddFacility who_am_i={who_am_i} />
                           )}
                         />
-                        <Route
-                          path={`${match.path}facility`}
-                          render={(props) => (
-                            <Facility
-                              who_am_i={who_am_i}
-                              setNavigation={this.setNavigation}
-                            />
-                          )}
-                        />
-                        <Route
-                          path={`${match.path}profile`}
-                          render={(props) => (
-                            <MyProfile
-                              who_am_i={who_am_i}
-                              constants={constants}
-                              setNavigation={this.setNavigation}
-                            />
-                          )}
-                        />
+
                         <Route
                           path={`${match.path}`}
                           exact
@@ -213,43 +255,11 @@ class App extends React.Component {
                           )}
                         />
                         <Route
-                          path={`${match.path}admin_complain`}
-                          exact
-                          render={(props) => (
-                            <AdminComplains
-                              who_am_i={who_am_i}
-                              constants={constants}
-                              setNavigation={this.setNavigation}
-                              {...props}
-                            />
-                          )}
-                        />
-                        <Route
                           path={`${match.path}events`}
                           render={(props) => (
                             <Events
                               who_am_i={who_am_i}
                               setNavigation={this.setNavigation}
-                            />
-                          )}
-                        />
-                        <Route
-                          path={`${match.path}create-authority`}
-                          render={(props) => (
-                            <AdminAuthorities
-                              who_am_i={who_am_i}
-                              constants={constants}
-                              {...props}
-                            />
-                          )}
-                        />
-                        <Route
-                          path={`${match.path}edit-authority`}
-                          render={(props) => (
-                            <EditAuthorities
-                              who_am_i={who_am_i}
-                              constants={constants}
-                              {...props}
                             />
                           )}
                         />
@@ -289,6 +299,28 @@ class App extends React.Component {
                             </React.Fragment>
                           )}
                         />
+                        <Route
+                          path={`${match.path}complain`}
+                          exact
+                          render={(props) => (
+                            <React.Fragment>
+                              <MyInfo {...props} who_am_i={who_am_i} />
+                              <EventsCard {...props} who_am_i={who_am_i} />
+                            </React.Fragment>
+                          )}
+                        />
+                        {who_am_i.isStudent && (
+                          <Route
+                            path={`${match.path}book_room`}
+                            exact
+                            render={(props) => (
+                              <React.Fragment>
+                                <MyInfo {...props} who_am_i={who_am_i} />
+                                <EventsCard {...props} who_am_i={who_am_i} />
+                              </React.Fragment>
+                            )}
+                          />
+                        )}
                         <Route
                           path={`${match.path}events`}
                           exact
