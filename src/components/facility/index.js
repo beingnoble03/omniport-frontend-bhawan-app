@@ -36,7 +36,7 @@ class Facility extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: this.props.id || 1,
+      id: this.props.activeFacility || 1,
       editMode: false,
       information: "",
       startTime: [""],
@@ -366,6 +366,7 @@ class Facility extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    activeFacility: state.activeFacility,
     facility: state.facility,
     facilities: state.facilities,
   };

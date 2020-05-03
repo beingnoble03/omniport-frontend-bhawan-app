@@ -37,6 +37,14 @@
     font-weight: normal;
 }
 
+.active-button {
+    background-color: #304FFE !important;
+    color: #FFFFFF !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    border-radius: 4px !important;
+  }
+
 .top-margin {
     margin-top: 50px;
   }

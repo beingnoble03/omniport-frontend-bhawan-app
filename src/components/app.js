@@ -18,17 +18,14 @@ const BookingRequests = lazy(() => import("./booking_request/index"));
 const Facility = lazy(() => import("./facility/index"));
 const MyProfile = lazy(() => import("./my_profile/index"));
 const AdminAuthorities = lazy(() => import("./admin_authorities/index"));
+const EditAuthorities = lazy(() => import("./edit-authorities/index"));
 const AddFacility = lazy(() => import("./add-facility/index"));
 import { whoami } from "../actions/who_am_i";
 import { getConstants } from "../actions/get-constants";
-import {
-  constantsUrl,
-} from "../urls";
-import PastBookings from "./past_bookings_admin/index";
+import { constantsUrl } from "../urls";
 import main from "formula_one/src/css/app.css";
 import blocks from "../css/app.css";
 import RegisterStudent from "./register_student/index";
-import { getComplains } from "../actions/complains";
 
 const creators = [
   {
@@ -68,7 +65,11 @@ class App extends React.Component {
 
   componentDidMount() {
     this.props.whoami(this.successCallBack, this.errCallBack);
-    this.props.getConstants(constantsUrl(), this.consSuccessCallBack, this.errCallBack);
+    this.props.getConstants(
+      constantsUrl(),
+      this.consSuccessCallBack,
+      this.errCallBack
+    );
   }
   setNavigation = (activeNav) => {
     this.setState({
@@ -92,8 +93,8 @@ class App extends React.Component {
       message: res.statusText,
       consLoaded: true,
       consLoading: false,
-    })
-  }
+    });
+  };
   errCallBack = (err) => {
     this.setState({
       error: true,
@@ -122,9 +123,15 @@ class App extends React.Component {
               <Switch>
                 <Route
                   path={`${match.path}`}
-                  render={(props) => (
-                    <Nav who_am_i={who_am_i} constants={constants} activeNav={this.state.activeNav} />
-                  )}
+                  render={(props) => {
+                    return (
+                      <Nav
+                        who_am_i={who_am_i}
+                        constants={constants}
+                        activeNav={this.state.activeNav}
+                      />
+                    );
+                  }}
                 />
               </Switch>
               <div styleName="blocks.app-container">
@@ -192,14 +199,16 @@ class App extends React.Component {
                           exact
                           render={(props) => (
                             <React.Fragment>
-                            <Facilities
-                              who_am_i={who_am_i}
-                              setNavigation={this.setNavigation}
-                            />
-                            <Authorities
-                            who_am_i={who_am_i}
-                            constants={constants}
-                          />
+                              <Facilities
+                                who_am_i={who_am_i}
+                                setNavigation={this.setNavigation}
+                                {...this.props}
+                              />
+                              <Authorities
+                                who_am_i={who_am_i}
+                                constants={constants}
+                                {...this.props}
+                              />
                             </React.Fragment>
                           )}
                         />
@@ -225,9 +234,23 @@ class App extends React.Component {
                           )}
                         />
                         <Route
-                          path={`${match.path}authority/:id`}
+                          path={`${match.path}create-authority`}
                           render={(props) => (
-                            <AdminAuthorities who_am_i={who_am_i} constants={constants} {...props} />
+                            <AdminAuthorities
+                              who_am_i={who_am_i}
+                              constants={constants}
+                              {...props}
+                            />
+                          )}
+                        />
+                        <Route
+                          path={`${match.path}edit-authority`}
+                          render={(props) => (
+                            <EditAuthorities
+                              who_am_i={who_am_i}
+                              constants={constants}
+                              {...props}
+                            />
                           )}
                         />
                         <Route
@@ -307,8 +330,8 @@ const mapDispatchToProps = (dispatch) => {
     whoami: (successCallBack, errCallBack) => {
       dispatch(whoami(successCallBack, errCallBack));
     },
-    getConstants: (url,successCallBack, errCallBack) => {
-      dispatch(getConstants(url,successCallBack, errCallBack));
+    getConstants: (url, successCallBack, errCallBack) => {
+      dispatch(getConstants(url, successCallBack, errCallBack));
     },
   };
 };

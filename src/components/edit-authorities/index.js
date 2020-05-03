@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import {
   Header,
   Image,
@@ -9,22 +10,20 @@ import {
   Dropdown,
 } from "semantic-ui-react";
 import { searchPerson } from "../../actions/searchPerson";
-import { addAuthority } from "../../actions/authorities";
-import { yellowPagesUrl, authoritiesUrl } from "../../urls";
+import { editAuthority } from "../../actions/authorities";
+import { yellowPagesUrl, specificAuthoritiesUrl } from "../../urls";
 import "./index.css";
 
-class AdminAuthorities extends React.Component {
+class EditAuthorities extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "",
+      selected: this.props.activeAuthority.name || "",
       message: "",
       success: false,
       error: false,
-      permissions: null,
       options: [],
-      selected: "",
-      designation: null,
+      designation: this.props.activeAuthority.designation || "",
     };
     this.delayedCallback = _.debounce(this.ajaxCall, 300);
   }
@@ -35,9 +34,12 @@ class AdminAuthorities extends React.Component {
         designation: this.state.designation,
         person: this.state.selected.id,
       };
-      this.props.addAuthority(
+      this.props.editAuthority(
         data,
-        authoritiesUrl(this.props.who_am_i.residence),
+        specificAuthoritiesUrl(
+          this.props.who_am_i.residence,
+          this.props.activeAuthority.id
+        ),
         this.adminCallBack,
         this.errCallBack
       );
@@ -101,64 +103,61 @@ class AdminAuthorities extends React.Component {
     this.setState({ selected: data.value });
   };
 
-
   render() {
     const { name, options, selected, designation } = this.state;
-    const { match, constants } = this.props;
+    const { constants } = this.props;
     let designations = [];
     for (var i in constants.designations) {
       designations.push({
         key: i.toString(),
-        text: (constants.designations[i]).toString(),
+        text: constants.designations[i].toString(),
         value: i.toString(),
       });
     }
     return (
       <React.Fragment>
         <div styleName="centered">
-          <div>
-            <Header as="h4"> {constants.designations[match.params.id]} </Header>
-          </div>
-          <div>
-            <Image
-              src={
-                selected.displayPicture ||
-                "https://react.semantic-ui.com/images/wireframe/square-image.png"
-              }
-              size="tiny"
-              circular
-            />
-          </div>
+          {designation ? (
+            <React.Fragment>
+              <div>
+                <Header as="h4"> {constants.designations[designation]} </Header>
+              </div>
+              <div>
+                <Image
+                  src={
+                    selected.displayPicture ||
+                    "https://react.semantic-ui.com/images/wireframe/square-image.png"
+                  }
+                  size="tiny"
+                  circular
+                />
+              </div>
 
-          <Form>
-            <Form.Field>
-              <label>Name</label>
-              <Dropdown
-                name="name"
-                onSearchChange={this.onSearchChange}
-                onChange={this.onChange}
-                value={selected}
-                search
-                selection
-                closeOnChange
-                options={options}
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Designation</label>
-              <Dropdown
-              name="designation"
-              value={designation}
-              onChange={this.handleChange}
-              selection
-              closeOnChange
-              options={designations}
-              />
-            </Form.Field>
-            <Button size="medium" onClick={this.handleSubmit} width={3}>
-              Submit
-            </Button>
-          </Form>
+              <Form>
+                <Form.Field>
+                  <label>Name</label>
+                  <Dropdown
+                    name="name"
+                    onSearchChange={this.onSearchChange}
+                    onChange={this.onChange}
+                    value={selected}
+                    search
+                    selection
+                    closeOnChange
+                    options={options}
+                  />
+                </Form.Field>
+                <Button size="medium" onClick={this.handleSubmit} width={3}>
+                  Submit
+                </Button>
+              </Form>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              Go to <Link to="/bhawan_app/">this</Link> and select the authority
+              first
+            </React.Fragment>
+          )}
         </div>
       </React.Fragment>
     );
@@ -168,6 +167,7 @@ class AdminAuthorities extends React.Component {
 function mapStateToProps(state) {
   return {
     searchPersonResults: state.searchPersonResults,
+    activeAuthority: state.activeAuthority,
   };
 }
 
@@ -176,10 +176,10 @@ const mapDispatchToProps = (dispatch) => {
     searchPerson: (url, successCallBack) => {
       dispatch(searchPerson(url, successCallBack));
     },
-    addAuthority: (url, data, successCallBack, errCallBack) => {
-      dispatch(addAuthority(url, data, successCallBack, errCallBack));
+    editAuthority: (url, data, successCallBack, errCallBack) => {
+      dispatch(editAuthority(url, data, successCallBack, errCallBack));
     },
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminAuthorities);
+export default connect(mapStateToProps, mapDispatchToProps)(EditAuthorities);

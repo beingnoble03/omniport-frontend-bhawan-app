@@ -1,11 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
-
-import { Container, Card, Image, Header } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import { Container, Card, Image, Header, Button } from "semantic-ui-react";
 
 import "./index.css";
 
 import { getAllAuthorities } from "../../actions/authorities";
+import { setActiveAuthority } from "../../actions/set-active-authority"
 
 class Authorities extends React.Component {
   constructor(props) {
@@ -17,28 +18,39 @@ class Authorities extends React.Component {
   componentDidMount() {
     this.props.getAllAuthorities(this.props.who_am_i.residence);
   }
+
   increaseCount = () => {
     const max_length = this.state.max_length + 3;
     this.setState({
       max_length,
     });
   };
-  handleRedirect = (id) => {
-    console.log(id);
+
+  handleRedirect = (authority) => {
+    this.props.setActiveAuthority(authority)
+    if(this.props.who_am_i.isAdmin && !this.props.who_am_i.isStudent ) {
+    this.props.history.push("/bhawan_app/edit-authority")
+    }
   };
+
   render() {
-    const { authorities, constants } = this.props;
+    const { authorities, constants, who_am_i} = this.props;
     return (
       <Container styleName="top-margin">
-        <h2>Authorities</h2>
+        <h2>
+          Authorities
+          {who_am_i.isAdmin && (
+            <Link to="/bhawan_app/create-authority">
+            <Button styleName="active-button">Add new Admin</Button>
+          </Link>
+          )}
+        </h2>
         <Card.Group itemsPerRow={3}>
           {authorities.length > 0
             ? authorities.map((authority, index) => {
                 if (index < this.state.max_length)
                   return (
-                    <Card
-                      styleName="card"
-                    >
+                    <Card styleName="card" onClick={() => this.handleRedirect(authority)}>
                       <Card.Content styleName="top-card">
                         <Header as="h5" styleName="zero-margin">
                           {constants.designations[authority.designation]}
@@ -60,15 +72,21 @@ class Authorities extends React.Component {
                         <Container styleName="authority-info">
                           <Card.Content>
                             <span styleName="bold">Room no: </span>
-                            <span styleName="details">{authority.roomNumber}</span>
+                            <span styleName="details">
+                              {authority.roomNumber}
+                            </span>
                           </Card.Content>
                           <Card.Content>
                             <span styleName="bold">Email: </span>
-                            <span styleName="details">{authority.emailAddress}</span>
+                            <span styleName="details">
+                              {authority.emailAddress}
+                            </span>
                           </Card.Content>
                           <Card.Content>
                             <span styleName="bold">Phone no: </span>
-                        <span styleName="details">{authority.phoneNumber}</span>
+                            <span styleName="details">
+                              {authority.phoneNumber}
+                            </span>
                           </Card.Content>
                         </Container>
                       </Card.Content>
@@ -95,6 +113,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getAllAuthorities: (residence) => {
       dispatch(getAllAuthorities(residence));
+    },
+    setActiveAuthority: (id) => {
+      dispatch(setActiveAuthority(id))
     },
   };
 };

@@ -99,3 +99,6 @@ export const facilityUrl = (residence, id) => {
 export const authoritiesUrl = (residence) => {
   return `${baseApiUrl()}${residence}/admin/`
 }
+export const specificAuthoritiesUrl = (residence, id) => {
+  return `${baseApiUrl()}${residence}/admin/${id}/`
+}

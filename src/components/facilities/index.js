@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Card, Container, Button } from "semantic-ui-react";
 import { getFacilities } from "../../actions/facilities";
+import { setActiveFacility } from "../../actions/set-active-facility"
 import { facilitiesUrl } from "../../urls";
 import facilities from "./index.css";
 import blocks from "../../css/app.css";
@@ -26,7 +27,8 @@ class Facilities extends React.Component {
     });
   };
   handleRedirect = (id) => {
-    console.log(id);
+    this.props.setActiveFacility(id);
+    this.props.history.push("/bhawan_app/facility/");
   };
   render() {
     const { facilities, who_am_i } = this.props;
@@ -37,7 +39,7 @@ class Facilities extends React.Component {
           Facilities
           {(who_am_i.isAdmin && !who_am_i.isStudent) &&
           <Link to="bhawan_app/add/facility/">
-            <Button styleName="blocks.active-button">Add Faciilty</Button>
+            <Button styleName="blocks.active-button">Add Facilty</Button>
           </Link>
           }
         </h2>
@@ -46,7 +48,6 @@ class Facilities extends React.Component {
             ? facilities.map((facility, index) => {
                 if (index < this.state.max_length)
                   return (
-                    <Link to="/bhawan_app/facility/">
                       <Card
                         styleName="blocks.card-border blocks.color-black"
                         onClick={() => this.handleRedirect(facility.id)}
@@ -67,7 +68,6 @@ class Facilities extends React.Component {
                           </div>
                         </Card.Content>
                       </Card>
-                    </Link>
                   );
               })
             : "Your Bhawan admins have not added the facilities"}
@@ -89,6 +89,9 @@ const mapDispatchToProps = (dispatch) => {
     getFacilities: (url) => {
       dispatch(getFacilities(url));
     },
+    setActiveFacility: (id) => {
+      dispatch(setActiveFacility(id));
+    }
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Facilities);
