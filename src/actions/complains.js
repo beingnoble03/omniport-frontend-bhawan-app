@@ -55,16 +55,9 @@ export const increaseUnsuccefulAttempts = (url, successCallBack, errCallBack) =>
       url: url,
     })
       .then((response) => {
-        console.log("gvsrcjh")
         successCallBack(response)
-        let item = response.data;
-        // dispatch({
-        //   type: "INCREASE_UNSUCCESFUL_ATTEMPT",
-        //   payload: item,
-        // });
       })
       .catch((error) => {
-        console.log("jghsvdjh")
         errCallBack(error)});
   };
 };

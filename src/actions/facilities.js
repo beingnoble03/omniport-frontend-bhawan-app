@@ -53,7 +53,6 @@ export const addFacility = (url, data, successCallBack, errCallBack) => {
       })
       .catch((err) => {
         errCallBack();
-        console.log(err);
       });
   };
 };

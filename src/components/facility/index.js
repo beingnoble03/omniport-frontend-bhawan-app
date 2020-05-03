@@ -115,7 +115,6 @@ class Facility extends React.Component {
   };
 
   submitData = () => {
-    console.log("uygwe");
     const { information, startTime, endTime, descriptions } = this.state;
 
     if (information && descriptions && startTime && endTime) {
@@ -155,7 +154,6 @@ class Facility extends React.Component {
   };
 
   removeClick = (i) => {
-    console.log("eve");
     let descriptions = [...this.state.descriptions];
     let startTime = [...this.state.startTime];
     let endTime = [...this.state.endTime];

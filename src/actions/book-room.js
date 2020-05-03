@@ -13,7 +13,6 @@ export const bookRoom = (data, residence, successCallBack, errCallBack) => {
         headers: headers,
       })
       .then((res) => {
-        console.log(res);
         successCallBack(res);
         const response = {
           status: true,
@@ -26,7 +25,6 @@ export const bookRoom = (data, residence, successCallBack, errCallBack) => {
         });
       })
       .catch((err) => {
-        console.log(err);
         errCallBack(err);
         const response = {
           value:

@@ -97,7 +97,6 @@ class AdminAuthorities extends React.Component {
   };
 
   onChange = (e, data) => {
-    console.log(data.value);
     this.setState({ selected: data.value });
   };
 

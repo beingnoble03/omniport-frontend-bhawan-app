@@ -6,12 +6,9 @@ const timeSlots = (state = initialState, action) => {
       return action.payload;
     }
     case "ADD_TIME_SLOT": {
-      console.log("ywybj")
       return [...state, action.payload];
     }
     case "EDIT_TIME_SLOT": {
-      console.log("hjbvdfj");
-      console.log(action.payload);
       return state;
     }
     default:

@@ -120,10 +120,6 @@ class BookRoom extends React.Component {
       );
       formData.append(`visitors${index}`, this.state.proof[index], 'hey.png')
     });
-    console.log("wec");
-    for (var value of formData.values()) {
-      console.log(value);
-    }
     this.props.bookRoom(
       formData,
       this.props.who_am_i.residence,
@@ -132,7 +128,6 @@ class BookRoom extends React.Component {
     );
   };
   successCallBack = (res) => {
-    console.log(res);
     this.setState({
       success: true,
       error: false,
@@ -141,7 +136,6 @@ class BookRoom extends React.Component {
   };
 
   errCallBack = (err) => {
-    console.log(err);
     this.setState({
       error: true,
       success: false,

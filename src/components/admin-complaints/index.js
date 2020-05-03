@@ -24,7 +24,7 @@ import {
   Dropdown,
   Pagination,
 } from "semantic-ui-react";
-import { toast } from 'react-semantic-toasts'
+import { toast } from "react-semantic-toasts";
 import "./index.css";
 import * as moment from "moment";
 
@@ -68,7 +68,7 @@ class AdminComplains extends Component {
   };
 
   componentDidMount() {
-    this.props.setNavigation("Student Complains")
+    this.props.setNavigation("Student Complains");
     this.props.getPendingComplains(
       statusComplainsUrl(this.props.who_am_i.residence, ["pending"])
     );
@@ -165,7 +165,6 @@ class AdminComplains extends Component {
   };
 
   resolveSuccessCallBack = (res) => {
-    console.log("vgefj");
     this.setState({
       success: true,
       error: false,
@@ -240,13 +239,13 @@ class AdminComplains extends Component {
       message: "",
     });
     toast({
-      type: 'success',
-      title: 'Time Slot changed',
+      type: "success",
+      title: "Time Slot changed",
       description: "Time Slot Changed",
-      animation: 'fade up',
-      icon: 'smile outline',
-      time: 4000
-    })
+      animation: "fade up",
+      icon: "smile outline",
+      time: 4000,
+    });
     this.props.getTimeSlots();
   };
 
@@ -321,8 +320,15 @@ class AdminComplains extends Component {
                         </Table.Cell>
                         <Table.Cell>{complain.description}</Table.Cell>
                         <Table.Cell>{complain.complainant}</Table.Cell>
-                        <Table.Cell>{moment(complain.datetimeCreated.substring(0,10), "YYYY-MM-DD").format("DD/MM/YY")}</Table.Cell>
-                        <Table.Cell>{constants.complaint_types[complain.complaintType]}</Table.Cell>
+                        <Table.Cell>
+                          {moment(
+                            complain.datetimeCreated.substring(0, 10),
+                            "YYYY-MM-DD"
+                          ).format("DD/MM/YY")}
+                        </Table.Cell>
+                        <Table.Cell>
+                          {constants.complaint_types[complain.complaintType]}
+                        </Table.Cell>
                         <Table.Cell>{complain.phoneNumber}</Table.Cell>
                         <Table.Cell>{complain.roomNo}</Table.Cell>
                         <Table.Cell
@@ -416,12 +422,29 @@ class AdminComplains extends Component {
                             </Table.Cell>
                             <Table.Cell>{complain.description}</Table.Cell>
                             <Table.Cell>{complain.complainant}</Table.Cell>
-                            <Table.Cell>{moment(complain.datetimeCreated.substring(0,10), "YYYY-MM-DD").format("DD/MM/YY")}</Table.Cell>
-                            <Table.Cell>{constants.complaint_types[complain.complaintType]}</Table.Cell>
+                            <Table.Cell>
+                              {moment(
+                                complain.datetimeCreated.substring(0, 10),
+                                "YYYY-MM-DD"
+                              ).format("DD/MM/YY")}
+                            </Table.Cell>
+                            <Table.Cell>
+                              {
+                                constants.complaint_types[
+                                  complain.complaintType
+                                ]
+                              }
+                            </Table.Cell>
                             <Table.Cell>{complain.phoneNumber}</Table.Cell>
                             <Table.Cell>{complain.roomNo}</Table.Cell>
                             <Table.Cell>{complain.failedAttempts}</Table.Cell>
-                            <Table.Cell>{constants.statues.COMLAINT_STATUSES[complain.status]}</Table.Cell>
+                            <Table.Cell>
+                              {
+                                constants.statues.COMLAINT_STATUSES[
+                                  complain.status
+                                ]
+                              }
+                            </Table.Cell>
                           </Table.Row>
                         );
                       })

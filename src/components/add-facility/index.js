@@ -81,7 +81,6 @@ class Facility extends React.Component {
   };
 
   submitData = () => {
-    console.log("uygwe");
     const { croppedImage, information, startTime, endTime, descriptions } = this.state;
     let image = null;
 
@@ -96,7 +95,6 @@ class Facility extends React.Component {
       formData.append("description", this.state.information);
       for (var i = 0; i < this.state.days.length; i++) {
         for (var j = 0; j < this.state.days[i].length; j++) {
-          console.log(this.state.days[i][j]);
           formData.append("timings", JSON.stringify({
             day: this.state.days[i][j],
             start: this.state.startTime[i],
@@ -182,7 +180,6 @@ class Facility extends React.Component {
   };
 
   removeClick = (i) => {
-    console.log("jre");
     let descriptions = [...this.state.descriptions];
     let startTime = [...this.state.startTime];
     let endTime = [...this.state.endTime];

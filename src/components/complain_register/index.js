@@ -63,7 +63,6 @@ class ComplainRegister extends React.Component {
   };
 
   successCallBack = (res) => {
-    console.log("tvwu");
     this.setState({
       success: true,
       error: false,
@@ -76,7 +75,6 @@ class ComplainRegister extends React.Component {
   };
 
   errCallBack = (err) => {
-    console.log(err);
     this.setState({
       error: true,
       success: false,

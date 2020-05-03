@@ -39,8 +39,6 @@ export const addAuthority = (data, url, successCallBack, errCallBack) => {
 };
 
 export const editAuthority = (data, url, successCallBack, errCallBack) => {
-  console.log(data)
-  console.log(url)
   const headers = {
     "Content-Type": "application/json",
     "X-CSRFToken": getCookie("csrftoken"),

@@ -5,7 +5,7 @@ const bookingRequests = (state = initialState, action) => {
       case 'GET_ALL_ROOM_BOOKINGS':
           return action.payload
       case 'UPDATE_BOOKINGS':
-          console.log("ufvty")
+          return state
     default:
       return state
   }
