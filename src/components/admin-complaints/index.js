@@ -26,7 +26,7 @@ import {
 } from "semantic-ui-react";
 import { toast } from "react-semantic-toasts";
 import "./index.css";
-import * as moment from "moment";
+import moment from "moment"
 
 const days = [
   { key: "mon", text: "Monday", value: "mon" },

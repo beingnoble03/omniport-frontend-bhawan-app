@@ -18,7 +18,7 @@ import { TimeInput } from "semantic-ui-calendar-react";
 import { getFacilities, addFacility } from "../../actions/facilities";
 import { facilitiesUrl } from "../../urls";
 import "./index.css";
-import * as moment from "moment";
+import moment from "moment"
 
 const IMAGE_STYLE = {
   maxHeight: "100%",

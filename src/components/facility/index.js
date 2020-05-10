@@ -20,7 +20,7 @@ import {
 } from "../../actions/facilities";
 import { facilitiesUrl, facilityUrl } from "../../urls";
 import "./index.css";
-import * as moment from "moment";
+import moment from "moment"
 
 const options = [
   { key: "mon", text: "Monday", value: "mon" },

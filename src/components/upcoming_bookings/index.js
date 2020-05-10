@@ -5,7 +5,7 @@ import { getRoomBookings } from "../../actions/get-room-bookings";
 import { bookingsUrl } from "../../urls";
 import blocks from "../../css/app.css";
 import main from "./index.css";
-import * as moment from "moment";
+import moment from "moment"
 class UpcomingBookings extends React.Component {
   componentDidMount() {
     this.props.getRoomBookings(

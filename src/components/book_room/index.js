@@ -4,7 +4,7 @@ import { Button, Form, Input, Container, Icon, Message } from "semantic-ui-react
 import { DateInput, TimeInput } from "semantic-ui-calendar-react";
 import "./index.css";
 import { bookRoom } from "../../actions/book-room";
-import * as moment from "moment";
+import moment from "moment"
 
 class BookRoom extends React.Component {
   constructor(props) {

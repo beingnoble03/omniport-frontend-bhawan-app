@@ -4,7 +4,7 @@ import { Table, Header, Button, Pagination } from "semantic-ui-react";
 import { getComplains } from "../../actions/complains";
 import { addComplaint } from "../../actions/add_complaint";
 import { complainsUrl } from "../../urls";
-import * as moment from "moment";
+import moment from "moment"
 import "./index.css";
 
 class Complains extends React.Component {

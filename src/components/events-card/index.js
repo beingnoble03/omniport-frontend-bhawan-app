@@ -7,7 +7,7 @@ import "./index.css";
 import { getEvents } from "../../actions/events";
 import { eventsUrl, eventUrl } from "../../urls";
 import { addEvent } from "../../actions/add-events";
-import * as moment from "moment";
+import moment from "moment"
 
 class EventsCard extends React.Component {
   constructor(props) {

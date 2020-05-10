@@ -16,7 +16,7 @@ import { getComplains } from "../../actions/complains";
 import { addComplaint } from "../../actions/add_complaint";
 import { complainsUrl } from "../../urls";
 import Complains from "../complains/index";
-import * as moment from "moment";
+import moment from "moment"
 
 class ComplainRegister extends React.Component {
   constructor(props) {
