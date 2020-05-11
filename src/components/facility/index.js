@@ -11,6 +11,7 @@ import {
   Input,
   Icon,
   Grid,
+  Message,
 } from "semantic-ui-react";
 import { TimeInput } from "semantic-ui-calendar-react";
 import {
@@ -36,6 +37,7 @@ class Facility extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      editsuccess: false,
       id: this.props.activeFacility || 1,
       editMode: false,
       information: "",
@@ -146,7 +148,7 @@ class Facility extends React.Component {
       this.props.editFacility(
         facilityUrl(this.props.who_am_i.residence, this.state.id),
         data,
-        this.successCallBack,
+        this.editFacilityCallBack,
         this.errCallBack
       );
     }
@@ -217,6 +219,27 @@ class Facility extends React.Component {
       description: [],
     });
   };
+  editFacilityCallBack = (res) => {
+    this.setState({
+      editsuccess: true,
+      error: false,
+      message: res.statusText,
+      convenientTime: "",
+      complain: "",
+      category: "",
+      information: res.data.description,
+      day: [],
+      start: [],
+      end: [],
+      description: [],
+    });
+    this.props.getFacility(
+      this.props.who_am_i.residence,
+      this.state.id,
+      this.successCallBack,
+      this.errCallBack
+    );
+  };
 
   errCallBack = (err) => {
     this.setState({
@@ -255,6 +278,15 @@ class Facility extends React.Component {
 
     return (
       <Grid.Column>
+        {this.state.error && (
+            <Message warning>
+              <Icon name="warning" />
+              {this.state.message.response.data}
+            </Message>
+          )}
+          {this.state.editsuccess && (
+            <Message positive>{this.state.message}</Message>
+          )}
         <div>
           {facilities && facilities.length > 0
             ? facilities.map((allFacility, index) => {

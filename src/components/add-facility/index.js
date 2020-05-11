@@ -11,6 +11,7 @@ import {
   Grid,
   Input,
   Icon,
+  Message,
 } from "semantic-ui-react";
 import { CustomCropper } from "formula_one";
 import getCroppedImage from "../get-cropped-image";
@@ -18,7 +19,7 @@ import { TimeInput } from "semantic-ui-calendar-react";
 import { getFacilities, addFacility } from "../../actions/facilities";
 import { facilitiesUrl } from "../../urls";
 import "./index.css";
-import moment from "moment"
+import moment from "moment";
 
 const IMAGE_STYLE = {
   maxHeight: "100%",
@@ -81,7 +82,13 @@ class Facility extends React.Component {
   };
 
   submitData = () => {
-    const { croppedImage, information, startTime, endTime, descriptions } = this.state;
+    const {
+      croppedImage,
+      information,
+      startTime,
+      endTime,
+      descriptions,
+    } = this.state;
     let image = null;
 
     !croppedImage ? (image = false) : (image = true);
@@ -89,27 +96,29 @@ class Facility extends React.Component {
     this.setState({
       imageCrop: image,
     });
-      let formData = new FormData();
-      formData.append("name", this.state.name);
-      formData.append("description", this.state.information);
-      for (var i = 0; i < this.state.days.length; i++) {
-        for (var j = 0; j < this.state.days[i].length; j++) {
-          formData.append("timings", JSON.stringify({
+    let formData = new FormData();
+    formData.append("name", this.state.name);
+    formData.append("description", this.state.information);
+    for (var i = 0; i < this.state.days.length; i++) {
+      for (var j = 0; j < this.state.days[i].length; j++) {
+        formData.append(
+          "timings",
+          JSON.stringify({
             day: this.state.days[i][j],
             start: this.state.startTime[i],
             end: this.state.endTime[i],
             description: this.state.descriptions[i],
-          }));
-        }
+          })
+        );
       }
-      formData.append("displayPicture", croppedImage);
-      this.props.addFacility(
-        facilitiesUrl(this.props.who_am_i.residence),
-        formData,
-        this.successCallBack,
-        this.errCallBack
-      );
-
+    }
+    formData.append("displayPicture", croppedImage);
+    this.props.addFacility(
+      facilitiesUrl(this.props.who_am_i.residence),
+      formData,
+      this.successCallBack,
+      this.errCallBack
+    );
   };
   handleOpen = () => {
     this.setState({
@@ -251,7 +260,7 @@ class Facility extends React.Component {
 
   render() {
     const { information, name } = this.state;
-    const {  facilities } = this.props;
+    const { facilities } = this.props;
     const options = [
       { key: "mon", text: "Monday", value: "Monday" },
       { key: "tue", text: "Tuesday", value: "Tuesday" },
@@ -260,9 +269,17 @@ class Facility extends React.Component {
       { key: "fri", text: "Friday", value: "Friday" },
       { key: "sat", text: "Saturday", value: "Saturday" },
       { key: "sun", text: "Sunday", value: "Sunday" },
+      { key: "dai", text: "Daily", value: "Daily" },
     ];
     return (
       <Grid.Column>
+        {this.state.error && (
+          <Message warning>
+            <Icon name="warning" />
+            {this.state.message.response.data}
+          </Message>
+        )}
+        {this.state.success && <Message positive>{this.state.message}</Message>}
         <Header as="h2">XYZ</Header>
         <Grid divided="vertically">
           <Grid.Row columns={2}>

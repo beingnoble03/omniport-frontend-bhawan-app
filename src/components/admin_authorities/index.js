@@ -5,7 +5,8 @@ import {
   Image,
   Button,
   Form,
-  Input,
+  Message,
+  Icon,
   Dropdown,
 } from "semantic-ui-react";
 import { searchPerson } from "../../actions/searchPerson";
@@ -45,6 +46,7 @@ class AdminAuthorities extends React.Component {
   };
 
   adminCallBack = (res) => {
+    console.log(res);
     this.setState({
       success: true,
       error: false,
@@ -52,6 +54,7 @@ class AdminAuthorities extends React.Component {
     });
   };
   errCallBack = (err) => {
+    console.log(err);
     this.setState({
       error: true,
       success: false,
@@ -100,21 +103,29 @@ class AdminAuthorities extends React.Component {
     this.setState({ selected: data.value });
   };
 
-
   render() {
-    const { name, options, selected, designation } = this.state;
+    const { name, options, selected, designation, message } = this.state;
     const { match, constants } = this.props;
     let designations = [];
     for (var i in constants.designations) {
       designations.push({
         key: i.toString(),
-        text: (constants.designations[i]).toString(),
+        text: constants.designations[i].toString(),
         value: i.toString(),
       });
     }
     return (
       <React.Fragment>
         <div styleName="centered">
+          {this.state.error && (
+            <Message warning>
+              <Icon name="warning" />
+              {this.state.message.response.data}
+            </Message>
+          )}
+          {this.state.success && (
+            <Message positive>{this.state.message}</Message>
+          )}
           <div>
             <Header as="h4"> {constants.designations[match.params.id]} </Header>
           </div>
@@ -146,12 +157,12 @@ class AdminAuthorities extends React.Component {
             <Form.Field>
               <label>Designation</label>
               <Dropdown
-              name="designation"
-              value={designation}
-              onChange={this.handleChange}
-              selection
-              closeOnChange
-              options={designations}
+                name="designation"
+                value={designation}
+                onChange={this.handleChange}
+                selection
+                closeOnChange
+                options={designations}
               />
             </Form.Field>
             <Button size="medium" onClick={this.handleSubmit} width={3}>

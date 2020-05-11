@@ -6,7 +6,8 @@ import {
   Image,
   Button,
   Form,
-  Input,
+  Message,
+  Icon,
   Dropdown,
 } from "semantic-ui-react";
 import { searchPerson } from "../../actions/searchPerson";
@@ -116,6 +117,15 @@ class EditAuthorities extends React.Component {
     return (
       <React.Fragment>
         <div styleName="centered">
+        {this.state.error && (
+            <Message warning>
+              <Icon name="warning" />
+              {this.state.message.response.data}
+            </Message>
+          )}
+          {this.state.success && (
+            <Message positive>{this.state.message}</Message>
+          )}
           {designation ? (
             <React.Fragment>
               <div>
