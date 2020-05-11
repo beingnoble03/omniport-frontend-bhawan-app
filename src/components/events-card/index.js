@@ -88,7 +88,7 @@ class EventsCard extends React.Component {
           <Card>
             <Card.Content>
               <Card.Header>
-                {location.pathname === eventUrl
+                {location.pathname === eventUrl()
                   ? "On this day"
                   : "Todays events"}
               </Card.Header>
@@ -113,7 +113,7 @@ class EventsCard extends React.Component {
                       </div>
                     );
                   })
-                : "No event today"}
+                : "No events today"}
               {this.props.who_am_i.isAdmin &&
               location.pathname === "/bhawan_app/events" ? (
                 <Header as="h5" onClick={this.toggleAddEvent}>

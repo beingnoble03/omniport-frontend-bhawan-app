@@ -89,7 +89,6 @@ class Facility extends React.Component {
     this.setState({
       imageCrop: image,
     });
-    if (information && descriptions && startTime && endTime && croppedImage) {
       let formData = new FormData();
       formData.append("name", this.state.name);
       formData.append("description", this.state.information);
@@ -110,7 +109,7 @@ class Facility extends React.Component {
         this.successCallBack,
         this.errCallBack
       );
-    }
+
   };
   handleOpen = () => {
     this.setState({

@@ -28,6 +28,7 @@ class Events extends React.Component {
         weekends={true}
         aspectRatio='1.3'
         events={this.props.mappedEvents}
+        selectable={true}
         plugins={[dayGridPlugin, interactionPlugin]}
         header={{
           left: 'prev,next today',

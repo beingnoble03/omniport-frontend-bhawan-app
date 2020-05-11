@@ -42,7 +42,6 @@ class BookRoom extends React.Component {
           <Form.Field>
             <label>Name of Visitor</label>
             <Input
-              icon="angle down"
               value={visitor || ""}
               onChange={(event) => this.handleVisitorChange(i, event)}
             />
@@ -50,7 +49,6 @@ class BookRoom extends React.Component {
           <Form.Field>
             <label>Relation</label>
             <Input
-              icon="angle down"
               value={this.state.relatives[i] || ""}
               onChange={(event) => this.handleRelativeChange(i, event)}
             />

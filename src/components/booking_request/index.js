@@ -131,15 +131,15 @@ class BookingRequests extends Component {
     this.props.getPresentRoomBookings(
       statusBookingsUrl(
         this.props.who_am_i.residence,
-        this.props.constants.statues.BOOKING_STATUSES[this.state.activeItem],
+        this.state.activeItem,
         "False",
       )
     );
     this.props.getPastRoomBookings(
       statusBookingsUrl(
         this.props.who_am_i.residence,
-        this.props.constants.statues.BOOKING_STATUSES[this.state.activePastItem],
-        true,
+        this.state.activePastItem,
+        "true",
       )
     );
   };

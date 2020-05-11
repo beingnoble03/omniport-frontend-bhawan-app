@@ -38,7 +38,7 @@ class Facilities extends React.Component {
         <h2>
           Facilities
           {(who_am_i.isAdmin && !who_am_i.isStudent) &&
-          <Link to="bhawan_app/add/facility/">
+          <Link to="/bhawan_app/add/facility/">
             <Button styleName="blocks.active-button">Add Facilty</Button>
           </Link>
           }
