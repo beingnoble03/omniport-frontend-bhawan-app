@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import {
   Header,
   Container,
-  Button,
-  Modal,
   Form,
   Dropdown,
   TextArea,
@@ -13,27 +11,21 @@ import {
   Icon,
   Message,
 } from "semantic-ui-react";
-import { CustomCropper } from "formula_one";
-import getCroppedImage from "../get-cropped-image";
 import { TimeInput } from "semantic-ui-calendar-react";
 import { getFacilities, addFacility } from "../../actions/facilities";
 import { facilitiesUrl } from "../../urls";
 import "./index.css";
-import moment from "moment";
 
-const IMAGE_STYLE = {
-  maxHeight: "100%",
-  maxWidth: "100%",
-};
 
 const options = [
-  { key: "mon", text: "Monday", value: "mon" },
-  { key: "tue", text: "Tuesday", value: "tue" },
-  { key: "wed", text: "Wednesday", value: "wed" },
-  { key: "thurs", text: "Thursday", value: "thu" },
-  { key: "fri", text: "Friday", value: "fri" },
-  { key: "sat", text: "Saturday", value: "sat" },
-  { key: "sun", text: "Sunday", value: "sun" },
+  { key: "mon", text: "Monday", value: "Monday" },
+  { key: "tue", text: "Tuesday", value: "Tuesday" },
+  { key: "wed", text: "Wednesday", value: "Wednesday" },
+  { key: "thurs", text: "Thursday", value: "Thursday" },
+  { key: "fri", text: "Friday", value: "Friday" },
+  { key: "sat", text: "Saturday", value: "Saturday" },
+  { key: "sun", text: "Sunday", value: "Sunday" },
+  { key: "dai", text: "Daily", value: "Daily" },
 ];
 
 class Facility extends React.Component {
@@ -46,6 +38,7 @@ class Facility extends React.Component {
       information: "",
       name: "",
       days: [[]],
+      displayImage: null,
       validImage: true,
       imageCrop: true,
       imageSrc: null,
@@ -71,15 +64,6 @@ class Facility extends React.Component {
       open: true,
     });
   };
-  showCroppedImage = async () => {
-    const croppedImage = await getCroppedImage(
-      this.state.imageSrc,
-      this.state.pixelCrop
-    );
-
-    var file = dataURLtoFile(croppedImage, "image.png");
-    this.setState({ croppedImage: file });
-  };
 
   submitData = () => {
     const {
@@ -88,6 +72,7 @@ class Facility extends React.Component {
       startTime,
       endTime,
       descriptions,
+      displayImage,
     } = this.state;
     let image = null;
 
@@ -112,7 +97,7 @@ class Facility extends React.Component {
         );
       }
     }
-    formData.append("displayPicture", croppedImage);
+    formData.append("displayPicture", displayImage);
     this.props.addFacility(
       facilitiesUrl(this.props.who_am_i.residence),
       formData,
@@ -131,6 +116,23 @@ class Facility extends React.Component {
       open: false,
     });
   };
+
+  removeClick = (i) => {
+    let descriptions = [...this.state.descriptions];
+    let startTime = [...this.state.startTime];
+    let endTime = [...this.state.endTime];
+    descriptions.splice(i, 1);
+    startTime.splice(i, 1);
+    endTime.splice(i, 1);
+    days.splice(i, 1);
+    this.setState({
+      descriptions,
+      startTime,
+      endTime,
+      days,
+    });
+  };
+
   createForm = () => {
     return this.state.descriptions.map((description, i) => (
       <div key={i}>
@@ -180,27 +182,11 @@ class Facility extends React.Component {
             />
           </Form.Field>
           {this.state.descriptions.length > 1 ? (
-            <Icon name="close" onClick={() => this.removeClick(i)} />
+            <Icon name="close" styleName="hover-icon" onClick={(event) => this.removeClick(i)} />
           ) : null}
         </Form.Group>
       </div>
     ));
-  };
-
-  removeClick = (i) => {
-    let descriptions = [...this.state.descriptions];
-    let startTime = [...this.state.startTime];
-    let endTime = [...this.state.endTime];
-    descriptions.splice(i, 1);
-    startTime.splice(i, 1);
-    endTime.splice(i, 1);
-    days.splice(i, 1);
-    this.setState({
-      descriptions,
-      startTime,
-      endTime,
-      days,
-    });
   };
 
   handleDescriptionsChange(i, event) {
@@ -257,20 +243,20 @@ class Facility extends React.Component {
       this.setState({ [name]: value });
     }
   };
+  handleSelectPicture = async (e, i) => {
+    const z = e.target.files;
+    if (e.target.files && e.target.files.length == 1) {
+      const displayImage = await readFile(z[0]);
+      const displayImageFile = await dataURLtoFile(displayImage, "image.png");
 
+      this.setState({
+        displayImage: displayImageFile,
+      });
+    }
+  };
   render() {
     const { information, name } = this.state;
     const { facilities } = this.props;
-    const options = [
-      { key: "mon", text: "Monday", value: "Monday" },
-      { key: "tue", text: "Tuesday", value: "Tuesday" },
-      { key: "wed", text: "Wednesday", value: "Wednesday" },
-      { key: "thurs", text: "Thursday", value: "Thursday" },
-      { key: "fri", text: "Friday", value: "Friday" },
-      { key: "sat", text: "Saturday", value: "Saturday" },
-      { key: "sun", text: "Sunday", value: "Sunday" },
-      { key: "dai", text: "Daily", value: "Daily" },
-    ];
     return (
       <Grid.Column>
         {this.state.error && (
@@ -288,9 +274,8 @@ class Facility extends React.Component {
                 <label>Image:</label>
                 <input
                   type="file"
-                  onChange={this.fileChange}
+                  onChange={this.handleSelectPicture}
                   name="uploadedFile"
-                  onClick={this.handleOpen}
                 />
               </Form.Field>
             </Grid.Column>
@@ -303,7 +288,6 @@ class Facility extends React.Component {
                       <label>Name</label>
                       <Input
                         name="name"
-                        icon="angle down"
                         value={name}
                         onChange={this.handleChange}
                       />
@@ -331,38 +315,6 @@ class Facility extends React.Component {
                     </Form.Group>
                   </Form>
                 </div>
-                <Modal
-                  dimmer="blurring"
-                  size="tiny"
-                  open={this.state.open}
-                  onClose={this.handleClose}
-                >
-                  <Modal.Header>Crop project's photo</Modal.Header>
-                  <Modal.Content image>
-                    {this.state.imageSrc && (
-                      <Fragment>
-                        <CustomCropper
-                          imageStyle={IMAGE_STYLE}
-                          src={this.state.imageSrc}
-                          crop={this.state.crop}
-                          onChange={(crop) => {
-                            this.setState({ crop });
-                          }}
-                          onComplete={(crop, pixelCrop) => {
-                            this.setState({ pixelCrop }, () =>
-                              this.showCroppedImage()
-                            );
-                          }}
-                        />
-                      </Fragment>
-                    )}
-                  </Modal.Content>
-                  <Modal.Actions>
-                    <Button positive type="submit" onClick={this.handleClose}>
-                      Done
-                    </Button>
-                  </Modal.Actions>
-                </Modal>
               </Container>
             </Grid.Column>
           </Grid.Row>

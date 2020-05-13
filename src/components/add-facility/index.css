@@ -1,13 +1,20 @@
-.low_margin{
+.low_margin {
     margin-bottom: 0px !important;
 }
-.image_margin{
+
+.image_margin {
     margin-right: 91px !important;
 }
-.button_margin{
+
+.button_margin {
     margin-right: 17px !important;
 }
-.plus-icon{
+
+.plus-icon {
     margin-top: 3.3%;
+    cursor: pointer;
+}
+
+.hover-icon {
     cursor: pointer;
 }
