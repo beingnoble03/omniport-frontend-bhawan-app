@@ -9,6 +9,7 @@ import {
   Dropdown,
   Pagination,
   Table,
+  Grid
 } from "semantic-ui-react";
 import "./index.css";
 import { connect } from "react-redux";
@@ -16,7 +17,7 @@ import { getComplains } from "../../actions/complains";
 import { addComplaint } from "../../actions/add_complaint";
 import { complainsUrl } from "../../urls";
 import Complains from "../complains/index";
-import moment from "moment"
+import moment from "moment";
 
 class ComplainRegister extends React.Component {
   constructor(props) {
@@ -88,92 +89,105 @@ class ComplainRegister extends React.Component {
     for (var i in constants.complaint_types) {
       options.push({
         key: i.toString(),
-        text: (constants.complaint_types[i]).toString(),
+        text: constants.complaint_types[i].toString(),
         value: i.toString(),
       });
     }
     return (
-      <React.Fragment>
-        {this.state.error && (
-          <Message warning>
-            <Icon name="warning" />
-            Your complain could not be made. Please try again
-          </Message>
-        )}
-        {this.state.success && (
-          <Message positive>Your complain has been made succesfully</Message>
-        )}
-        <Form>
-          <Form.Field>
-            <label>Category</label>
-            <Dropdown
-              name="category"
-              selection
-              options={options}
+        <Grid.Column width={12} floated="left">
+          {this.state.error && (
+            <Message warning>
+              <Icon name="warning" />
+              Your complain could not be made. Please try again
+            </Message>
+          )}
+          {this.state.success && (
+            <Message positive>Your complain has been made succesfully</Message>
+          )}
+          <Form>
+            <Form.Field>
+              <label>Category</label>
+              <Dropdown
+                name="category"
+                selection
+                options={options}
+                onChange={this.handleChange}
+                styleName="field-width"
+              />
+            </Form.Field>
+            <Form.Field
+              name="complain"
+              value={this.state.complain}
               onChange={this.handleChange}
-              styleName="field-width"
+              control={TextArea}
+              label="Complaint"
+              placeholder="Type your complaint here ...."
+              styleName="complaint"
+              rows="5"
             />
-          </Form.Field>
-          <Form.Field
-            name="complain"
-            value={this.state.complain}
-            onChange={this.handleChange}
-            control={TextArea}
-            label="Complaint"
-            placeholder="Type your complaint here ...."
-            styleName="complaint"
-            rows="5"
-          />
-          <Button
-            size="medium"
-            styleName="button"
-            onClick={this.handleSubmit}
-            width={3}
-          >
-            Submit
-          </Button>
-        </Form>
-        <React.Fragment>
-          <Header as="h3">My Complains</Header>
-          <Table celled>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>ID</Table.HeaderCell>
-                <Table.HeaderCell>Complaint</Table.HeaderCell>
-                <Table.HeaderCell>Complain Type</Table.HeaderCell>
-                <Table.HeaderCell>Complain Status</Table.HeaderCell>
-                <Table.HeaderCell>Complain Date</Table.HeaderCell>
-                <Table.HeaderCell>Applicant Room</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {complains.results && complains.results.length > 0
-                ? complains.results.map((complain, index) => {
-                    return (
-                      <Table.Row>
-                        <Table.Cell>
-                          {5 * (activePage - 1) + index + 1}
-                        </Table.Cell>
-                        <Table.Cell>{complain.description}</Table.Cell>
-                        <Table.Cell>{constants.complaint_types[complain.complaintType]}</Table.Cell>
-                        <Table.Cell>{constants.statues.COMLAINT_STATUSES[complain.status]}</Table.Cell>
-                        <Table.Cell>{moment(complain.datetimeCreated.substring(0,10), "YYYY-MM-DD").format("DD/MM/YY")}</Table.Cell>
-                        <Table.Cell>{complain.roomNo}</Table.Cell>
-                      </Table.Row>
-                    );
-                  })
-                : null}
-            </Table.Body>
-          </Table>
-          {complains.count > 5 ? (
-            <Pagination
-              activePage={activePage}
-              onPageChange={this.handlePaginationChange}
-              totalPages={Math.ceil(complains.count / 10)}
-            />
-          ) : null}
-        </React.Fragment>
-      </React.Fragment>
+            <Button
+              size="medium"
+              styleName="button"
+              onClick={this.handleSubmit}
+              width={3}
+            >
+              Submit
+            </Button>
+          </Form>
+          <React.Fragment>
+            <Header as="h3">My Complains</Header>
+            <Table celled>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>ID</Table.HeaderCell>
+                  <Table.HeaderCell>Complaint</Table.HeaderCell>
+                  <Table.HeaderCell>Complain Type</Table.HeaderCell>
+                  <Table.HeaderCell>Complain Status</Table.HeaderCell>
+                  <Table.HeaderCell>Complain Date</Table.HeaderCell>
+                  <Table.HeaderCell>Applicant Room</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {complains.results && complains.results.length > 0
+                  ? complains.results.map((complain, index) => {
+                      return (
+                        <Table.Row>
+                          <Table.Cell>
+                            {5 * (activePage - 1) + index + 1}
+                          </Table.Cell>
+                          <Table.Cell>{complain.description}</Table.Cell>
+                          <Table.Cell>
+                            {constants.complaint_types[complain.complaintType]}
+                          </Table.Cell>
+                          <Table.Cell>
+                            {
+                              constants.statues.COMLAINT_STATUSES[
+                                complain.status
+                              ]
+                            }
+                          </Table.Cell>
+                          <Table.Cell>
+                            {moment(
+                              complain.datetimeCreated.substring(0, 10),
+                              "YYYY-MM-DD"
+                            ).format("DD/MM/YY")}
+                          </Table.Cell>
+                          <Table.Cell>{complain.roomNo}</Table.Cell>
+                        </Table.Row>
+                      );
+                    })
+                  : null}
+              </Table.Body>
+            </Table>
+            {complains.count > 5 ? (
+              <Pagination
+                activePage={activePage}
+                onPageChange={this.handlePaginationChange}
+                totalPages={Math.ceil(complains.count / 10)}
+              />
+            ) : null}
+          </React.Fragment>
+        </Grid.Column>
     );
   }
 }

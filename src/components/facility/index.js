@@ -21,7 +21,7 @@ import {
 } from "../../actions/facilities";
 import { facilitiesUrl, facilityUrl } from "../../urls";
 import "./index.css";
-import moment from "moment"
+import moment from "moment";
 
 const options = [
   { key: "mon", text: "Monday", value: "mon" },
@@ -67,7 +67,6 @@ class Facility extends React.Component {
           <Form.Field>
             <label>Description</label>
             <Input
-              icon="angle down"
               value={description || ""}
               onChange={(event) => this.handleDescriptionsChange(i, event)}
             />
@@ -159,6 +158,7 @@ class Facility extends React.Component {
     let descriptions = [...this.state.descriptions];
     let startTime = [...this.state.startTime];
     let endTime = [...this.state.endTime];
+    let days = [...this.state.days];
     descriptions.splice(i, 1);
     startTime.splice(i, 1);
     endTime.splice(i, 1);
@@ -277,8 +277,9 @@ class Facility extends React.Component {
     const { information } = this.state;
 
     return (
-      <Grid.Column>
-        {this.state.error && (
+      <Grid.Column width={16}>
+        <Grid.Column>
+          {this.state.error && (
             <Message warning>
               <Icon name="warning" />
               {this.state.message.response.data}
@@ -287,108 +288,109 @@ class Facility extends React.Component {
           {this.state.editsuccess && (
             <Message positive>{this.state.message}</Message>
           )}
-        <div>
-          {facilities && facilities.length > 0
-            ? facilities.map((allFacility, index) => {
-                return (
-                  <Button
-                    styleName="button_margin"
-                    onClick={() => this.handleFacilityChange(allFacility.id)}
-                  >
-                    {allFacility.name}
-                  </Button>
-                );
-              })
-            : null}
-        </div>
-        {facility ? (
-          <React.Fragment>
-            <Header as="h2">{facility.name}</Header>
-            <Grid divided="vertically">
-              <Grid.Row columns={2}>
-                <Grid.Column>
-                  <Image
-                    src={
-                      facility.displayPicture ||
-                      "https://react.semantic-ui.com/images/wireframe/image.png"
-                    }
-                    size="medium"
-                  />
-                </Grid.Column>
-                <Grid.Column>
-                  <Container>
-                    {this.state.editMode ? (
-                      <div>
-                        <Header as="h5">Edit Information</Header>
-                        <Form>
-                          <TextArea
-                            name="information"
-                            value={information}
-                            onChange={this.handleChange}
-                            placeholder="Tell us more"
-                            fluid
-                          />
-                          <Header as="h3">Timings</Header>
-                          {this.createForm()}
-                          <Form.Field>
-                            <Icon
-                              onClick={this.addClick}
-                              name="plus"
-                              size="big"
-                              styleName="plus-icon"
+          <div>
+            {facilities && facilities.length > 0
+              ? facilities.map((allFacility, index) => {
+                  return (
+                    <Button
+                      styleName="button_margin"
+                      onClick={() => this.handleFacilityChange(allFacility.id)}
+                    >
+                      {allFacility.name}
+                    </Button>
+                  );
+                })
+              : null}
+          </div>
+          {facility ? (
+            <React.Fragment>
+              <Header as="h2">{facility.name}</Header>
+              <Grid divided="vertically">
+                <Grid.Row columns={2}>
+                  <Grid.Column>
+                    <Image
+                      src={
+                        facility.displayPicture ||
+                        "https://react.semantic-ui.com/images/wireframe/image.png"
+                      }
+                      size="medium"
+                    />
+                  </Grid.Column>
+                  <Grid.Column>
+                    <Container>
+                      {this.state.editMode ? (
+                        <div>
+                          <Header as="h5">Edit Information</Header>
+                          <Form>
+                            <TextArea
+                              name="information"
+                              value={information}
+                              onChange={this.handleChange}
+                              placeholder="Tell us more"
+                              fluid
                             />
-                          </Form.Field>
-                          <Form.Group>
-                            <Form.Button onClick={this.submitData}>
-                              Save Changes
-                            </Form.Button>
-                            <Form.Button onClick={this.toggleEditMode}>
-                              Cancel
-                            </Form.Button>
-                          </Form.Group>
-                        </Form>
-                        * Filling any timing will rewrite the old timigs with
-                        new one
-                      </div>
-                    ) : (
-                      <div>
-                        {facility.description}
-                        <Header size="small" styleName="low_margin">
-                          Timings
-                        </Header>
-                        {facility.timings && facility.timings.length > 0
-                          ? facility.timings.map((timing) => {
-                              return (
-                                <div>
-                                  {timing.description}:{" "}
-                                  {moment(timing.start, "hh:mm:ss").format(
-                                    "hh:mm A"
-                                  )}{" "}
-                                  -
-                                  {moment(timing.end, "hh:mm:ss").format(
-                                    "hh:mm A"
-                                  )}
-                                </div>
-                              );
-                            })
-                          : null}
-                        {this.props.who_am_i.isAdmin && (
-                          <Button
-                            basic
-                            color="blue"
-                            onClick={this.toggleEditMode}
-                          >
-                            Edit
-                          </Button>
-                        )}
-                      </div>
-                    )}
-                  </Container>
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-          </React.Fragment>
-        ) : null}
+                            <Header as="h3">Timings</Header>
+                            {this.createForm()}
+                            <Form.Field>
+                              <Icon
+                                onClick={this.addClick}
+                                name="plus"
+                                size="big"
+                                styleName="plus-icon"
+                              />
+                            </Form.Field>
+                            <Form.Group>
+                              <Form.Button onClick={this.submitData}>
+                                Save Changes
+                              </Form.Button>
+                              <Form.Button onClick={this.toggleEditMode}>
+                                Cancel
+                              </Form.Button>
+                            </Form.Group>
+                          </Form>
+                          * Filling any timing will rewrite the old timigs with
+                          new one
+                        </div>
+                      ) : (
+                        <div>
+                          {facility.description}
+                          <Header size="small" styleName="low_margin">
+                            Timings
+                          </Header>
+                          {facility.timings && facility.timings.length > 0
+                            ? facility.timings.map((timing) => {
+                                return (
+                                  <div>
+                                    {timing.description}:{" "}
+                                    {moment(timing.start, "hh:mm:ss").format(
+                                      "hh:mm A"
+                                    )}{" "}
+                                    -
+                                    {moment(timing.end, "hh:mm:ss").format(
+                                      "hh:mm A"
+                                    )}
+                                  </div>
+                                );
+                              })
+                            : null}
+                          {this.props.who_am_i.isAdmin && (
+                            <Button
+                              basic
+                              color="blue"
+                              onClick={this.toggleEditMode}
+                            >
+                              Edit
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </Container>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            </React.Fragment>
+          ) : null}
+        </Grid.Column>
       </Grid.Column>
     );
   }

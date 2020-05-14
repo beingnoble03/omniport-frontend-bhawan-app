@@ -8,6 +8,7 @@ import {
   Message,
   Icon,
   Dropdown,
+  Grid
 } from "semantic-ui-react";
 import { searchPerson } from "../../actions/searchPerson";
 import { addAuthority } from "../../actions/authorities";
@@ -115,62 +116,67 @@ class AdminAuthorities extends React.Component {
       });
     }
     return (
-      <React.Fragment>
-        <div styleName="centered">
-          {this.state.error && (
-            <Message warning>
-              <Icon name="warning" />
-              {this.state.message.response.data}
-            </Message>
-          )}
-          {this.state.success && (
-            <Message positive>{this.state.message}</Message>
-          )}
-          <div>
-            <Header as="h4"> {constants.designations[match.params.id]} </Header>
-          </div>
-          <div>
-            <Image
-              src={
-                selected.displayPicture ||
-                "https://react.semantic-ui.com/images/wireframe/square-image.png"
-              }
-              size="tiny"
-              circular
-            />
-          </div>
+      <Grid container>
+          <Grid.Column width={16}>
+            <div styleName="centered">
+              {this.state.error && (
+                <Message warning>
+                  <Icon name="warning" />
+                  {this.state.message.response.data}
+                </Message>
+              )}
+              {this.state.success && (
+                <Message positive>{this.state.message}</Message>
+              )}
+              <div>
+                <Header as="h4">
+                  {" "}
+                  {constants.designations[match.params.id]}{" "}
+                </Header>
+              </div>
+              <div>
+                <Image
+                  src={
+                    selected.displayPicture ||
+                    "https://react.semantic-ui.com/images/wireframe/square-image.png"
+                  }
+                  size="tiny"
+                  circular
+                />
+              </div>
 
-          <Form>
-            <Form.Field>
-              <label>Name</label>
-              <Dropdown
-                name="name"
-                onSearchChange={this.onSearchChange}
-                onChange={this.onChange}
-                value={selected}
-                search
-                selection
-                closeOnChange
-                options={options}
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Designation</label>
-              <Dropdown
-                name="designation"
-                value={designation}
-                onChange={this.handleChange}
-                selection
-                closeOnChange
-                options={designations}
-              />
-            </Form.Field>
-            <Button size="medium" onClick={this.handleSubmit} width={3}>
-              Submit
-            </Button>
-          </Form>
-        </div>
-      </React.Fragment>
+              <Form>
+                <Form.Field>
+                  <label>Name</label>
+                  <Dropdown
+                    name="name"
+                    onSearchChange={this.onSearchChange}
+                    onChange={this.onChange}
+                    value={selected}
+                    search
+                    selection
+                    closeOnChange
+                    options={options}
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <label>Designation</label>
+                  <Dropdown
+                    name="designation"
+                    value={designation}
+                    onChange={this.handleChange}
+                    selection
+                    closeOnChange
+                    options={designations}
+                  />
+                </Form.Field>
+                <Button size="medium" onClick={this.handleSubmit} width={3}>
+                  Submit
+                </Button>
+              </Form>
+            </div>
+          </Grid.Column>
+      </Grid>
     );
   }
 }

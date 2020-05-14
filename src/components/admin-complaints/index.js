@@ -14,7 +14,7 @@ import {
   timeSlotsUrl,
 } from "../../urls";
 import {
-  Menu,
+  Grid,
   Header,
   Table,
   Button,
@@ -26,7 +26,7 @@ import {
 } from "semantic-ui-react";
 import { toast } from "react-semantic-toasts";
 import "./index.css";
-import moment from "moment"
+import moment from "moment";
 
 const days = [
   { key: "mon", text: "Monday", value: "mon" },
@@ -291,110 +291,10 @@ class AdminComplains extends Component {
     } = this.state;
     const { pendingComplains, resolvedComplains, constants } = this.props;
     return (
-      <React.Fragment>
-        <Container>
-          <Header as="h4">Student Complains</Header>
-          <Table celled>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>ID</Table.HeaderCell>
-                <Table.HeaderCell>Complaint</Table.HeaderCell>
-                <Table.HeaderCell>Applicant Name</Table.HeaderCell>
-                <Table.HeaderCell>Complaint Date</Table.HeaderCell>
-                <Table.HeaderCell>Complaint Type</Table.HeaderCell>
-                <Table.HeaderCell>Contact Number</Table.HeaderCell>
-                <Table.HeaderCell>Applicant Room</Table.HeaderCell>
-                <Table.HeaderCell>
-                  Unsuccesful attempts to solve
-                </Table.HeaderCell>
-                <Table.HeaderCell>Mark as resolved</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {pendingComplains.results && pendingComplains.results.length > 0
-                ? pendingComplains.results.map((complain, index) => {
-                    return (
-                      <Table.Row>
-                        <Table.Cell>
-                          {5 * (activePage - 1) + index + 1}
-                        </Table.Cell>
-                        <Table.Cell>{complain.description}</Table.Cell>
-                        <Table.Cell>{complain.complainant}</Table.Cell>
-                        <Table.Cell>
-                          {moment(
-                            complain.datetimeCreated.substring(0, 10),
-                            "YYYY-MM-DD"
-                          ).format("DD/MM/YY")}
-                        </Table.Cell>
-                        <Table.Cell>
-                          {constants.complaint_types[complain.complaintType]}
-                        </Table.Cell>
-                        <Table.Cell>{complain.phoneNumber}</Table.Cell>
-                        <Table.Cell>{complain.roomNo}</Table.Cell>
-                        <Table.Cell
-                          onClick={() =>
-                            this.increaseUnsuccesfulComplains(complain.id)
-                          }
-                        >
-                          {complain.failedAttempts}
-                          <span styleName="cursor"> + </span>
-                        </Table.Cell>
-                        <Table.Cell onClick={() => this.show(complain.id)}>
-                          <span styleName="resolve-style">Resolve</span>
-                        </Table.Cell>
-                      </Table.Row>
-                    );
-                  })
-                : null}
-            </Table.Body>
-          </Table>
-          {pendingComplains.count > 5 ? (
-            <Pagination
-              activePage={activePage}
-              onPageChange={this.handlePaginationChange}
-              totalPages={Math.ceil(pendingComplains.count / 5)}
-            />
-          ) : null}
-
-          <Header as="h4">
-            Select slot for
-            <Dropdown
-              name="type"
-              placeholder="type"
-              selection
-              options={types}
-              onChange={this.handleChange}
-            />
-            for
-            <Dropdown
-              name="days"
-              placeholder="days"
-              selection
-              options={days}
-              onChange={this.handleChange}
-            />
-            <TimeInput
-              name="from"
-              placeholder="From"
-              value={this.state.from}
-              iconPosition="left"
-              onChange={this.handleChange}
-            />
-            <TimeInput
-              name="to"
-              placeholder="To"
-              value={this.state.to}
-              iconPosition="left"
-              onChange={this.handleChange}
-            />
-            <Button onClick={this.changeTiming}>Change</Button>
-          </Header>
-          <Header as="h4">
-            Past Complains
-            <Icon name={pastComplainIcon} onClick={this.togglePastIcon} />
-          </Header>
-          {pastComplainIcon === "angle down" && (
-            <React.Fragment>
+      <Grid container>
+          <Grid.Column width={16}>
+            <Container>
+              <Header as="h4">Student Complains</Header>
               <Table celled>
                 <Table.Header>
                   <Table.Row>
@@ -408,17 +308,17 @@ class AdminComplains extends Component {
                     <Table.HeaderCell>
                       Unsuccesful attempts to solve
                     </Table.HeaderCell>
-                    <Table.HeaderCell>Complain Status</Table.HeaderCell>
+                    <Table.HeaderCell>Mark as resolved</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {resolvedComplains.results &&
-                  resolvedComplains.results.length > 0
-                    ? resolvedComplains.results.map((complain, index) => {
+                  {pendingComplains.results &&
+                  pendingComplains.results.length > 0
+                    ? pendingComplains.results.map((complain, index) => {
                         return (
                           <Table.Row>
                             <Table.Cell>
-                              {5 * (activeAprPage - 1) + index + 1}
+                              {5 * (activePage - 1) + index + 1}
                             </Table.Cell>
                             <Table.Cell>{complain.description}</Table.Cell>
                             <Table.Cell>{complain.complainant}</Table.Cell>
@@ -437,13 +337,16 @@ class AdminComplains extends Component {
                             </Table.Cell>
                             <Table.Cell>{complain.phoneNumber}</Table.Cell>
                             <Table.Cell>{complain.roomNo}</Table.Cell>
-                            <Table.Cell>{complain.failedAttempts}</Table.Cell>
-                            <Table.Cell>
-                              {
-                                constants.statues.COMLAINT_STATUSES[
-                                  complain.status
-                                ]
+                            <Table.Cell
+                              onClick={() =>
+                                this.increaseUnsuccesfulComplains(complain.id)
                               }
+                            >
+                              {complain.failedAttempts}
+                              <span styleName="cursor"> + </span>
+                            </Table.Cell>
+                            <Table.Cell onClick={() => this.show(complain.id)}>
+                              <span styleName="resolve-style">Resolve</span>
                             </Table.Cell>
                           </Table.Row>
                         );
@@ -451,28 +354,134 @@ class AdminComplains extends Component {
                     : null}
                 </Table.Body>
               </Table>
-              {resolvedComplains.count > 5 ? (
+              {pendingComplains.count > 5 ? (
                 <Pagination
-                  activePage={activeAprPage}
-                  onPageChange={this.handlePastPaginationChange}
-                  totalPages={Math.ceil(resolvedComplains.count / 5)}
+                  activePage={activePage}
+                  onPageChange={this.handlePaginationChange}
+                  totalPages={Math.ceil(pendingComplains.count / 5)}
                 />
               ) : null}
-            </React.Fragment>
-          )}
-        </Container>
-        <Modal size="mini" open={open} onClose={this.close}>
-          <Modal.Header styleName="center">Resolve Complain?</Modal.Header>
-          <Modal.Actions styleName="modalActions">
-            <Button positive fluid onClick={this.resolveComplaint}>
-              Yes
-            </Button>
-            <Button negative fluid onClick={this.close}>
-              No
-            </Button>
-          </Modal.Actions>
-        </Modal>
-      </React.Fragment>
+
+              <Header as="h4">
+                Select slot for
+                <Dropdown
+                  name="type"
+                  placeholder="type"
+                  selection
+                  options={types}
+                  onChange={this.handleChange}
+                />
+                for
+                <Dropdown
+                  name="days"
+                  placeholder="days"
+                  selection
+                  options={days}
+                  onChange={this.handleChange}
+                />
+                <TimeInput
+                  name="from"
+                  placeholder="From"
+                  value={this.state.from}
+                  iconPosition="left"
+                  onChange={this.handleChange}
+                />
+                <TimeInput
+                  name="to"
+                  placeholder="To"
+                  value={this.state.to}
+                  iconPosition="left"
+                  onChange={this.handleChange}
+                />
+                <Button onClick={this.changeTiming}>Change</Button>
+              </Header>
+              <Header as="h4">
+                Past Complains
+                <Icon name={pastComplainIcon} onClick={this.togglePastIcon} />
+              </Header>
+              {pastComplainIcon === "angle down" && (
+                <React.Fragment>
+                  <Table celled>
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.HeaderCell>ID</Table.HeaderCell>
+                        <Table.HeaderCell>Complaint</Table.HeaderCell>
+                        <Table.HeaderCell>Applicant Name</Table.HeaderCell>
+                        <Table.HeaderCell>Complaint Date</Table.HeaderCell>
+                        <Table.HeaderCell>Complaint Type</Table.HeaderCell>
+                        <Table.HeaderCell>Contact Number</Table.HeaderCell>
+                        <Table.HeaderCell>Applicant Room</Table.HeaderCell>
+                        <Table.HeaderCell>
+                          Unsuccesful attempts to solve
+                        </Table.HeaderCell>
+                        <Table.HeaderCell>Complain Status</Table.HeaderCell>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      {resolvedComplains.results &&
+                      resolvedComplains.results.length > 0
+                        ? resolvedComplains.results.map((complain, index) => {
+                            return (
+                              <Table.Row>
+                                <Table.Cell>
+                                  {5 * (activeAprPage - 1) + index + 1}
+                                </Table.Cell>
+                                <Table.Cell>{complain.description}</Table.Cell>
+                                <Table.Cell>{complain.complainant}</Table.Cell>
+                                <Table.Cell>
+                                  {moment(
+                                    complain.datetimeCreated.substring(0, 10),
+                                    "YYYY-MM-DD"
+                                  ).format("DD/MM/YY")}
+                                </Table.Cell>
+                                <Table.Cell>
+                                  {
+                                    constants.complaint_types[
+                                      complain.complaintType
+                                    ]
+                                  }
+                                </Table.Cell>
+                                <Table.Cell>{complain.phoneNumber}</Table.Cell>
+                                <Table.Cell>{complain.roomNo}</Table.Cell>
+                                <Table.Cell>
+                                  {complain.failedAttempts}
+                                </Table.Cell>
+                                <Table.Cell>
+                                  {
+                                    constants.statues.COMLAINT_STATUSES[
+                                      complain.status
+                                    ]
+                                  }
+                                </Table.Cell>
+                              </Table.Row>
+                            );
+                          })
+                        : null}
+                    </Table.Body>
+                  </Table>
+                  {resolvedComplains.count > 5 ? (
+                    <Pagination
+                      activePage={activeAprPage}
+                      onPageChange={this.handlePastPaginationChange}
+                      totalPages={Math.ceil(resolvedComplains.count / 5)}
+                    />
+                  ) : null}
+                </React.Fragment>
+              )}
+            </Container>
+            <Modal size="mini" open={open} onClose={this.close}>
+              <Modal.Header styleName="center">Resolve Complain?</Modal.Header>
+              <Modal.Actions styleName="modalActions">
+                <Button positive fluid onClick={this.resolveComplaint}>
+                  Yes
+                </Button>
+                <Button negative fluid onClick={this.close}>
+                  No
+                </Button>
+              </Modal.Actions>
+            </Modal>
+          </Grid.Column>
+      </Grid>
     );
   }
 }

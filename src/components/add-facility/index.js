@@ -16,7 +16,6 @@ import { getFacilities, addFacility } from "../../actions/facilities";
 import { facilitiesUrl } from "../../urls";
 import "./index.css";
 
-
 const options = [
   { key: "mon", text: "Monday", value: "Monday" },
   { key: "tue", text: "Tuesday", value: "Tuesday" },
@@ -121,6 +120,7 @@ class Facility extends React.Component {
     let descriptions = [...this.state.descriptions];
     let startTime = [...this.state.startTime];
     let endTime = [...this.state.endTime];
+    let days = [...this.state.days];
     descriptions.splice(i, 1);
     startTime.splice(i, 1);
     endTime.splice(i, 1);
@@ -140,7 +140,6 @@ class Facility extends React.Component {
           <Form.Field>
             <label>Description</label>
             <Input
-              icon="angle down"
               value={description || ""}
               onChange={(event) => this.handleDescriptionsChange(i, event)}
             />
@@ -182,7 +181,11 @@ class Facility extends React.Component {
             />
           </Form.Field>
           {this.state.descriptions.length > 1 ? (
-            <Icon name="close" styleName="hover-icon" onClick={(event) => this.removeClick(i)} />
+            <Icon
+              name="close"
+              styleName="hover-icon"
+              onClick={(event) => this.removeClick(i)}
+            />
           ) : null}
         </Form.Group>
       </div>
@@ -258,67 +261,71 @@ class Facility extends React.Component {
     const { information, name } = this.state;
     const { facilities } = this.props;
     return (
-      <Grid.Column>
-        {this.state.error && (
-          <Message warning>
-            <Icon name="warning" />
-            {this.state.message.response.data}
-          </Message>
-        )}
-        {this.state.success && <Message positive>{this.state.message}</Message>}
-        <Header as="h2">XYZ</Header>
-        <Grid divided="vertically">
-          <Grid.Row columns={2}>
-            <Grid.Column>
-              <Form.Field required>
-                <label>Image:</label>
-                <input
-                  type="file"
-                  onChange={this.handleSelectPicture}
-                  name="uploadedFile"
-                />
-              </Form.Field>
-            </Grid.Column>
-            <Grid.Column>
-              <Container>
-                <div>
-                  <Header as="h5">Add Information</Header>
-                  <Form>
-                    <Form.Field>
-                      <label>Name</label>
-                      <Input
-                        name="name"
-                        value={name}
+      <Grid.Column width={12} floated="left">
+        <Grid.Column>
+          {this.state.error && (
+            <Message warning>
+              <Icon name="warning" />
+              {this.state.message.response.data}
+            </Message>
+          )}
+          {this.state.success && (
+            <Message positive>{this.state.message}</Message>
+          )}
+          <Header as="h2">XYZ</Header>
+          <Grid divided="vertically">
+            <Grid.Row columns={2}>
+              <Grid.Column>
+                <Form.Field required>
+                  <label>Image:</label>
+                  <input
+                    type="file"
+                    onChange={this.handleSelectPicture}
+                    name="uploadedFile"
+                  />
+                </Form.Field>
+              </Grid.Column>
+              <Grid.Column>
+                <Container>
+                  <div>
+                    <Header as="h5">Add Information</Header>
+                    <Form>
+                      <Form.Field>
+                        <label>Name</label>
+                        <Input
+                          name="name"
+                          value={name}
+                          onChange={this.handleChange}
+                        />
+                      </Form.Field>
+                      <TextArea
+                        name="information"
+                        value={information}
                         onChange={this.handleChange}
+                        placeholder="Tell us more"
+                        fluid
                       />
-                    </Form.Field>
-                    <TextArea
-                      name="information"
-                      value={information}
-                      onChange={this.handleChange}
-                      placeholder="Tell us more"
-                      fluid
-                    />
-                    {this.createForm()}
-                    <Form.Field>
-                      <Icon
-                        onClick={this.addClick}
-                        name="plus"
-                        size="big"
-                        styleName="plus-icon"
-                      />
-                    </Form.Field>
-                    <Form.Group>
-                      <Form.Button onClick={this.submitData}>
-                        Save Changes
-                      </Form.Button>
-                    </Form.Group>
-                  </Form>
-                </div>
-              </Container>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+                      {this.createForm()}
+                      <Form.Field>
+                        <Icon
+                          onClick={this.addClick}
+                          name="plus"
+                          size="big"
+                          styleName="plus-icon"
+                        />
+                      </Form.Field>
+                      <Form.Group>
+                        <Form.Button onClick={this.submitData}>
+                          Save Changes
+                        </Form.Button>
+                      </Form.Group>
+                    </Form>
+                  </div>
+                </Container>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Grid.Column>
       </Grid.Column>
     );
   }

@@ -137,43 +137,88 @@ class App extends React.Component {
               <div styleName="blocks.app-container">
                 <Grid container>
                   <Grid.Row>
-                    <GridColumn width={16}>
-                      <Route
-                        path={`${match.path}profile`}
-                        render={(props) => (
-                          <MyProfile
+                    <Route
+                      path={`${match.path}profile`}
+                      render={(props) => (
+                        <MyProfile
+                          who_am_i={who_am_i}
+                          constants={constants}
+                          setNavigation={this.setNavigation}
+                        />
+                      )}
+                    />
+                    <Route
+                      path={`${match.path}book_room`}
+                      exact
+                      render={(props) =>
+                        !who_am_i.isStudent && (
+                          <BookingRequests
                             who_am_i={who_am_i}
                             constants={constants}
-                            setNavigation={this.setNavigation}
                           />
-                        )}
-                      />
+                        )
+                      }
+                    />
+                    <Route
+                      path={`${match.path}facility`}
+                      render={(props) => (
+                        <Facility
+                          who_am_i={who_am_i}
+                          setNavigation={this.setNavigation}
+                        />
+                      )}
+                    />
+                    <Route
+                      path={`${match.path}admin_complain`}
+                      exact
+                      render={(props) => (
+                        <AdminComplains
+                          who_am_i={who_am_i}
+                          constants={constants}
+                          setNavigation={this.setNavigation}
+                          {...props}
+                        />
+                      )}
+                    />
+                    <Route
+                      path={`${match.path}create-authority`}
+                      render={(props) => (
+                        <AdminAuthorities
+                          who_am_i={who_am_i}
+                          constants={constants}
+                          {...props}
+                        />
+                      )}
+                    />
+                    <Route
+                      path={`${match.path}edit-authority`}
+                      render={(props) => (
+                        <EditAuthorities
+                          who_am_i={who_am_i}
+                          constants={constants}
+                          {...props}
+                        />
+                      )}
+                    />
+                    <Switch>
                       <Route
                         path={`${match.path}book_room`}
                         exact
                         render={(props) =>
-                          !who_am_i.isStudent && (
-                            <BookingRequests
+                          who_am_i.isStudent && (
+                            <BookRoom
                               who_am_i={who_am_i}
                               constants={constants}
+                              setNavigation={this.setNavigation}
                             />
                           )
                         }
                       />
                       <Route
-                        path={`${match.path}facility`}
-                        render={(props) => (
-                          <Facility
-                            who_am_i={who_am_i}
-                            setNavigation={this.setNavigation}
-                          />
-                        )}
-                      />
-                      <Route
-                        path={`${match.path}admin_complain`}
+                        path={`${match.path}complain`}
                         exact
                         render={(props) => (
-                          <AdminComplains
+                          <ComplainRegister
                             who_am_i={who_am_i}
                             constants={constants}
                             setNavigation={this.setNavigation}
@@ -182,88 +227,38 @@ class App extends React.Component {
                         )}
                       />
                       <Route
-                        path={`${match.path}create-authority`}
+                        path={`${match.path}add/facility`}
+                        render={(props) => <AddFacility who_am_i={who_am_i} />}
+                      />
+
+                      <Route
+                        path={`${match.path}`}
+                        exact
                         render={(props) => (
-                          <AdminAuthorities
-                            who_am_i={who_am_i}
-                            constants={constants}
-                            {...props}
-                          />
+                          <Grid.Column width={12} floated="left">
+                            <Facilities
+                              who_am_i={who_am_i}
+                              setNavigation={this.setNavigation}
+                              {...this.props}
+                            />
+                            <Authorities
+                              who_am_i={who_am_i}
+                              constants={constants}
+                              {...this.props}
+                            />
+                          </Grid.Column>
                         )}
                       />
                       <Route
-                        path={`${match.path}edit-authority`}
+                        path={`${match.path}events`}
                         render={(props) => (
-                          <EditAuthorities
+                          <Events
                             who_am_i={who_am_i}
-                            constants={constants}
-                            {...props}
+                            setNavigation={this.setNavigation}
                           />
                         )}
                       />
-                    </GridColumn>
-                    <Grid.Column width={12} floated="left">
-                      <Switch>
-                        <Route
-                          path={`${match.path}book_room`}
-                          exact
-                          render={(props) =>
-                            who_am_i.isStudent && (
-                              <BookRoom
-                                who_am_i={who_am_i}
-                                constants={constants}
-                                setNavigation={this.setNavigation}
-                              />
-                            )
-                          }
-                        />
-                        <Route
-                          path={`${match.path}complain`}
-                          exact
-                          render={(props) => (
-                            <ComplainRegister
-                              who_am_i={who_am_i}
-                              constants={constants}
-                              setNavigation={this.setNavigation}
-                              {...props}
-                            />
-                          )}
-                        />
-                        <Route
-                          path={`${match.path}add/facility`}
-                          render={(props) => (
-                            <AddFacility who_am_i={who_am_i} />
-                          )}
-                        />
-
-                        <Route
-                          path={`${match.path}`}
-                          exact
-                          render={(props) => (
-                            <React.Fragment>
-                              <Facilities
-                                who_am_i={who_am_i}
-                                setNavigation={this.setNavigation}
-                                {...this.props}
-                              />
-                              <Authorities
-                                who_am_i={who_am_i}
-                                constants={constants}
-                                {...this.props}
-                              />
-                            </React.Fragment>
-                          )}
-                        />
-                        <Route
-                          path={`${match.path}events`}
-                          render={(props) => (
-                            <Events
-                              who_am_i={who_am_i}
-                              setNavigation={this.setNavigation}
-                            />
-                          )}
-                        />
-                        <Route
+                      {/* <Route
                           path={`${match.path}admin/database`}
                           render={(props) => (
                             <StudentDatabase who_am_i={who_am_i} />
@@ -274,60 +269,58 @@ class App extends React.Component {
                           render={(props) => (
                             <RegisterStudent who_am_i={who_am_i} />
                           )}
-                        />
-                      </Switch>
-                    </Grid.Column>
-                    <Grid.Column width={3} floated="right">
-                      <Switch>
-                        <Route
-                          path={`${match.path}`}
-                          exact
-                          render={(props) => (
-                            <React.Fragment>
+                        /> */}
+                    </Switch>
+                    <Switch>
+                      <Route
+                        path={`${match.path}`}
+                        exact
+                        render={(props) => (
+                          <Grid.Column width={3} floated="right">
+                            <MyInfo {...props} who_am_i={who_am_i} />
+                            <EventsCard {...props} who_am_i={who_am_i} />
+                            {who_am_i.isAdmin && who_am_i.isStudent ? (
+                              <Link to="/bhawan_app/admin_complain">
+                                <Button fluid styleName="blocks.active-button">
+                                  Student Complains
+                                </Button>
+                              </Link>
+                            ) : null}
+                          </Grid.Column>
+                        )}
+                      />
+                      <Route
+                        path={`${match.path}complain`}
+                        exact
+                        render={(props) => (
+                            <Grid.Column width={3} floated="right">
                               <MyInfo {...props} who_am_i={who_am_i} />
                               <EventsCard {...props} who_am_i={who_am_i} />
-                              {who_am_i.isAdmin && who_am_i.isStudent ? (
-                                <Link to="/bhawan_app/admin_complain">
-                                  <Button
-                                    fluid
-                                    styleName="blocks.active-button"
-                                  >
-                                    Student Complains
-                                  </Button>
-                                </Link>
-                              ) : null}
-                            </React.Fragment>
-                          )}
-                        />
+                            </Grid.Column>
+                        )}
+                      />
+                      {who_am_i.isStudent && (
                         <Route
-                          path={`${match.path}complain`}
+                          path={`${match.path}book_room`}
                           exact
                           render={(props) => (
-                            <React.Fragment>
-                              <MyInfo {...props} who_am_i={who_am_i} />
-                              <EventsCard {...props} who_am_i={who_am_i} />
-                            </React.Fragment>
-                          )}
-                        />
-                        {who_am_i.isStudent && (
-                          <Route
-                            path={`${match.path}book_room`}
-                            exact
-                            render={(props) => (
-                              <React.Fragment>
+                              <Grid.Column width={3} floated="right">
                                 <MyInfo {...props} who_am_i={who_am_i} />
                                 <EventsCard {...props} who_am_i={who_am_i} />
-                              </React.Fragment>
-                            )}
-                          />
-                        )}
-                        <Route
-                          path={`${match.path}events`}
-                          exact
-                          render={(props) => <EventsCard who_am_i={who_am_i} />}
+                              </Grid.Column>
+                          )}
                         />
-                      </Switch>
-                    </Grid.Column>
+                      )}
+                      <Route
+                        path={`${match.path}events`}
+                        exact
+                        render={(props) => (
+                            <Grid.Column width={3} floated="right">
+                              <EventsCard {...props} who_am_i={who_am_i} />
+                            </Grid.Column>
+                        )}
+                      />
+                    </Switch>
                   </Grid.Row>
                 </Grid>
               </div>

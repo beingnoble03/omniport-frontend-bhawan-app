@@ -9,6 +9,7 @@ import {
   Message,
   Icon,
   Dropdown,
+  Grid
 } from "semantic-ui-react";
 import { searchPerson } from "../../actions/searchPerson";
 import { editAuthority } from "../../actions/authorities";
@@ -115,60 +116,63 @@ class EditAuthorities extends React.Component {
       });
     }
     return (
-      <React.Fragment>
-        <div styleName="centered">
-        {this.state.error && (
-            <Message warning>
-              <Icon name="warning" />
-              {this.state.message.response.data}
-            </Message>
-          )}
-          {this.state.success && (
-            <Message positive>{this.state.message}</Message>
-          )}
-          {designation ? (
-            <React.Fragment>
-              <div>
-                <Header as="h4"> {constants.designations[designation]} </Header>
-              </div>
-              <div>
-                <Image
-                  src={
-                    selected.displayPicture ||
-                    "https://react.semantic-ui.com/images/wireframe/square-image.png"
-                  }
-                  size="tiny"
-                  circular
-                />
-              </div>
-
-              <Form>
-                <Form.Field>
-                  <label>Name</label>
-                  <Dropdown
-                    name="name"
-                    onSearchChange={this.onSearchChange}
-                    onChange={this.onChange}
-                    value={selected}
-                    search
-                    selection
-                    closeOnChange
-                    options={options}
+        <Grid.Column width={16}>
+          <div styleName="centered">
+            {this.state.error && (
+              <Message warning>
+                <Icon name="warning" />
+                {this.state.message.response.data}
+              </Message>
+            )}
+            {this.state.success && (
+              <Message positive>{this.state.message}</Message>
+            )}
+            {designation ? (
+              <React.Fragment>
+                <div>
+                  <Header as="h4">
+                    {" "}
+                    {constants.designations[designation]}{" "}
+                  </Header>
+                </div>
+                <div>
+                  <Image
+                    src={
+                      selected.displayPicture ||
+                      "https://react.semantic-ui.com/images/wireframe/square-image.png"
+                    }
+                    size="tiny"
+                    circular
                   />
-                </Form.Field>
-                <Button size="medium" onClick={this.handleSubmit} width={3}>
-                  Submit
-                </Button>
-              </Form>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              Go to <Link to="/bhawan_app/">this</Link> and select the authority
-              first
-            </React.Fragment>
-          )}
-        </div>
-      </React.Fragment>
+                </div>
+
+                <Form>
+                  <Form.Field>
+                    <label>Name</label>
+                    <Dropdown
+                      name="name"
+                      onSearchChange={this.onSearchChange}
+                      onChange={this.onChange}
+                      value={selected}
+                      search
+                      selection
+                      closeOnChange
+                      options={options}
+                    />
+                  </Form.Field>
+                  <Button size="medium" onClick={this.handleSubmit} width={3}>
+                    Submit
+                  </Button>
+                </Form>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                Go to <Link to="/bhawan_app/">this</Link> and select the
+                authority first
+              </React.Fragment>
+            )}
+          </div>
+        </Grid.Column>
     );
   }
 }

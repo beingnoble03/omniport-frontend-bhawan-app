@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, Form, Input, Container, Icon, Message } from "semantic-ui-react";
+import { Button, Form, Input, Icon, Message, Grid } from "semantic-ui-react";
 import { DateInput, TimeInput } from "semantic-ui-calendar-react";
 import "./index.css";
 import { bookRoom } from "../../actions/book-room";
-import moment from "moment"
+import moment from "moment";
 
 class BookRoom extends React.Component {
   constructor(props) {
@@ -53,7 +53,7 @@ class BookRoom extends React.Component {
               onChange={(event) => this.handleRelativeChange(i, event)}
             />
           </Form.Field>
-          <Form.Field >
+          <Form.Field>
             <label>Identity Proof</label>
             <input
               type="file"
@@ -116,7 +116,7 @@ class BookRoom extends React.Component {
           relation: this.state.relatives[index],
         })
       );
-      formData.append(`visitors${index}`, this.state.proof[index], 'hey.png')
+      formData.append(`visitors${index}`, this.state.proof[index], "hey.png");
     });
     this.props.bookRoom(
       formData,
@@ -158,7 +158,7 @@ class BookRoom extends React.Component {
   };
   render() {
     return (
-      <Container>
+      <Grid.Column width={12} floated="left">
         {this.state.error && (
           <Message warning>
             <Icon name="warning" />
@@ -166,7 +166,9 @@ class BookRoom extends React.Component {
           </Message>
         )}
         {this.state.success && (
-          <Message positive>Your Booking Request has been made succesfully</Message>
+          <Message positive>
+            Your Booking Request has been made succesfully
+          </Message>
         )}
         <Form>
           <Form.Group>
@@ -202,7 +204,7 @@ class BookRoom extends React.Component {
             </Button>
           </Form.Field>
         </Form>
-      </Container>
+      </Grid.Column>
     );
   }
 }

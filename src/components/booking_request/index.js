@@ -17,6 +17,7 @@ import {
   Icon,
   Pagination,
   Message,
+  Grid,
 } from "semantic-ui-react";
 import "./index.css";
 
@@ -41,14 +42,14 @@ class BookingRequests extends Component {
       statusBookingsUrl(
         this.props.who_am_i.residence,
         this.props.constants.statues.BOOKING_STATUSES.pen,
-        "False",
+        "False"
       )
     );
     this.props.getPastRoomBookings(
       statusBookingsUrl(
         this.props.who_am_i.residence,
         this.props.constants.statues.BOOKING_STATUSES.cnf,
-        true,
+        true
       )
     );
   }
@@ -132,14 +133,14 @@ class BookingRequests extends Component {
       statusBookingsUrl(
         this.props.who_am_i.residence,
         this.state.activeItem,
-        "False",
+        "False"
       )
     );
     this.props.getPastRoomBookings(
       statusBookingsUrl(
         this.props.who_am_i.residence,
         this.state.activePastItem,
-        "true",
+        "true"
       )
     );
   };
@@ -172,7 +173,7 @@ class BookingRequests extends Component {
       `${statusBookingsUrl(
         this.props.who_am_i.residence,
         this.state.activeItem,
-        "False",
+        "False"
       )}&page=${activePage}`
     );
   };
@@ -204,7 +205,7 @@ class BookingRequests extends Component {
       constants,
     } = this.props;
     return (
-      <div>
+      <Grid.Column width={16}>
         {this.state.error && (
           <Message warning>
             <Icon name="warning" />
@@ -511,7 +512,7 @@ class BookingRequests extends Component {
             </Modal.Actions>
           </Modal>
         ) : null}
-      </div>
+      </Grid.Column>
     );
   }
 }
