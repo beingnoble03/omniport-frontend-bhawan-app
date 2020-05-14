@@ -62,7 +62,7 @@ class Complains extends React.Component {
             <Pagination
               activePage={activePage}
               onPageChange={this.handlePaginationChange}
-              totalPages={Math.ceil(complains.count / 10)}
+              totalPages={Math.ceil(complains.count / 5)}
             />
           ) : null}
         </React.Fragment>

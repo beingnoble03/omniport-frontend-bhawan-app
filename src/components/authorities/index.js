@@ -39,7 +39,7 @@ class Authorities extends React.Component {
       <Container styleName="top-margin">
         <h2>
           Authorities
-          {who_am_i.isAdmin && (
+          {!who_am_i.isStudent && (
             <Link to="/bhawan_app/create-authority">
             <Button styleName="active-button">Add new Admin</Button>
           </Link>
