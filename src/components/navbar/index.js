@@ -8,6 +8,7 @@ import {
   adminComplainUrl,
   bookingUrl,
   eventUrl,
+  complainUrl,
 } from "../../urls";
 
 export default class Nav extends Component {
@@ -50,7 +51,10 @@ export default class Nav extends Component {
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
-  handleGroupClick = (e, { name }) => this.setState({ activeSubGroup: name });
+  handleGroupClick = (name, url) => {
+    this.setState({ activeSubGroup: name });
+    this.props.history.push(url);
+  };
 
   render() {
     const { activeItem, activeSubGroup } = this.state;
@@ -59,89 +63,91 @@ export default class Nav extends Component {
       <React.Fragment>
         <Menu secondary styleName="navCss.upper_menu">
           <Menu.Item>
-            <Header>{this.props.constants.hostels[this.props.who_am_i.residence]}</Header>
+            <Header>
+              {this.props.constants.hostels[this.props.who_am_i.residence]}
+            </Header>
           </Menu.Item>
           {this.props.who_am_i.isStudent ? (
             <Menu.Menu position="right">
               <Menu.Item styleName="blocks.zero-padding">
-                <Link to="/bhawan_app/book_room/">
-                  <Button
-                    styleName={
-                      location.pathname === "/bhawan_app/book_room/"
-                        ? "blocks.disactive-button"
-                        : "blocks.active-button"
-                    }
-                  >
-                    Book a Guest Room
-                  </Button>
-                </Link>
+                <Button
+                  styleName={
+                    location.pathname === "/bhawan_app/book_room/"
+                      ? "blocks.disactive-button"
+                      : "blocks.active-button"
+                  }
+                  onClick={() => {
+                    this.props.history.push(bookingUrl());
+                  }}
+                >
+                  Book a Guest Room
+                </Button>
               </Menu.Item>
               <Menu.Item styleName="blocks.zero-padding">
-                <Link to="/bhawan_app/complain/">
-                  <Button
-                    styleName={
-                      location.pathname === "/bhawan_app/complain/"
-                        ? "blocks.disactive-button"
-                        : "blocks.active-button"
-                    }
-                  >
-                    Register a Complaint
-                  </Button>
-                </Link>
+                <Button
+                  styleName={
+                    location.pathname === "/bhawan_app/complain/"
+                      ? "blocks.disactive-button"
+                      : "blocks.active-button"
+                  }
+                  onClick={() => {
+                    this.props.history.push(complainUrl());
+                  }}
+                >
+                  Register a Complaint
+                </Button>
               </Menu.Item>
             </Menu.Menu>
           ) : null}
         </Menu>
         {this.props.who_am_i.isAdmin && !this.props.who_am_i.isStudent ? (
           <Menu size="mini" secondary styleName="navCss.lower_menu">
-            <Link to="/bhawan_app/admin_complain">
-              <Menu.Item
-                size="mini"
-                name="complains"
-                color="blue"
-                styleName="navCss.navColor"
-                active={activeSubGroup == "complains"}
-                onClick={this.handleGroupClick}
-              >
-                Complaints
-              </Menu.Item>
-            </Link>
-            <Link to="/bhawan_app/book_room">
-              <Menu.Item
-                size="mini"
-                name="bookings"
-                color="blue"
-                styleName="navCss.navColor"
-                active={activeSubGroup == "bookings"}
-                onClick={this.handleGroupClick}
-              >
-                Guest Room Bookings
-              </Menu.Item>
-            </Link>
-            <Link to="/bhawan_app/events">
-              <Menu.Item
-                size="mini"
-                name="events"
-                color="blue"
-                styleName="navCss.navColor"
-                active={activeSubGroup == "events"}
-                onClick={this.handleGroupClick}
-              >
-                Events
-              </Menu.Item>
-            </Link>
-            <Link to="/bhawan_app/">
-              <Menu.Item
-                size="mini"
-                name="facauth"
-                color="blue"
-                styleName="navCss.navColor"
-                active={activeSubGroup == "facauth"}
-                onClick={this.handleGroupClick}
-              >
-                Facilities and Authorities
-              </Menu.Item>
-            </Link>
+            <Menu.Item
+              size="mini"
+              name="complains"
+              color="blue"
+              styleName="navCss.navColor"
+              active={activeSubGroup == "complains"}
+              onClick={() =>
+                this.handleGroupClick("complains", "/bhawan_app/admin_complain")
+              }
+            >
+              Complaints
+            </Menu.Item>
+            <Menu.Item
+              size="mini"
+              name="bookings"
+              color="blue"
+              styleName="navCss.navColor"
+              active={activeSubGroup == "bookings"}
+              onClick={() =>
+                this.handleGroupClick("bookings", "/bhawan_app/book_room")
+              }
+            >
+              Guest Room Bookings
+            </Menu.Item>
+            <Menu.Item
+              size="mini"
+              name="events"
+              color="blue"
+              styleName="navCss.navColor"
+              active={activeSubGroup == "events"}
+              onClick={() =>
+                this.handleGroupClick("events", "/bhawan_app/events")
+              }
+            >
+              Events
+            </Menu.Item>
+            <Menu.Item
+              size="mini"
+              name="facauth"
+              color="blue"
+              styleName="navCss.navColor"
+              active={activeSubGroup == "facauth"}
+              onClick={() => this.handleGroupClick("facauth", "/bhawan_app/")}
+            >
+              Facilities and Authorities
+            </Menu.Item>
             {/* <Menu.Item
               size="mini"
               name="database"
@@ -166,10 +172,18 @@ export default class Nav extends Component {
         ) : (
           <Menu size="mini" secondary styleName="navCss.lower_menu">
             <Menu.Item size="mini">
-              {/* <Link to={homePageUrl()}>
-                <Icon name="angle left" />
-              </Link>{" "}
-              <Icon name="angle right" /> */}
+              <Icon
+                name="angle left"
+                onClick={() => {
+                  this.props.history.goBack();
+                }}
+              />
+              <Icon
+                name="angle right"
+                onClick={() => {
+                  this.props.history.goForward();
+                }}
+              />
               {this.props.activeNav}
             </Menu.Item>
           </Menu>

@@ -129,6 +129,7 @@ class App extends React.Component {
                         who_am_i={who_am_i}
                         constants={constants}
                         activeNav={this.state.activeNav}
+                        {...props}
                       />
                     );
                   }}
@@ -144,6 +145,7 @@ class App extends React.Component {
                           who_am_i={who_am_i}
                           constants={constants}
                           setNavigation={this.setNavigation}
+                          {...props}
                         />
                       )}
                     />
@@ -155,6 +157,7 @@ class App extends React.Component {
                           <BookingRequests
                             who_am_i={who_am_i}
                             constants={constants}
+                            {...props}
                           />
                         )
                       }
@@ -165,6 +168,7 @@ class App extends React.Component {
                         <Facility
                           who_am_i={who_am_i}
                           setNavigation={this.setNavigation}
+                          {...props}
                         />
                       )}
                     />
@@ -293,10 +297,10 @@ class App extends React.Component {
                         path={`${match.path}complain`}
                         exact
                         render={(props) => (
-                            <Grid.Column width={3} floated="right">
-                              <MyInfo {...props} who_am_i={who_am_i} />
-                              <EventsCard {...props} who_am_i={who_am_i} />
-                            </Grid.Column>
+                          <Grid.Column width={3} floated="right">
+                            <MyInfo {...props} who_am_i={who_am_i} />
+                            <EventsCard {...props} who_am_i={who_am_i} />
+                          </Grid.Column>
                         )}
                       />
                       {who_am_i.isStudent && (
@@ -304,10 +308,10 @@ class App extends React.Component {
                           path={`${match.path}book_room`}
                           exact
                           render={(props) => (
-                              <Grid.Column width={3} floated="right">
-                                <MyInfo {...props} who_am_i={who_am_i} />
-                                <EventsCard {...props} who_am_i={who_am_i} />
-                              </Grid.Column>
+                            <Grid.Column width={3} floated="right">
+                              <MyInfo {...props} who_am_i={who_am_i} />
+                              <EventsCard {...props} who_am_i={who_am_i} />
+                            </Grid.Column>
                           )}
                         />
                       )}
@@ -315,9 +319,9 @@ class App extends React.Component {
                         path={`${match.path}events`}
                         exact
                         render={(props) => (
-                            <Grid.Column width={3} floated="right">
-                              <EventsCard {...props} who_am_i={who_am_i} />
-                            </Grid.Column>
+                          <Grid.Column width={3} floated="right">
+                            <EventsCard {...props} who_am_i={who_am_i} />
+                          </Grid.Column>
                         )}
                       />
                     </Switch>
