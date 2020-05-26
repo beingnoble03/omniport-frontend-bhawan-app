@@ -51,7 +51,7 @@ class Authorities extends React.Component {
                 if (index < this.state.max_length)
                   return (
                     <Card styleName="card" onClick={() => this.handleRedirect(authority)}>
-                      <Card.Content styleName="top-card">
+                      <Card.Content styleName="top-card bold">
                         <Header as="h5" styleName="zero-margin">
                           {constants.designations[authority.designation]}
                         </Header>

@@ -8,8 +8,9 @@
     justify-content: space-between;
 }
 .center{
-    display: flex;
+    display: flex; 
     align-items: center;
+    margin-right: 1em;
 }
 .column-center {
     display: flex;
@@ -17,13 +18,27 @@
     justify-content: center;
     align-items: center;
 }
-.check {
-    color: #747474;
-    font-weight: 500;
+.large {
     font-size: 16px;
 }
-.check-detail {
+.mid {
+    font-size: 12px;
+}
+.small {
+    font-size: 10px;
+}
+.green {
+    color: #00661D;
+}
+.red {
+    color: #D04B4B;
+}
+.yellow {
+    color: yellow;
+}
+.black {
     color: #000000;
-    /* font-weight: 600; */
-    font-size: 14px;
+}
+.grey {
+    color: #747474;
 }

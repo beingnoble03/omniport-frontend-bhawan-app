@@ -15,7 +15,8 @@
     box-shadow: 3px 3px 16px rgba(0, 0, 0, 0.11) !important;
     font-family: Lato;
     font-style: normal;
-    font-weight: bold;
+    /* font-weight: 5 !important; */
+    /* font-size: 16px !important; */
 }
 
 .navColor {

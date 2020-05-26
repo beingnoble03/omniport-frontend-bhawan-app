@@ -25,7 +25,7 @@ class BookingRequests extends Component {
   state = {
     open: false,
     activeItem: "pending",
-    pastBookingIcon: "angle up",
+    pastBookingIcon: "angle down",
     message: "",
     success: false,
     err: false,
@@ -356,9 +356,9 @@ class BookingRequests extends Component {
 
           <Header as="h4">
             Past Bookings
-            <Icon name={pastBookingIcon} onClick={this.togglePastIcon} />
+            <Icon name={pastBookingIcon} onClick={this.togglePastIcon} className="cursor"/>
           </Header>
-          {pastBookingIcon === "angle down" && (
+          {pastBookingIcon === "angle up" && (
             <Table.Cell>
               <Menu compact icon="labeled">
                 <Menu.Item

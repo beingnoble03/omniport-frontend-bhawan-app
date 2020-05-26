@@ -62,9 +62,8 @@ class BookRoom extends React.Component {
               name={`picture${i}`}
               id={`uploadPhoto${i}`}
             />
-          </Form.Field>
-          {this.state.visitors.length > 1 ? (
-            <Icon name="close" onClick={() => this.removeClick(i)} />
+          </Form.Field>{this.state.visitors.length > 1 ? (
+            <Icon name="close" size="big" onClick={() => this.removeClick(i)}styleName="top-margin" />
           ) : null}
         </Form.Group>
       </div>

@@ -85,7 +85,7 @@ class EventsCard extends React.Component {
           </div>
         ) : null}
         <Link to="/bhawan_app/events">
-          <Card>
+          <Card styleName="font_color">
             <Card.Content>
               <Card.Header>
                 {location.pathname === eventUrl()
@@ -95,10 +95,10 @@ class EventsCard extends React.Component {
               {dayEvents.length > 0
                 ? dayEvents.map((event) => {
                     return (
-                      <div styleName="max-content-width">
+                      <div styleName="max-content-width mid-font">
                         <Card.Description>
                           {event.name}
-                          <div styleName="display-flex">
+                          <div styleName="display-flex small-font">
                             <div styleName="min-margin">
                               {event.description}
                             </div>
@@ -128,8 +128,8 @@ class EventsCard extends React.Component {
                     placeholder="Event"
                     control={Input}
                     onChange={this.handleChange}
-                    label="First name"
-                    placeholder="First name"
+                    label="Event name"
+                    placeholder="Event name"
                     required
                   />
                   <Form.Field

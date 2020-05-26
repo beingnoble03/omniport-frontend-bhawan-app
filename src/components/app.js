@@ -285,7 +285,7 @@ class App extends React.Component {
                             <EventsCard {...props} who_am_i={who_am_i} />
                             {who_am_i.isAdmin && who_am_i.isStudent ? (
                               <Link to="/bhawan_app/admin_complain">
-                                <Button fluid styleName="blocks.active-button">
+                                <Button fluid styleName="blocks.student-complains">
                                   Student Complains
                                 </Button>
                               </Link>
