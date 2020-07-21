@@ -174,12 +174,14 @@ export default class Nav extends Component {
             <Menu.Item size="mini">
               <Icon
                 name="angle left"
+                styleName="navCss.cursor"
                 onClick={() => {
                   this.props.history.goBack();
                 }}
               />
               <Icon
                 name="angle right"
+                styleName="navCss.cursor"
                 onClick={() => {
                   this.props.history.goForward();
                 }}
