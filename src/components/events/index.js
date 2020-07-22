@@ -25,14 +25,13 @@ class Events extends React.Component {
       <Grid.Column width={12} floated="left">
         <FullCalendar
           defaultView="dayGridMonth"
-          ref={this.calendarRef}
           dateClick={this.handleDateClick}
-          weekends={true}
+          weekends
           aspectRatio="1.3"
           events={this.props.mappedEvents}
           selectable={true}
           plugins={[dayGridPlugin, interactionPlugin]}
-          header={{
+          headerToolbar={{
             left: "prev,next today",
             center: "title",
             right: "",
