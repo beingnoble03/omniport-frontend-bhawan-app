@@ -1,4 +1,7 @@
-import React from "react";
+import React from 'react';
+import { connect } from 'react-redux';
+import moment from 'moment';
+
 import {
   Button,
   Form,
@@ -10,30 +13,29 @@ import {
   Pagination,
   Table,
   Grid,
-} from "semantic-ui-react";
-import "./index.css";
-import { connect } from "react-redux";
-import { getComplains } from "../../actions/complains";
-import { addComplaint } from "../../actions/add_complaint";
-import { complainsUrl } from "../../urls";
-import Complains from "../complains/index";
-import moment from "moment";
+} from 'semantic-ui-react';
+
+import './index.css';
+
+import { getComplains } from '../../actions/complains';
+import { addComplaint } from '../../actions/add_complaint';
+import { complainsUrl } from '../../urls';
 
 class ComplainRegister extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      complain: "",
-      category: "",
+      complain: '',
+      category: '',
       success: false,
       error: false,
-      message: "",
+      message: '',
       activePage: 1,
     };
   }
 
   componentDidMount() {
-    this.props.setNavigation("Register a Complain");
+    this.props.setNavigation('Register a Complain');
     this.props.getComplains(complainsUrl(this.props.who_am_i.residence));
   }
 
@@ -68,9 +70,9 @@ class ComplainRegister extends React.Component {
       success: true,
       error: false,
       message: res.statusText,
-      convenientTime: "",
-      complain: "",
-      category: "",
+      convenientTime: '',
+      complain: '',
+      category: '',
     });
     this.props.getComplains(complainsUrl(this.props.who_am_i.residence));
   };
@@ -94,10 +96,10 @@ class ComplainRegister extends React.Component {
       });
     }
     return (
-      <Grid.Column width={12} floated="left">
+      <Grid.Column width={12} floated='left'>
         {this.state.error && (
           <Message warning>
-            <Icon name="warning" />
+            <Icon name='warning' />
             Your complain could not be made. Please try again
           </Message>
         )}
@@ -108,33 +110,33 @@ class ComplainRegister extends React.Component {
           <Form.Field>
             <label>Category</label>
             <Dropdown
-              name="category"
+              name='category'
               selection
               options={options}
               onChange={this.handleChange}
-              styleName="field-width"
+              styleName='field-width'
             />
           </Form.Field>
-          <div styleName="info">
+          <div styleName='info'>
             <div>3 attempts will be made to resolve your complaint</div>
             <div>
               The complaint will be deleted after 3 unsuccessful attempts
             </div>
           </div>
           <Form.Field
-            name="complain"
+            name='complain'
             value={this.state.complain}
             onChange={this.handleChange}
             control={TextArea}
-            label="Complaint"
-            placeholder="Type your complaint here ...."
-            styleName="complaint"
-            rows="5"
+            label='Complaint'
+            placeholder='Type your complaint here ....'
+            styleName='complaint'
+            rows='5'
             required
           />
           <Button
-            size="medium"
-            styleName="button"
+            size='medium'
+            styleName='button'
             onClick={this.handleSubmit}
             width={3}
           >
@@ -142,7 +144,7 @@ class ComplainRegister extends React.Component {
           </Button>
         </Form>
         <React.Fragment>
-          <Header as="h3">My Complains</Header>
+          <Header as='h3'>My Complains</Header>
           <Table celled>
             <Table.Header>
               <Table.Row>
@@ -172,8 +174,8 @@ class ComplainRegister extends React.Component {
                         <Table.Cell>
                           {moment(
                             complain.datetimeCreated.substring(0, 10),
-                            "YYYY-MM-DD"
-                          ).format("DD/MM/YY")}
+                            'YYYY-MM-DD'
+                          ).format('DD/MM/YY')}
                         </Table.Cell>
                         <Table.Cell>{complain.roomNo}</Table.Cell>
                       </Table.Row>

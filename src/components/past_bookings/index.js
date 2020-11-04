@@ -1,9 +1,13 @@
-import React, { Component } from "react";
-import { Table, Pagination } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { getRoomBookings } from "../../actions/get-room-bookings";
-import { bookingsUrl } from "../../urls";
-import "./index.css";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+import { Table, Pagination } from 'semantic-ui-react';
+
+import { getRoomBookings } from '../../actions/get-room-bookings';
+
+import { bookingsUrl } from '../../urls';
+
+import './index.css';
 
 class PastBookings extends Component {
   state = { activePage: 1 };
@@ -23,7 +27,7 @@ class PastBookings extends Component {
     const { activePage } = this.state;
     return (
       <div>
-        <Table celled compact styleName="card-margin">
+        <Table celled compact styleName='card-margin'>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>ID</Table.HeaderCell>

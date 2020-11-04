@@ -1,5 +1,6 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react'
+import { connect } from 'react-redux'
+
 import {
   Header,
   Image,
@@ -9,119 +10,122 @@ import {
   Icon,
   Dropdown,
   Grid
-} from "semantic-ui-react";
-import { searchPerson } from "../../actions/searchPerson";
-import { addAuthority } from "../../actions/authorities";
-import { yellowPagesUrl, authoritiesUrl } from "../../urls";
-import "./index.css";
+} from 'semantic-ui-react'
+
+import { searchPerson } from '../../actions/searchPerson'
+import { addAuthority } from '../../actions/authorities'
+
+import { yellowPagesUrl, authoritiesUrl } from '../../urls'
+
+import './index.css'
 
 class AdminAuthorities extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      name: "",
-      message: "",
+      name: '',
+      message: '',
       success: false,
       error: false,
       permissions: null,
       options: [],
-      selected: "",
-      designation: null,
-    };
-    this.delayedCallback = _.debounce(this.ajaxCall, 300);
+      selected: '',
+      designation: null
+    }
+    this.delayedCallback = _.debounce(this.ajaxCall, 300)
   }
 
   handleSubmit = () => {
     if (this.state.selected && this.state.designation) {
       let data = {
         designation: this.state.designation,
-        person: this.state.selected.id,
-      };
+        person: this.state.selected.id
+      }
       this.props.addAuthority(
         data,
         authoritiesUrl(this.props.who_am_i.residence),
         this.adminCallBack,
         this.errCallBack
-      );
+      )
     }
-  };
+  }
 
   adminCallBack = (res) => {
-    console.log(res);
+    console.log(res)
     this.setState({
       success: true,
       error: false,
-      message: res.statusText,
-    });
-  };
+      message: res.statusText
+    })
+  }
   errCallBack = (err) => {
-    console.log(err);
+    console.log(err)
     this.setState({
       error: true,
       success: false,
-      message: err,
-    });
-  };
+      message: err
+    })
+  }
 
   handleChange = (event, { name, value }) => {
     if (this.state.hasOwnProperty(name)) {
-      this.setState({ [name]: value });
+      this.setState({ [name]: value })
     }
-  };
+  }
 
   successCallBack = (res) => {
     let options = res.data.map((person, index) => {
-      let text = person.fullName;
+      let text = person.fullName
       if (
         person.roles &&
         person.roles.length > 0 &&
         person.roles[0].data &&
         person.roles[0].data.branch
       ) {
-        text = `${text} - ${person.roles[0].data.branch.department.name}`;
+        text = `${text} - ${person.roles[0].data.branch.department.name}`
       }
-      return { key: index, text: text, value: person };
-    });
+      return { key: index, text: text, value: person }
+    })
     this.setState({
       options,
-    });
-  };
+    })
+  }
 
   ajaxCall = (e) => {
     this.props.searchPerson(
       yellowPagesUrl(e.target.value),
       this.successCallBack
-    );
-  };
+    )
+  }
 
   onSearchChange = (e) => {
-    e.persist();
-    this.setState({ [e.target.name]: e.target.value });
-    this.delayedCallback(e);
-  };
+    e.persist()
+    this.setState({ [e.target.name]: e.target.value })
+    this.delayedCallback(e)
+  }
 
   onChange = (e, data) => {
-    this.setState({ selected: data.value });
-  };
+    this.setState({ selected: data.value })
+  }
 
   render() {
-    const { name, options, selected, designation, message } = this.state;
-    const { match, constants } = this.props;
-    let designations = [];
+    const { name, options, selected, designation, message } = this.state
+    const { match, constants } = this.props
+    let designations = []
     for (var i in constants.designations) {
       designations.push({
         key: i.toString(),
         text: constants.designations[i].toString(),
-        value: i.toString(),
-      });
+        value: i.toString()
+      })
     }
     return (
       <Grid container>
           <Grid.Column width={16}>
-            <div styleName="centered">
+            <div styleName='centered'>
               {this.state.error && (
                 <Message warning>
-                  <Icon name="warning" />
+                  <Icon name='warning' />
                   {this.state.message.response.data}
                 </Message>
               )}
@@ -129,18 +133,18 @@ class AdminAuthorities extends React.Component {
                 <Message positive>{this.state.message}</Message>
               )}
               <div>
-                <Header as="h4">
-                  {" "}
-                  {constants.designations[match.params.id]}{" "}
+                <Header as='h4'>
+                  {' '}
+                  {constants.designations[match.params.id]}{' '}
                 </Header>
               </div>
               <div>
                 <Image
                   src={
                     selected.displayPicture ||
-                    "https://react.semantic-ui.com/images/wireframe/square-image.png"
+                    'https://react.semantic-ui.com/images/wireframe/square-image.png'
                   }
-                  size="tiny"
+                  size='tiny'
                   circular
                 />
               </div>
@@ -149,7 +153,7 @@ class AdminAuthorities extends React.Component {
                 <Form.Field>
                   <label>Name</label>
                   <Dropdown
-                    name="name"
+                    name='name'
                     onSearchChange={this.onSearchChange}
                     onChange={this.onChange}
                     value={selected}
@@ -162,7 +166,7 @@ class AdminAuthorities extends React.Component {
                 <Form.Field>
                   <label>Designation</label>
                   <Dropdown
-                    name="designation"
+                    name='designation'
                     value={designation}
                     onChange={this.handleChange}
                     selection
@@ -170,32 +174,32 @@ class AdminAuthorities extends React.Component {
                     options={designations}
                   />
                 </Form.Field>
-                <Button size="medium" onClick={this.handleSubmit} width={3}>
+                <Button size='medium' onClick={this.handleSubmit} width={3}>
                   Submit
                 </Button>
               </Form>
             </div>
           </Grid.Column>
       </Grid>
-    );
+    )
   }
 }
 
 function mapStateToProps(state) {
   return {
-    searchPersonResults: state.searchPersonResults,
-  };
+    searchPersonResults: state.searchPersonResults
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     searchPerson: (url, successCallBack) => {
-      dispatch(searchPerson(url, successCallBack));
+      dispatch(searchPerson(url, successCallBack))
     },
     addAuthority: (url, data, successCallBack, errCallBack) => {
-      dispatch(addAuthority(url, data, successCallBack, errCallBack));
-    },
-  };
-};
+      dispatch(addAuthority(url, data, successCallBack, errCallBack))
+    }
+  }
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminAuthorities);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminAuthorities)

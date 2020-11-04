@@ -1,52 +1,49 @@
-import axios from "axios";
+import axios from 'axios'
 
 export const getRoomBookings = (url) => {
   return (dispatch) => {
     axios({
-      method: "get",
-      url: url,
+      method: 'get',
+      url: url
     })
       .then((response) => {
-        let item = response.data;
+        let item = response.data
         dispatch({
-          type: "GET_ALL_ROOM_BOOKINGS",
-          payload: item,
-        });
+          type: 'GET_ALL_ROOM_BOOKINGS',
+          payload: item
+        })
       })
-      .catch((error) => {});
-  };
-};
+  }
+}
 
 export const getPresentRoomBookings = (url) => {
   return (dispatch) => {
     axios({
-      method: "get",
-      url: url,
+      method: 'get',
+      url: url
     })
       .then((response) => {
-        let item = response.data;
+        let item = response.data
         dispatch({
-          type: "GET_PRESENT_ROOM_BOOKINGS",
-          payload: item,
-        });
+          type: 'GET_PRESENT_ROOM_BOOKINGS',
+          payload: item
+        })
       })
-      .catch((error) => {});
-  };
-};
+  }
+}
 
 export const getPastRoomBookings = (url) => {
   return (dispatch) => {
     axios({
-      method: "get",
-      url: url,
+      method: 'get',
+      url: url
     })
       .then((response) => {
-        let item = response.data;
+        let item = response.data
         dispatch({
-          type: "GET_PAST_ROOM_BOOKINGS",
-          payload: item,
-        });
+          type: 'GET_PAST_ROOM_BOOKINGS',
+          payload: item
+        })
       })
-      .catch((error) => {});
-  };
-};
+  }
+}

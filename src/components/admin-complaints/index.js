@@ -1,18 +1,6 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { TimeInput } from "semantic-ui-calendar-react";
-import {
-  getPendingComplains,
-  getResolvedComplains,
-  increaseUnsuccefulAttempts,
-} from "../../actions/complains";
-import { getTimeSlots, changeTimeSlot } from "../../actions/time-slots";
-import { resolveComplain } from "../../actions/resolveComplain";
-import {
-  statusComplainsUrl,
-  increaseUnsuccesfulComplainsUrl,
-  timeSlotsUrl,
-} from "../../urls";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { TimeInput } from 'semantic-ui-calendar-react'
 import {
   Grid,
   Header,
@@ -23,206 +11,199 @@ import {
   Icon,
   Dropdown,
   Pagination,
-} from "semantic-ui-react";
-import { toast } from "react-semantic-toasts";
-import "./index.css";
-import moment from "moment";
+  FormGroup,
+} from 'semantic-ui-react'
+import moment from 'moment'
+
+import {
+  getPendingComplains,
+  getResolvedComplains,
+  increaseUnsuccefulAttempts,
+} from '../../actions/complains'
+import { getTimeSlots, changeTimeSlot } from '../../actions/time-slots'
+import { resolveComplain } from '../../actions/resolveComplain'
+import {
+  statusComplainsUrl,
+  increaseUnsuccesfulComplainsUrl,
+  timeSlotsUrl,
+} from '../../urls'
+
+import { toast } from 'react-semantic-toasts'
+import './index.css'
 
 const days = [
-  { key: "mon", text: "Monday", value: "mon" },
-  { key: "tue", text: "Tuesday", value: "tue" },
-  { key: "wed", text: "Wednesday", value: "wed" },
-  { key: "thu", text: "Thursday", value: "thu" },
-  { key: "fri", text: "Friday", value: "fri" },
-  { key: "sat", text: "Saturday", value: "sat" },
-  { key: "sun", text: "Sunday", value: "sun" },
-  { key: "dai", text: "Daily", value: "dai" },
-];
+  { key: 'mon', text: 'Monday', value: 'mon' },
+  { key: 'tue', text: 'Tuesday', value: 'tue' },
+  { key: 'wed', text: 'Wednesday', value: 'wed' },
+  { key: 'thu', text: 'Thursday', value: 'thu' },
+  { key: 'fri', text: 'Friday', value: 'fri' },
+  { key: 'sat', text: 'Saturday', value: 'sat' },
+  { key: 'sun', text: 'Sunday', value: 'sun' },
+  { key: 'dai', text: 'Daily', value: 'dai' },
+]
 
 const types = [
-  { key: "ele", text: "Electric", value: "ele" },
-  { key: "toi", text: "Toilet", value: "toi" },
-  { key: "car", text: "Carpentry", value: "car" },
-  { key: "cle", text: "Cleaning", value: "cle" },
-  { key: "oth", text: "Others", value: "oth" },
-];
+  { key: 'ele', text: 'Electric', value: 'ele' },
+  { key: 'toi', text: 'Toilet', value: 'toi' },
+  { key: 'car', text: 'Carpentry', value: 'car' },
+  { key: 'cle', text: 'Cleaning', value: 'cle' },
+  { key: 'oth', text: 'Others', value: 'oth' },
+]
 
 class AdminComplains extends Component {
   state = {
     open: false,
-    pastComplainIcon: "angle up",
-    from: "",
-    to: "",
+    pastComplainIcon: 'angle up',
+    from: '',
+    to: '',
     success: false,
     err: false,
-    message: "",
-    type: "",
-    days: "",
+    message: '',
+    type: '',
     activeId: null,
-    activeItem: "apr",
+    activeItem: 'apr',
     activePage: 1,
     activeAprPage: 1,
     found: false,
     foundType: false,
     foundId: 1,
-  };
+  }
 
   componentDidMount() {
-    this.props.setNavigation("Student Complains");
+    this.props.setNavigation('Student Complains')
     this.props.getPendingComplains(
-      statusComplainsUrl(this.props.who_am_i.residence, ["pending"])
-    );
+      statusComplainsUrl(this.props.who_am_i.residence, ['pending'])
+    )
     this.props.getResolvedComplains(
       statusComplainsUrl(this.props.who_am_i.residence, [
-        "resolved",
-        "unresolved",
+        'resolved',
+        'unresolved',
       ])
-    );
-    this.props.getTimeSlots(this.props.who_am_i.residence);
+    )
+    this.props.getTimeSlots(this.props.who_am_i.residence)
   }
+
   show = (id) => {
     this.setState({
       open: true,
       activeId: id,
-    });
-  };
+    })
+  }
 
-  close = () => this.setState({ open: false });
+  close = () => this.setState({ open: false })
 
   togglePastIcon = () => {
-    const pastComplainIcon = this.state.pastComplainIcon;
-    pastComplainIcon === "angle down"
-      ? this.setState({ pastComplainIcon: "angle up" })
-      : this.setState({ pastComplainIcon: "angle down" });
-  };
+    const pastComplainIcon = this.state.pastComplainIcon
+    pastComplainIcon === 'angle down'
+      ? this.setState({ pastComplainIcon: 'angle up' })
+      : this.setState({ pastComplainIcon: 'angle down' })
+  }
 
   handleChange = (event, { name, value }) => {
     if (this.state.hasOwnProperty(name)) {
-      this.setState({ [name]: value });
+      this.setState({ [name]: value })
     }
-    if (name == "days") {
+    if (name == 'type') {
       this.setState({
-        from: "",
-        to: "",
-      });
-      this.searchTime(this.state.type, value);
-    } else if (name == "type") {
-      this.setState({
-        from: "",
-        to: "",
-      });
-      this.searchTime(value, this.state.days);
+        from: '',
+        to: '',
+      })
+      this.searchTime(value)
     }
-  };
+  }
 
-  searchTime(type, days) {
-    let index;
-    let entry;
-    for (index = 0; index < this.props.timeSlots.length; ++index) {
-      entry = this.props.timeSlots[index];
+  searchTime(type) {
+    let index
+    let entry
+    for (index = 0 ;index < this.props.timeSlots.length; ++index) {
+      entry = this.props.timeSlots[index]
       if (entry && entry.complaintType && entry.complaintType === type) {
-        for (var tim = 0; tim < entry.timing.length; tim++) {
-          if (entry.timing[tim].day == days) {
             this.setState({
-              from: moment(entry.timing[tim].start, "HH:mm:SS").format("HH:mm"),
-              to: moment(entry.timing[tim].end, "HH:mm:SS").format("HH:mm"),
+              from: moment(entry.timing[0].start, 'HH:mm:SS').format('HH:mm'),
+              to: moment(entry.timing[0].end, 'HH:mm:SS').format('HH:mm'),
               found: true,
               foundId: entry.id,
               foundType: true,
-            });
-            return;
-          }
-        }
-        this.setState({
-          found: true,
-          foundType: false,
-        });
-        return;
+            })
+            return
       }
-      this.setState({
-        found: false,
-        foundType: false,
-      });
     }
     this.setState({
       found: false,
       foundType: false,
-    });
+    })
   }
 
   resolveComplaint = () => {
     const body = {
-      status: "res",
-    };
+      status: 'res',
+    }
     this.props.resolveComplain(
       this.state.activeId,
       body,
       this.props.who_am_i.residence,
       this.resolveSuccessCallBack,
       this.errCallBack
-    );
-    this.close();
-  };
+    )
+    this.close()
+  }
 
   resolveSuccessCallBack = (res) => {
     this.setState({
       success: true,
       error: false,
-      message: "",
-    });
+      message: '',
+    })
     this.props.getPendingComplains(
-      statusComplainsUrl(this.props.who_am_i.residence, ["pending"])
-    );
+      statusComplainsUrl(this.props.who_am_i.residence, ['pending'])
+    )
     this.props.getResolvedComplains(
       statusComplainsUrl(this.props.who_am_i.residence, [
-        "resolved",
-        "unresolved",
+        'resolved',
+        'unresolved',
       ])
-    );
-  };
+    )
+  }
 
   successCallBack = (res) => {
     this.setState({
       success: true,
       error: false,
-      message: "",
-    });
-  };
+      message: '',
+    })
+  }
 
   errCallBack = (err) => {
     this.setState({
       error: true,
       success: false,
       message: err,
-    });
-  };
+    })
+  }
+
   changeTiming = () => {
-    let dayTiming = [];
-    for (var index = 0; index < this.props.timeSlots.length; index++) {
-      if (this.props.timeSlots[index].complaintType === this.state.type) {
-        dayTiming = this.props.timeSlots[index].timing;
-        break;
-      }
-    }
+    let dayTiming = []
+
     if (this.state.foundType) {
-      for (var index = 0; index < dayTiming.length; index++) {
-        if (dayTiming[index].day === this.state.days) {
-          dayTiming[index].start = this.state.from;
-          dayTiming[index].end = this.state.to;
-          break;
+      for (var index = 0; index < this.props.timeSlots.length; index++) {
+        if (this.props.timeSlots[index].complaintType === this.state.type) {
+          dayTiming = this.props.timeSlots[index].timing
+          dayTiming[index].start = this.state.from
+          dayTiming[index].end = this.state.to
+          break
         }
       }
     } else {
-      dayTiming.push({
-        day: this.state.days,
+      dayTiming = [{
+        day: 'dai',
         start: this.state.from,
         end: this.state.to,
-      });
+      }]
     }
     const data = {
       complaintType: this.state.type,
       timing: dayTiming,
-    };
+    }
     this.props.changeTimeSlot(
       data,
       this.state.found,
@@ -230,55 +211,56 @@ class AdminComplains extends Component {
       timeSlotsUrl(this.props.who_am_i.residence),
       this.timeSlotSuccessCallBack,
       this.errorCallBack
-    );
-  };
+    )
+  }
+
   timeSlotSuccessCallBack = (res) => {
     this.setState({
       success: true,
       error: false,
-      message: "",
-    });
+      message: '',
+    })
     toast({
-      type: "success",
-      title: "Time Slot changed",
-      description: "Time Slot Changed",
-      animation: "fade up",
-      icon: "smile outline",
+      type: 'success',
+      title: 'Time Slot changed',
+      description: 'Time Slot Changed',
+      animation: 'fade up',
+      icon: 'smile outline',
       time: 4000,
-    });
-    this.props.getTimeSlots();
-  };
+    })
+    this.props.getTimeSlots()
+  }
 
   handleItemClick = (e, { name }) => {
-    this.setState({ activeItem: name });
-  };
+    this.setState({ activeItem: name })
+  }
 
   handlePaginationChange = (e, { activePage }) => {
-    this.setState({ activePage });
+    this.setState({ activePage })
     this.props.getPendingComplains(
       `${statusComplainsUrl(this.props.who_am_i.residence, [
-        "PENDING",
+        'PENDING',
       ])}&page=${activePage}`
-    );
-  };
+    )
+  }
 
   handlePastPaginationChange = (e, { activePage }) => {
-    this.setState({ activeAprPage: activePage });
+    this.setState({ activeAprPage: activePage })
     this.props.getResolvedComplains(
       `${statusComplainsUrl(this.props.who_am_i.residence, [
-        "RESOLVED",
-        "UNRESOLVED",
+        'RESOLVED',
+        'UNRESOLVED',
       ])}&page=${activePage}`
-    );
-  };
+    )
+  }
 
   increaseUnsuccesfulComplains = (id) => {
     this.props.increaseUnsuccefulAttempts(
       increaseUnsuccesfulComplainsUrl(this.props.who_am_i.residence, id),
       this.resolveSuccessCallBack,
       this.errCallBack
-    );
-  };
+    )
+  }
 
   render() {
     const {
@@ -288,13 +270,13 @@ class AdminComplains extends Component {
       activePage,
       activeRejPage,
       activeAprPage,
-    } = this.state;
-    const { pendingComplains, resolvedComplains, constants } = this.props;
+    } = this.state
+    const { pendingComplains, resolvedComplains, constants } = this.props
     return (
       <Grid container>
           <Grid.Column width={16}>
             <Container>
-              <Header as="h4">Student Complains</Header>
+              <Header as='h4'>Student Complains</Header>
               <Table celled>
                 <Table.Header>
                   <Table.Row>
@@ -325,8 +307,8 @@ class AdminComplains extends Component {
                             <Table.Cell>
                               {moment(
                                 complain.datetimeCreated.substring(0, 10),
-                                "YYYY-MM-DD"
-                              ).format("DD/MM/YY")}
+                                'YYYY-MM-DD'
+                              ).format('DD/MM/YY')}
                             </Table.Cell>
                             <Table.Cell>
                               {
@@ -343,13 +325,13 @@ class AdminComplains extends Component {
                               }
                             >
                               {complain.failedAttempts}
-                              <span styleName="cursor"> + </span>
+                              <span styleName='cursor'> + </span>
                             </Table.Cell>
                             <Table.Cell onClick={() => this.show(complain.id)}>
-                              <span styleName="resolve-style">Resolve</span>
+                              <span styleName='resolve-style'>Resolve</span>
                             </Table.Cell>
                           </Table.Row>
-                        );
+                        )
                       })
                     : null}
                 </Table.Body>
@@ -362,44 +344,40 @@ class AdminComplains extends Component {
                 />
               ) : null}
 
-              <Header as="h4">
+              <Header as='h4'>
                 Select slot for
                 <Dropdown
-                  name="type"
-                  placeholder="type"
+                  name='type'
+                  placeholder='type'
                   selection
                   options={types}
                   onChange={this.handleChange}
+                  compact
                 />
-                for
-                <Dropdown
-                  name="days"
-                  placeholder="days"
-                  selection
-                  options={days}
-                  onChange={this.handleChange}
-                />
-                <TimeInput
-                  name="from"
-                  placeholder="From"
-                  value={this.state.from}
-                  iconPosition="left"
-                  onChange={this.handleChange}
-                />
-                <TimeInput
-                  name="to"
-                  placeholder="To"
-                  value={this.state.to}
-                  iconPosition="left"
-                  onChange={this.handleChange}
-                />
+                from
+                {/* <FormGroup> */}
+                  <TimeInput
+                    name='from'
+                    placeholder='From'
+                    value={this.state.from}
+                    iconPosition='left'
+                    onChange={this.handleChange}
+                  />
+                  <TimeInput
+                    name='to'
+                    placeholder='To'
+                    value={this.state.to}
+                    iconPosition='left'
+                    onChange={this.handleChange}
+                  />
+                {/* </FormGroup> */}
                 <Button onClick={this.changeTiming}>Change</Button>
               </Header>
-              <Header as="h4">
+              <Header as='h4'>
                 Past Complains
                 <Icon name={pastComplainIcon} onClick={this.togglePastIcon} />
               </Header>
-              {pastComplainIcon === "angle down" && (
+              {pastComplainIcon === 'angle down' && (
                 <React.Fragment>
                   <Table celled>
                     <Table.Header>
@@ -431,8 +409,8 @@ class AdminComplains extends Component {
                                 <Table.Cell>
                                   {moment(
                                     complain.datetimeCreated.substring(0, 10),
-                                    "YYYY-MM-DD"
-                                  ).format("DD/MM/YY")}
+                                    'YYYY-MM-DD'
+                                  ).format('DD/MM/YY')}
                                 </Table.Cell>
                                 <Table.Cell>
                                   {
@@ -454,7 +432,7 @@ class AdminComplains extends Component {
                                   }
                                 </Table.Cell>
                               </Table.Row>
-                            );
+                            )
                           })
                         : null}
                     </Table.Body>
@@ -469,9 +447,9 @@ class AdminComplains extends Component {
                 </React.Fragment>
               )}
             </Container>
-            <Modal size="mini" open={open} onClose={this.close}>
-              <Modal.Header styleName="center">Resolve Complain?</Modal.Header>
-              <Modal.Actions styleName="modalActions">
+            <Modal size='mini' open={open} onClose={this.close}>
+              <Modal.Header styleName='center'>Resolve Complain?</Modal.Header>
+              <Modal.Actions styleName='modalActions'>
                 <Button positive fluid onClick={this.resolveComplaint}>
                   Yes
                 </Button>
@@ -482,7 +460,7 @@ class AdminComplains extends Component {
             </Modal>
           </Grid.Column>
       </Grid>
-    );
+    )
   }
 }
 
@@ -491,19 +469,19 @@ function mapStateToProps(state) {
     pendingComplains: state.pendingComplains,
     resolvedComplains: state.resolvedComplains,
     timeSlots: state.timeSlots,
-  };
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getPendingComplains: (url) => {
-      dispatch(getPendingComplains(url));
+      dispatch(getPendingComplains(url))
     },
     getResolvedComplains: (url) => {
-      dispatch(getResolvedComplains(url));
+      dispatch(getResolvedComplains(url))
     },
     getTimeSlots: (residence) => {
-      dispatch(getTimeSlots(residence));
+      dispatch(getTimeSlots(residence))
     },
     changeTimeSlot: (
       data,
@@ -522,17 +500,17 @@ const mapDispatchToProps = (dispatch) => {
           successCallBack,
           errorCallBack
         )
-      );
+      )
     },
     increaseUnsuccefulAttempts: (url, successCallBack, errCallBack) => {
-      dispatch(increaseUnsuccefulAttempts(url, successCallBack, errCallBack));
+      dispatch(increaseUnsuccefulAttempts(url, successCallBack, errCallBack))
     },
     resolveComplain: (id, data, residence, successCallBack, errCallBack) => {
       dispatch(
         resolveComplain(id, data, residence, successCallBack, errCallBack)
-      );
+      )
     },
-  };
-};
+  }
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminComplains);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminComplains)

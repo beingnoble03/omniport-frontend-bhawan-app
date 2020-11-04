@@ -1,5 +1,5 @@
-import React, { Fragment } from "react";
-import { connect } from "react-redux";
+import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
 import {
   Header,
   Container,
@@ -10,32 +10,32 @@ import {
   Input,
   Icon,
   Message,
-} from "semantic-ui-react";
-import { TimeInput } from "semantic-ui-calendar-react";
-import { getFacilities, addFacility } from "../../actions/facilities";
-import { facilitiesUrl } from "../../urls";
-import "./index.css";
+} from 'semantic-ui-react';
+import { TimeInput } from 'semantic-ui-calendar-react';
+import { getFacilities, addFacility } from '../../actions/facilities';
+import { facilitiesUrl } from '../../urls';
+import './index.css';
 
 const options = [
-  { key: "mon", text: "Monday", value: "Monday" },
-  { key: "tue", text: "Tuesday", value: "Tuesday" },
-  { key: "wed", text: "Wednesday", value: "Wednesday" },
-  { key: "thurs", text: "Thursday", value: "Thursday" },
-  { key: "fri", text: "Friday", value: "Friday" },
-  { key: "sat", text: "Saturday", value: "Saturday" },
-  { key: "sun", text: "Sunday", value: "Sunday" },
-  { key: "dai", text: "Daily", value: "Daily" },
+  { key: 'mon', text: 'Monday', value: 'Monday' },
+  { key: 'tue', text: 'Tuesday', value: 'Tuesday' },
+  { key: 'wed', text: 'Wednesday', value: 'Wednesday' },
+  { key: 'thurs', text: 'Thursday', value: 'Thursday' },
+  { key: 'fri', text: 'Friday', value: 'Friday' },
+  { key: 'sat', text: 'Saturday', value: 'Saturday' },
+  { key: 'sun', text: 'Sunday', value: 'Sunday' },
+  { key: 'dai', text: 'Daily', value: 'Daily' },
 ];
 
 class Facility extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      startTime: [""],
-      endTime: [""],
-      descriptions: [""],
-      information: "",
-      name: "",
+      startTime: [''],
+      endTime: [''],
+      descriptions: [''],
+      information: '',
+      name: '',
       days: [[]],
       displayImage: null,
       validImage: true,
@@ -81,12 +81,12 @@ class Facility extends React.Component {
       imageCrop: image,
     });
     let formData = new FormData();
-    formData.append("name", this.state.name);
-    formData.append("description", this.state.information);
+    formData.append('name', this.state.name);
+    formData.append('description', this.state.information);
     for (var i = 0; i < this.state.days.length; i++) {
       for (var j = 0; j < this.state.days[i].length; j++) {
         formData.append(
-          "timings",
+          'timings',
           JSON.stringify({
             day: this.state.days[i][j],
             start: this.state.startTime[i],
@@ -96,7 +96,7 @@ class Facility extends React.Component {
         );
       }
     }
-    formData.append("displayPicture", displayImage);
+    formData.append('displayPicture', displayImage);
     this.props.addFacility(
       facilitiesUrl(this.props.who_am_i.residence),
       formData,
@@ -140,7 +140,7 @@ class Facility extends React.Component {
           <Form.Field>
             <label>Description</label>
             <Input
-              value={description || ""}
+              value={description || ''}
               onChange={(event) => this.handleDescriptionsChange(i, event)}
             />
           </Form.Field>
@@ -149,8 +149,8 @@ class Facility extends React.Component {
           <Form.Field>
             <label>Days</label>
             <Dropdown
-              name="days"
-              placeholder="Select Day"
+              name='days'
+              placeholder='Select Day'
               multiple
               selection
               options={options}
@@ -163,7 +163,7 @@ class Facility extends React.Component {
           <Form.Field>
             <label>Start time</label>
             <TimeInput
-              name="startTime"
+              name='startTime'
               value={this.state.startTime[i]}
               onChange={(event, { value }) =>
                 this.handleStartTimeChange(event, i, value)
@@ -173,7 +173,7 @@ class Facility extends React.Component {
           <Form.Field>
             <label>End time</label>
             <TimeInput
-              name="endTime"
+              name='endTime'
               value={this.state.endTime[i]}
               onChange={(event, { value }) =>
                 this.handleEndTimeChange(event, i, value)
@@ -182,8 +182,8 @@ class Facility extends React.Component {
           </Form.Field>
           {this.state.descriptions.length > 1 ? (
             <Icon
-              name="close"
-              styleName="hover-icon"
+              name='close'
+              styleName='hover-icon'
               onClick={(event) => this.removeClick(i)}
             />
           ) : null}
@@ -218,9 +218,9 @@ class Facility extends React.Component {
 
   addClick = () => {
     this.setState((prevState) => ({
-      descriptions: [...prevState.descriptions, ""],
-      startTime: [...prevState.startTime, ""],
-      endTime: [...prevState.endTime, ""],
+      descriptions: [...prevState.descriptions, ''],
+      startTime: [...prevState.startTime, ''],
+      endTime: [...prevState.endTime, ''],
       days: [...prevState.days, []],
     }));
   };
@@ -250,7 +250,7 @@ class Facility extends React.Component {
     const z = e.target.files;
     if (e.target.files && e.target.files.length == 1) {
       const displayImage = await readFile(z[0]);
-      const displayImageFile = await dataURLtoFile(displayImage, "image.png");
+      const displayImageFile = await dataURLtoFile(displayImage, 'image.png');
 
       this.setState({
         displayImage: displayImageFile,
@@ -261,57 +261,57 @@ class Facility extends React.Component {
     const { information, name } = this.state;
     const { facilities } = this.props;
     return (
-      <Grid.Column width={12} floated="left">
+      <Grid.Column width={12} floated='left'>
         <Grid.Column>
           {this.state.error && (
             <Message warning>
-              <Icon name="warning" />
+              <Icon name='warning' />
               {this.state.message.response.data}
             </Message>
           )}
           {this.state.success && (
             <Message positive>{this.state.message}</Message>
           )}
-          <Header as="h2">XYZ</Header>
-          <Grid divided="vertically">
+          <Header as='h2'>XYZ</Header>
+          <Grid divided='vertically'>
             <Grid.Row columns={2}>
               <Grid.Column>
                 <Form.Field required>
                   <label>Image:</label>
                   <input
-                    type="file"
+                    type='file'
                     onChange={this.handleSelectPicture}
-                    name="uploadedFile"
+                    name='uploadedFile'
                   />
                 </Form.Field>
               </Grid.Column>
               <Grid.Column>
                 <Container>
                   <div>
-                    <Header as="h5">Add Information</Header>
+                    <Header as='h5'>Add Information</Header>
                     <Form>
                       <Form.Field>
                         <label>Name</label>
                         <Input
-                          name="name"
+                          name='name'
                           value={name}
                           onChange={this.handleChange}
                         />
                       </Form.Field>
                       <TextArea
-                        name="information"
+                        name='information'
                         value={information}
                         onChange={this.handleChange}
-                        placeholder="Tell us more"
+                        placeholder='Tell us more'
                         fluid
                       />
                       {this.createForm()}
                       <Form.Field>
                         <Icon
                           onClick={this.addClick}
-                          name="plus"
-                          size="big"
-                          styleName="plus-icon"
+                          name='plus'
+                          size='big'
+                          styleName='plus-icon'
                         />
                       </Form.Field>
                       <Form.Group>
@@ -334,13 +334,13 @@ class Facility extends React.Component {
 function readFile(file) {
   return new Promise((resolve) => {
     const reader = new FileReader();
-    reader.addEventListener("load", () => resolve(reader.result), false);
+    reader.addEventListener('load', () => resolve(reader.result), false);
     reader.readAsDataURL(file);
   });
 }
 
 function dataURLtoFile(dataurl, filename) {
-  let arr = dataurl.split(","),
+  let arr = dataurl.split(','),
     mime = arr[0].match(/:(.*?);/)[1],
     bstr = atob(arr[1]),
     n = bstr.length,

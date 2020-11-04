@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Header, Table, Icon, Container } from "semantic-ui-react";
+import React, { Component } from 'react';
+import { Header, Table, Icon, Container } from 'semantic-ui-react';
 
 export default class StudentDatabase extends Component {
   state = {};
@@ -11,7 +11,7 @@ export default class StudentDatabase extends Component {
 
     return (
       <div>
-        <Header as="h4">Student Database </Header>
+        <Header as='h4'>Student Database </Header>
         <Container>
           <Table celled>
             <Table.Header>

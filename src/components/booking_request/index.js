@@ -1,12 +1,15 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+
 import {
   getRoomBookings,
   getPresentRoomBookings,
-  getPastRoomBookings,
-} from "../../actions/get-room-bookings";
-import { updateBooking } from "../../actions/book-room";
-import { bookingsUrl, statusBookingsUrl, specificBookingUrl } from "../../urls";
+  getPastRoomBookings
+} from '../../actions/get-room-bookings'
+import { updateBooking } from '../../actions/book-room'
+
+import { bookingsUrl, statusBookingsUrl, specificBookingUrl } from '../../urls'
+
 import {
   Menu,
   Header,
@@ -17,176 +20,176 @@ import {
   Icon,
   Pagination,
   Message,
-  Grid,
-} from "semantic-ui-react";
-import "./index.css";
+  Grid
+} from 'semantic-ui-react'
+import './index.css'
 
 class BookingRequests extends Component {
   state = {
     open: false,
-    activeItem: "pending",
-    pastBookingIcon: "angle down",
-    message: "",
+    activeItem: 'pending',
+    pastBookingIcon: 'angle down',
+    message: '',
     success: false,
     err: false,
     activeId: null,
     detailOpen: false,
     activeBooking: null,
-    activePastItem: "confirmed",
+    activePastItem: 'confirmed',
     activePage: 1,
-    openReject: false,
-  };
+    openReject: false
+  }
 
   componentDidMount() {
     this.props.getPresentRoomBookings(
       statusBookingsUrl(
         this.props.who_am_i.residence,
         this.props.constants.statues.BOOKING_STATUSES.pen,
-        "False"
+        'False'
       )
-    );
+    )
     this.props.getPastRoomBookings(
       statusBookingsUrl(
         this.props.who_am_i.residence,
         this.props.constants.statues.BOOKING_STATUSES.cnf,
         true
       )
-    );
+    )
   }
 
-  close = () => this.setState({ open: false, openReject: false });
+  close = () => this.setState({ open: false, openReject: false })
 
   detailsClose = () => {
     this.setState({
       detailOpen: false,
-    });
-  };
+    })
+  }
   openModal = (activeId) => {
     this.setState({
       activeId: activeId,
-      open: true,
-    });
-  };
+      open: true
+    })
+  }
   openRejectModal = (activeId) => {
     this.setState({
       activeId: activeId,
-      openReject: true,
-    });
-  };
+      openReject: true
+    })
+  }
 
   handleItemClick = (e, { name }) => {
-    this.setState({ activeItem: name, activePage: 1 });
+    this.setState({ activeItem: name, activePage: 1 })
     this.props.getPresentRoomBookings(
-      statusBookingsUrl(this.props.who_am_i.residence, name, "False")
-    );
-  };
+      statusBookingsUrl(this.props.who_am_i.residence, name, 'False')
+    )
+  }
   handlePastItemClick = (e, { name }) => {
-    this.setState({ activePastItem: name, activeAprPage: 1 });
+    this.setState({ activePastItem: name, activeAprPage: 1 })
     this.props.getPastRoomBookings(
       statusBookingsUrl(this.props.who_am_i.residence, name, true)
-    );
-  };
+    )
+  }
 
   rejectBooking = () => {
     const body = {
-      status: "rej",
-    };
+      status: 'rej'
+    }
     this.props.updateBooking(
       specificBookingUrl(this.props.who_am_i.residence, this.state.activeId),
       body,
       this.successCallBack,
       this.errCallBack
-    );
+    )
     this.setState({
       open: false,
-    });
-  };
+    })
+  }
 
   updateBooking = () => {
-    const { activeItem, activeId } = this.state;
+    const { activeItem, activeId } = this.state
     const body = {
       status:
-        activeItem == "pending"
-          ? "fwd"
-          : activeItem == "forwarded"
-          ? "apr"
-          : "cnf",
-    };
+        activeItem == 'pending'
+          ? 'fwd'
+          : activeItem == 'forwarded'
+          ? 'apr'
+          : 'cnf'
+    }
     this.props.updateBooking(
       specificBookingUrl(this.props.who_am_i.residence, activeId),
       body,
       this.successCallBack,
       this.errCallBack
-    );
+    )
     this.setState({
-      open: false,
-    });
-  };
+      open: false
+    })
+  }
 
   successCallBack = (res) => {
     this.setState({
       success: true,
       error: false,
-      message: res.statusText,
-    });
+      message: res.statusText
+    })
     this.props.getPresentRoomBookings(
       statusBookingsUrl(
         this.props.who_am_i.residence,
         this.state.activeItem,
-        "False"
+        'False'
       )
-    );
+    )
     this.props.getPastRoomBookings(
       statusBookingsUrl(
         this.props.who_am_i.residence,
         this.state.activePastItem,
-        "true"
+        'true'
       )
-    );
-  };
+    )
+  }
 
   errCallBack = (err) => {
     this.setState({
       error: true,
       success: false,
-      message: err,
-    });
-  };
+      message: err
+    })
+  }
 
   togglePastIcon = () => {
-    const pastBookingIcon = this.state.pastBookingIcon;
-    pastBookingIcon === "angle down"
-      ? this.setState({ pastBookingIcon: "angle up" })
-      : this.setState({ pastBookingIcon: "angle down" });
-  };
+    const pastBookingIcon = this.state.pastBookingIcon
+    pastBookingIcon === 'angle down'
+      ? this.setState({ pastBookingIcon: 'angle up' })
+      : this.setState({ pastBookingIcon: 'angle down' })
+  }
 
   setActiveBooking = (booking) => {
     this.setState({
       detailOpen: true,
       activeBooking: booking,
-      activeId: booking.id,
-    });
-  };
+      activeId: booking.id
+    })
+  }
   handlePaginationChange = (e, { activePage }) => {
-    this.setState({ activePage });
+    this.setState({ activePage })
     this.props.getPresentRoomBookings(
       `${statusBookingsUrl(
         this.props.who_am_i.residence,
         this.state.activeItem,
-        "False"
+        'False'
       )}&page=${activePage}`
-    );
-  };
+    )
+  }
   handlePastPaginationChange = (e, { activePage }) => {
-    this.setState({ activeAprPage: activePage });
+    this.setState({ activeAprPage: activePage })
     this.props.getPresentRoomBookings(
       `${statusBookingsUrl(
         this.props.who_am_i.residence,
         this.state.activePastItem,
         true
       )}&page=${activePage}`
-    );
-  };
+    )
+  }
   render() {
     const {
       activeItem,
@@ -197,58 +200,58 @@ class BookingRequests extends Component {
       detailOpen,
       activePage,
       activeAprPage,
-    } = this.state;
+    } = this.state
     const {
       bookingRequests,
       presentBookingRequests,
       pastBookingRequests,
       constants,
-    } = this.props;
+    } = this.props
     return (
       <Grid.Column width={16}>
         {this.state.error && (
           <Message warning>
-            <Icon name="warning" />
+            <Icon name='warning' />
             {this.state.message.response.data}
           </Message>
         )}
         {this.state.success && <Message positive>{this.state.message}</Message>}
         <Container>
-          <Header as="h4">Room Bookings</Header>
-          <Menu compact icon="labeled">
+          <Header as='h4'>Room Bookings</Header>
+          <Menu compact icon='labeled'>
             <Menu.Item
-              name="pending"
-              active={activeItem === "pending"}
+              name='pending'
+              active={activeItem === 'pending'}
               onClick={this.handleItemClick}
-              color="blue"
-              styleName="booking-menu"
+              color='blue'
+              styleName='booking-menu'
             >
               Pending
             </Menu.Item>
             <Menu.Item
-              name="forwarded"
-              active={activeItem === "forwarded"}
+              name='forwarded'
+              active={activeItem === 'forwarded'}
               onClick={this.handleItemClick}
-              color="blue"
-              styleName="booking-menu"
+              color='blue'
+              styleName='booking-menu'
             >
               Forwarded
             </Menu.Item>
             <Menu.Item
-              name="approved"
-              active={activeItem === "approved"}
+              name='approved'
+              active={activeItem === 'approved'}
               onClick={this.handleItemClick}
-              color="blue"
-              styleName="booking-menu"
+              color='blue'
+              styleName='booking-menu'
             >
               Approved
             </Menu.Item>
             <Menu.Item
-              name="confirmed"
-              active={activeItem === "confirmed"}
+              name='confirmed'
+              active={activeItem === 'confirmed'}
               onClick={this.handleItemClick}
-              color="blue"
-              styleName="booking-menu"
+              color='blue'
+              styleName='booking-menu'
             >
               Confirmed
             </Menu.Item>
@@ -263,14 +266,14 @@ class BookingRequests extends Component {
                 <Table.HeaderCell>From </Table.HeaderCell>
                 <Table.HeaderCell>To</Table.HeaderCell>
                 <Table.HeaderCell>Contact Number</Table.HeaderCell>
-                {activeItem !== "confirmed" && (
+                {activeItem !== 'confirmed' && (
                   <React.Fragment>
                     <Table.HeaderCell>
-                      {activeItem == "pending"
-                        ? "Forward Request"
-                        : activeItem == "forwarded"
-                        ? "Approve Request"
-                        : "Confirm Request"}
+                      {activeItem == 'pending'
+                        ? 'Forward Request'
+                        : activeItem == 'forwarded'
+                        ? 'Approve Request'
+                        : 'Confirm Request'}
                     </Table.HeaderCell>
                     <Table.HeaderCell>Reject request</Table.HeaderCell>
                   </React.Fragment>
@@ -318,30 +321,30 @@ class BookingRequests extends Component {
                         >
                           {request.phoneNumber}
                         </Table.Cell>
-                        {activeItem !== "confirmed" && (
+                        {activeItem !== 'confirmed' && (
                           <React.Fragment>
                             <Table.Cell
                               onClick={() => this.openModal(request.id)}
                             >
-                              <span styleName="forward">
-                                {activeItem == "pending"
-                                  ? "Forward"
-                                  : activeItem == "forwarded"
-                                  ? "Approve"
-                                  : activeItem == "approved"
-                                  ? "Confirm"
-                                  : "Confirmed"}
+                              <span styleName='forward'>
+                                {activeItem == 'pending'
+                                  ? 'Forward'
+                                  : activeItem == 'forwarded'
+                                  ? 'Approve'
+                                  : activeItem == 'approved'
+                                  ? 'Confirm'
+                                  : 'Confirmed'}
                               </span>
                             </Table.Cell>
                             <Table.Cell
                               onClick={() => this.openRejectModal(request.id)}
                             >
-                              <span styleName="reject">Reject</span>
+                              <span styleName='reject'>Reject</span>
                             </Table.Cell>
                           </React.Fragment>
                         )}
                       </Table.Row>
-                    );
+                    )
                   })
                 : null}
             </Table.Body>
@@ -354,28 +357,28 @@ class BookingRequests extends Component {
             />
           ) : null}
 
-          <Header as="h4">
+          <Header as='h4'>
             Past Bookings
-            <Icon name={pastBookingIcon} onClick={this.togglePastIcon} className="cursor"/>
+            <Icon name={pastBookingIcon} onClick={this.togglePastIcon} className='cursor'/>
           </Header>
-          {pastBookingIcon === "angle up" && (
+          {pastBookingIcon === 'angle up' && (
             <Table.Cell>
-              <Menu compact icon="labeled">
+              <Menu compact icon='labeled'>
                 <Menu.Item
-                  name="confirmed"
-                  active={activePastItem === "confirmed"}
+                  name='confirmed'
+                  active={activePastItem === 'confirmed'}
                   onClick={this.handlePastItemClick}
-                  color="blue"
-                  styleName="booking-menu"
+                  color='blue'
+                  styleName='booking-menu'
                 >
                   Confirmed
                 </Menu.Item>
                 <Menu.Item
-                  name="rejected"
-                  active={activePastItem === "rejected"}
+                  name='rejected'
+                  active={activePastItem === 'rejected'}
                   onClick={this.handlePastItemClick}
-                  color="blue"
-                  styleName="booking-menu"
+                  color='blue'
+                  styleName='booking-menu'
                 >
                   Rejected
                 </Menu.Item>
@@ -410,7 +413,7 @@ class BookingRequests extends Component {
                           <Table.Cell>{request.requestedTill}</Table.Cell>
                           <Table.Cell>{request.phoneNumber}</Table.Cell>
                         </Table.Row>
-                      );
+                      )
                     })
                   : null}
               </Table>
@@ -425,9 +428,9 @@ class BookingRequests extends Component {
           ) : null}
         </Container>
 
-        <Modal size="mini" open={openReject} onClose={this.close}>
-          <Modal.Header styleName="center">Reject Request</Modal.Header>
-          <Modal.Actions styleName="modalActions">
+        <Modal size='mini' open={openReject} onClose={this.close}>
+          <Modal.Header styleName='center'>Reject Request</Modal.Header>
+          <Modal.Actions styleName='modalActions'>
             <Button positive fluid onClick={this.rejectBooking}>
               Yes
             </Button>
@@ -437,16 +440,16 @@ class BookingRequests extends Component {
           </Modal.Actions>
         </Modal>
 
-        <Modal size="mini" open={open} onClose={this.close}>
-          <Modal.Header styleName="center">
-            {activeItem === "pending"
-              ? "Forward"
-              : activeItem === "forwarded"
-              ? "Approve"
-              : "Confirm"}{" "}
+        <Modal size='mini' open={open} onClose={this.close}>
+          <Modal.Header styleName='center'>
+            {activeItem === 'pending'
+              ? 'Forward'
+              : activeItem === 'forwarded'
+              ? 'Approve'
+              : 'Confirm'}{' '}
             Request
           </Modal.Header>
-          <Modal.Actions styleName="modalActions">
+          <Modal.Actions styleName='modalActions'>
             <Button positive fluid onClick={this.updateBooking}>
               Yes
             </Button>
@@ -458,11 +461,11 @@ class BookingRequests extends Component {
 
         {this.state.activeBooking ? (
           <Modal open={detailOpen} onClose={this.detailsClose} closeIcon>
-            <Header icon="hotel" content="Booking Details" />
+            <Header icon='hotel' content='Booking Details' />
             <Modal.Content>
               <div>Applicant Name - {this.state.activeBooking.bookedBy}</div>
               <div>
-                Current Status -{" "}
+                Current Status -{' '}
                 {
                   constants.statues.BOOKING_STATUSES[
                     this.state.activeBooking.status
@@ -483,8 +486,8 @@ class BookingRequests extends Component {
                   ? this.state.activeBooking.visitor.map((visitor) => {
                       return (
                         <div>
-                          {visitor.fullName} - {visitor.relation} of{" "}
-                          {this.state.activeBooking.bookedBy} -{" "}
+                          {visitor.fullName} - {visitor.relation} of{' '}
+                          {this.state.activeBooking.bookedBy} -{' '}
                           <a
                             href={visitor.photoIdentification}
                             download={`bhawan-app${visitor.fullName}-${visitor.relation}of${this.state.activeBooking.bookedBy}`}
@@ -492,28 +495,28 @@ class BookingRequests extends Component {
                             Download Identity Proof
                           </a>
                         </div>
-                      );
+                      )
                     })
                   : null}
               </div>
             </Modal.Content>
             <Modal.Actions>
-              <Button color="red" onClick={this.detailsClose}>
-                <Icon name="remove" /> Cancel
+              <Button color='red' onClick={this.detailsClose}>
+                <Icon name='remove' /> Cancel
               </Button>
-              <Button color="green" onClick={this.updateBooking}>
-                <Icon name="checkmark" />
-                {activeItem === "pending"
-                  ? "Forward"
-                  : activeItem === "forwarded"
-                  ? "Approve"
-                  : "Confirm"}
+              <Button color='green' onClick={this.updateBooking}>
+                <Icon name='checkmark' />
+                {activeItem === 'pending'
+                  ? 'Forward'
+                  : activeItem === 'forwarded'
+                  ? 'Approve'
+                  : 'Confirm'}
               </Button>
             </Modal.Actions>
           </Modal>
         ) : null}
       </Grid.Column>
-    );
+    )
   }
 }
 
@@ -523,26 +526,26 @@ function mapStateToProps(state) {
     presentBookingRequests: state.presentBookingRequests,
     pastBookingRequests: state.pastBookingRequests,
     // bookingOptions: state.bookingOptions
-  };
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getRoomBookings: (residence) => {
-      dispatch(getRoomBookings(residence));
+      dispatch(getRoomBookings(residence))
     },
     getPresentRoomBookings: (url) => {
-      dispatch(getPresentRoomBookings(url));
+      dispatch(getPresentRoomBookings(url))
     },
     getPastRoomBookings: (url) => {
-      dispatch(getPastRoomBookings(url));
+      dispatch(getPastRoomBookings(url))
     },
     updateBooking: (id, data, residence, successCallBack, errCallBack) => {
       dispatch(
         updateBooking(id, data, residence, successCallBack, errCallBack)
-      );
+      )
     },
-  };
-};
+  }
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(BookingRequests);
+export default connect(mapStateToProps, mapDispatchToProps)(BookingRequests)

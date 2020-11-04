@@ -1,22 +1,22 @@
-import React from "react";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { Card, Form, Button, Input, Header } from "semantic-ui-react";
-import { TimeInput } from "semantic-ui-calendar-react";
-import "./index.css";
-import { getEvents } from "../../actions/events";
-import { eventsUrl, eventUrl } from "../../urls";
-import { addEvent } from "../../actions/add-events";
-import moment from "moment"
+import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { Card, Form, Button, Input, Header } from 'semantic-ui-react';
+import { TimeInput } from 'semantic-ui-calendar-react';
+import './index.css';
+import { getEvents } from '../../actions/events';
+import { eventsUrl, eventUrl } from '../../urls';
+import { addEvent } from '../../actions/add-events';
+import moment from 'moment'
 
 class EventsCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       addEvent: false,
-      event: "",
-      venue: "",
-      time: "",
+      event: '',
+      venue: '',
+      time: '',
     };
   }
 
@@ -38,10 +38,10 @@ class EventsCard extends React.Component {
       description: this.state.venue,
       timings: [
         {
-          day: "mon",
+          day: 'mon',
           start: this.state.time,
-          end: "00:00:00",
-          description: "tfgcygvjy",
+          end: '00:00:00',
+          description: 'tfgcygvjy',
         },
       ],
     };
@@ -79,44 +79,44 @@ class EventsCard extends React.Component {
 
     return (
       <React.Fragment>
-        {location.pathname === "/bhawan_app/events" ? (
-          <div styleName="day-heading">
-            {moment(this.props.activeDay, "YYYY-MM-DD").format("DD/MM/YYYY")}
+        {location.pathname === '/bhawan_app/events' ? (
+          <div styleName='day-heading'>
+            {moment(this.props.activeDay, 'YYYY-MM-DD').format('DD/MM/YYYY')}
           </div>
         ) : null}
-        <Link to="/bhawan_app/events">
-          <Card styleName="font_color">
+        <Link to='/bhawan_app/events'>
+          <Card styleName='font_color'>
             <Card.Content>
               <Card.Header>
                 {location.pathname === eventUrl()
-                  ? "On this day"
-                  : "Todays events"}
+                  ? 'On this day'
+                  : 'Todays events'}
               </Card.Header>
               {dayEvents.length > 0
                 ? dayEvents.map((event) => {
                     return (
-                      <div styleName="max-content-width mid-font">
+                      <div styleName='max-content-width mid-font'>
                         <Card.Description>
                           {event.name}
-                          <div styleName="display-flex small-font">
-                            <div styleName="min-margin">
+                          <div styleName='display-flex small-font'>
+                            <div styleName='min-margin'>
                               {event.description}
                             </div>
                             <div>
                               {moment(
                                 event.timings[0].start,
-                                "hh:mm:ss"
-                              ).format("hh:mm A")}
+                                'hh:mm:ss'
+                              ).format('hh:mm A')}
                             </div>
                           </div>
                         </Card.Description>
                       </div>
                     );
                   })
-                : "No events today"}
+                : 'No events today'}
               {this.props.who_am_i.isAdmin &&
-              location.pathname === "/bhawan_app/events" ? (
-                <Header as="h5" onClick={this.toggleAddEvent}>
+              location.pathname === '/bhawan_app/events' ? (
+                <Header as='h5' onClick={this.toggleAddEvent}>
                   {!this.state.addEvent ? <span>+</span> : null}
                   Add event
                 </Header>
@@ -124,32 +124,32 @@ class EventsCard extends React.Component {
               {this.state.addEvent ? (
                 <Form>
                   <Form.Field
-                    name="event"
-                    placeholder="Event"
+                    name='event'
+                    placeholder='Event'
                     control={Input}
                     onChange={this.handleChange}
-                    label="Event name"
-                    placeholder="Event name"
+                    label='Event name'
+                    placeholder='Event name'
                     required
                   />
                   <Form.Field
-                    name="venue"
-                    placeholder="Venue"
+                    name='venue'
+                    placeholder='Venue'
                     control={Input}
                     onChange={this.handleChange}
-                    label="Venue"
-                    placeholder="Venue"
+                    label='Venue'
+                    placeholder='Venue'
                     required
                   />
                   <Form.Field required>
                     <label>Time</label>
                     <TimeInput
-                      name="time"
+                      name='time'
                       value={this.state.time}
                       onChange={this.handleChange}
                     />
                   </Form.Field>
-                  <Button type="submit" fluid onClick={this.handleSubmit}>
+                  <Button type='submit' fluid onClick={this.handleSubmit}>
                     Submit
                   </Button>
                 </Form>

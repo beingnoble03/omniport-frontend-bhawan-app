@@ -6,7 +6,7 @@ import authorities from './authorities'
 import facilities from './facilities'
 import complains from './complains'
 import constants from './constants'
-import who_am_i from './who-am-i'
+import whoAmI from './who-am-i'
 import events from './events'
 import bookingRequests from './roomBookings'
 import timeSlots from './time-slots'
@@ -25,7 +25,7 @@ const rootReducers = combineReducers({
   constants: constants,
   facilities: facilities,
   complains: complains,
-  who_am_i: who_am_i,
+  who_am_i: whoAmI,
   events: events,
   bookingRequests: bookingRequests,
   timeSlots: timeSlots,
@@ -34,7 +34,7 @@ const rootReducers = combineReducers({
   resolvedComplains: resolvedComplains,
   pastBookingRequests: pastBookingRequests,
   presentBookingRequests: presentBookingRequests,
-  searchPersonResults: searchPersonResults,
+  searchPersonResults: searchPersonResults
 })
 
 export default rootReducers

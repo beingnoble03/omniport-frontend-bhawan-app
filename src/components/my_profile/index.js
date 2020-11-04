@@ -1,18 +1,18 @@
-import React from "react";
-import { connect } from "react-redux";
-import { Container, Divider, Menu, Grid } from "semantic-ui-react";
-import { getFacilities } from "../../actions/facilities";
-import UpcomingBookings from "../upcoming_bookings/index";
-import PastBookings from "../past_bookings/index";
-import Complains from "../complains/index";
-import { getComplains } from "../../actions/complains";
-import facilities from "./index.css";
-import blocks from "../../css/app.css";
+import React from 'react';
+import { connect } from 'react-redux';
+import { Container, Divider, Menu, Grid } from 'semantic-ui-react';
+import { getFacilities } from '../../actions/facilities';
+import UpcomingBookings from '../upcoming_bookings/index';
+import PastBookings from '../past_bookings/index';
+import Complains from '../complains/index';
+import { getComplains } from '../../actions/complains';
+import facilities from './index.css';
+import blocks from '../../css/app.css';
 
 class MyProfile extends React.Component {
-  state = { activeItem: "upcoming" };
+  state = { activeItem: 'upcoming' };
   componentDidMount() {
-    this.props.setNavigation("Profile");
+    this.props.setNavigation('Profile');
     this.props.getComplains(this.props.who_am_i.residence);
   }
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
@@ -23,27 +23,27 @@ class MyProfile extends React.Component {
         <Grid.Column width={16}>
           <Complains {...this.props} />
           <Divider />
-          <Menu compact icon="labeled">
+          <Menu compact icon='labeled'>
             <Menu.Item
-              name="upcoming"
-              active={activeItem === "upcoming"}
+              name='upcoming'
+              active={activeItem === 'upcoming'}
               onClick={this.handleItemClick}
-              color="blue"
-              styleName="facilities.booking-menu"
+              color='blue'
+              styleName='facilities.booking-menu'
             >
               Upcoming Bookings
             </Menu.Item>
             <Menu.Item
-              name="past"
-              active={activeItem === "past"}
+              name='past'
+              active={activeItem === 'past'}
               onClick={this.handleItemClick}
-              color="blue"
-              styleName="facilities.booking-menu"
+              color='blue'
+              styleName='facilities.booking-menu'
             >
               Past Bookings
             </Menu.Item>
           </Menu>
-          {activeItem === "past" ? (
+          {activeItem === 'past' ? (
             <PastBookings who_am_i={who_am_i} />
           ) : (
             <UpcomingBookings who_am_i={who_am_i} constants={constants} />

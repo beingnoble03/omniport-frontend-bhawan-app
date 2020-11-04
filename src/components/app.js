@@ -262,18 +262,26 @@ class App extends React.Component {
                           />
                         )}
                       />
-                      {/* <Route
-                          path={`${match.path}admin/database`}
+                      <Route
+                          path={`${match.path}database`}
                           render={(props) => (
-                            <StudentDatabase who_am_i={who_am_i} />
+                            <StudentDatabase
+                             who_am_i={who_am_i}
+                             setNavigation={this.setNavigation}
+                             {...this.props}
+                            />
                           )}
                         />
                         <Route
-                          path={`${match.path}admin/register_student`}
+                          path={`${match.path}registration`}
                           render={(props) => (
-                            <RegisterStudent who_am_i={who_am_i} />
+                            <RegisterStudent
+                             who_am_i={who_am_i}
+                             setNavigation={this.setNavigation}
+                             {...this.props}
+                            />
                           )}
-                        /> */}
+                        />
                     </Switch>
                     <Switch>
                       <Route

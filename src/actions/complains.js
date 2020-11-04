@@ -1,63 +1,61 @@
-import axios from "axios";
+import axios from 'axios'
 
-export const getComplains = ( url) => {
+export const getComplains = (url) => {
   return (dispatch) => {
     axios({
-      method: "get",
-      url: url,
+      method: 'get',
+      url: url
     })
       .then((response) => {
-        let item = response.data;
+        let item = response.data
         dispatch({
-          type: "GET_ALL_COMPLAINS",
-          payload: item,
-        });
+          type: 'GET_ALL_COMPLAINS',
+          payload: item
+        })
       })
-      .catch((error) => {});
-  };
-};
+  }
+}
 export const getPendingComplains = (url) => {
   return (dispatch) => {
     axios({
-      method: "get",
-      url: url,
+      method: 'get',
+      url: url
     })
       .then((response) => {
-        let item = response.data;
+        let item = response.data
         dispatch({
-          type: "GET_PENDING_COMPLAINS",
-          payload: item,
-        });
+          type: 'GET_PENDING_COMPLAINS',
+          payload: item
+        })
       })
-      .catch((error) => {});
-  };
-};
+  }
+}
 export const getResolvedComplains = (url) => {
   return (dispatch) => {
     axios({
-      method: "get",
-      url: url,
+      method: 'get',
+      url: url
     })
       .then((response) => {
-        let item = response.data;
+        let item = response.data
         dispatch({
-          type: "GET_RESOLVED_COMPLAINS",
-          payload: item,
-        });
+          type: 'GET_RESOLVED_COMPLAINS',
+          payload: item
+        })
       })
-      .catch((error) => {});
-  };
-};
+  }
+}
 export const increaseUnsuccefulAttempts = (url, successCallBack, errCallBack) => {
   return (dispatch) => {
     axios({
-      method: "get",
-      url: url,
+      method: 'get',
+      url: url
     })
       .then((response) => {
         successCallBack(response)
       })
       .catch((error) => {
-        errCallBack(error)});
-  };
-};
+        errCallBack(error)
+      })
+  }
+}

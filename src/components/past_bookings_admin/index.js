@@ -1,5 +1,6 @@
-import React, { Component } from "react";
-import { Menu, Header, Table, Icon, Container } from "semantic-ui-react";
+import React, { Component } from 'react';
+
+import { Header, Table, Icon, Container } from 'semantic-ui-react';
 
 export default class BookingRequests extends Component {
   state = {};
@@ -11,8 +12,8 @@ export default class BookingRequests extends Component {
 
     return (
       <div>
-        <Header as="h4">
-          Past Bookings <Icon name="angle down" />{" "}
+        <Header as='h4'>
+          Past Bookings <Icon name='angle down' />{' '}
         </Header>
 
         <Container>
