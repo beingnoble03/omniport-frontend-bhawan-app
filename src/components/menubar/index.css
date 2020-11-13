@@ -1,0 +1,44 @@
+.menu-bar {
+    position: fixed;
+    height: 100%;
+    background: #ffffff !important;
+    color: #878787 !important;
+    margin: 0 !important;
+    border: 2px solid black;
+    float: right !important;
+}
+
+.sub-header {
+    font-family: Lato;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px !important;
+}
+
+.menu-icon-bar > i {
+  float: left !important;
+  margin: 0px 5px 0px 0px !important;
+}
+
+.menu-icon-bar {
+  padding-top: 30px !important;
+  padding-bottom: 30px !important;
+}
+
+.menu-items {
+  color: #878787 !important;
+}
+
+@media (max-width: 1000px) {
+    .main-component {
+      margin-left: 0;
+    }
+
+    .menu-bar {
+      z-index: 100;
+    }
+
+    .closed-menu-bar {
+      display: none !important;
+    }
+  }

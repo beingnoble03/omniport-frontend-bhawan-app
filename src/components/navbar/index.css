@@ -27,3 +27,21 @@
 .cursor {
     cursor: pointer;
 }
+
+.menu-div {
+    width: 100%;
+}
+
+.closed-menu-bar {
+    display: none !important;
+}
+
+.right-margin {
+    margin-right: 10px !important;
+}
+
+@media (max-width: 1000px) {
+    .menu-bar {
+      z-index: 100;
+    }
+}

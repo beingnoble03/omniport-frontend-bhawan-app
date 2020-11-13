@@ -1,20 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container, Divider, Menu, Grid } from 'semantic-ui-react';
+
+import {  Divider, Menu, Grid } from 'semantic-ui-react';
+
 import { getFacilities } from '../../actions/facilities';
 import UpcomingBookings from '../upcoming_bookings/index';
 import PastBookings from '../past_bookings/index';
 import Complains from '../complains/index';
 import { getComplains } from '../../actions/complains';
+
 import facilities from './index.css';
 import blocks from '../../css/app.css';
+
+import { complainsUrl } from '../../urls';
 
 class MyProfile extends React.Component {
   state = { activeItem: 'upcoming' };
   componentDidMount() {
     this.props.setNavigation('Profile');
-    this.props.getComplains(this.props.who_am_i.residence);
-  }
+    this.props.getComplains(complainsUrl(this.props.who_am_i.residence));
+  } 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
   render() {
     const { activeItem } = this.state;

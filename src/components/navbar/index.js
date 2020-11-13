@@ -1,9 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component, lazy } from 'react'
 
 import { Header, Menu, Button, Icon } from 'semantic-ui-react'
 
 import navCss from './index.css'
 import blocks from '../../css/app.css'
+import hamburger from './hamburger.css'
+
+const MenuBar = lazy(() => import("../menubar/index"))
 
 import {
   homePageUrl,
@@ -15,16 +18,35 @@ import {
   databaseUrl
 } from '../../urls'
 
+const hamburgerDefaultOptions = [
+  'hamburger--minus',
+  'hamburger--spin',
+  'hamburger--squeeze'
+]
+
 export default class Nav extends Component {
   constructor(props) {
     super(props)
     this.state = {
       activeItem: 'home',
-      activeSubGroup: 'facauth'
+      activeSubGroup: 'facauth',
+      sideBarVisibility: false,
+      isMobile: false,
+      width: 0
+    }
+  }
+
+  resize = () => {
+    if (this.state.width !== window.innerWidth) {
+      this.setState({
+        width: window.innerWidth,
+        isMobile: window.innerWidth <= 1000,
+      });
     }
   }
 
   componentDidMount() {
+    this.resize();
     switch (location.pathname) {
       case homePageUrl(): {
         this.setState({
@@ -65,6 +87,10 @@ export default class Nav extends Component {
     }
   }
 
+  onSidebarClick = () => {
+    this.setState({ sideBarVisibility: !this.state.sideBarVisibility });
+  }
+
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
   handleGroupClick = (name, url) => {
@@ -73,7 +99,12 @@ export default class Nav extends Component {
   }
 
   render() {
-    const { activeItem, activeSubGroup } = this.state
+    const { 
+      activeItem,
+      activeSubGroup,
+      sideBarVisibility,
+      isMobile
+      } = this.state
 
     return (
       <React.Fragment>
@@ -84,36 +115,56 @@ export default class Nav extends Component {
             </Header>
           </Menu.Item>
           {this.props.who_am_i.isStudent ? (
-            <Menu.Menu position='right'>
-              <Menu.Item styleName='blocks.zero-padding'>
-                <Button
-                  styleName={
-                    location.pathname === '/bhawan_app/book_room/'
-                      ? 'blocks.disactive-button'
-                      : 'blocks.active-button'
-                  }
-                  onClick={() => {
-                    this.props.history.push(bookingUrl())
-                  }}
+            <Menu.Menu position='right' styleName="navCss.right-margin">
+              <button
+                styleName={`hamburger.hamburger hamburger.${
+                (hamburgerDefaultOptions)[
+                  Math.floor(
+                  Math.random() *
+                  Math.floor(
+                    (hamburgerDefaultOptions).length
+                  )
+                )
+                ]
+                } ${sideBarVisibility ? 'hamburger.is-active' : ''}`}
+                type='button'
+                onClick={this.onSidebarClick}
                 >
-                  Book a Guest Room
-                </Button>
-              </Menu.Item>
-              <Menu.Item styleName='blocks.zero-padding'>
-                <Button
-                  styleName={
-                    location.pathname === '/bhawan_app/complain/'
-                      ? 'blocks.disactive-button'
-                      : 'blocks.active-button'
-                  }
-                  onClick={() => {
-                    this.props.history.push(complainUrl())
-                  }}
-                >
-                  Register a Complaint
-                </Button>
-              </Menu.Item>
+                <span styleName='hamburger.hamburger-box'>
+                  <span styleName='hamburger.hamburger-inner' />
+                </span>
+              </button>
             </Menu.Menu>
+            // <Menu.Menu position='right'>
+            //   <Menu.Item styleName='blocks.zero-padding'>
+            //     <Button
+            //       styleName={
+            //         location.pathname === '/bhawan_app/book_room/'
+            //           ? 'blocks.disactive-button'
+            //           : 'blocks.active-button'
+            //       }
+            //       onClick={() => {
+            //         this.props.history.push(bookingUrl())
+            //       }}
+            //     >
+            //       Book a Guest Room
+            //     </Button>
+            //   </Menu.Item>
+            //   <Menu.Item styleName='blocks.zero-padding'>
+            //     <Button
+            //       styleName={
+            //         location.pathname === '/bhawan_app/complain/'
+            //           ? 'blocks.disactive-button'
+            //           : 'blocks.active-button'
+            //       }
+            //       onClick={() => {
+            //         this.props.history.push(complainUrl())
+            //       }}
+            //     >
+            //       Register a Complaint
+            //     </Button>
+            //   </Menu.Item>
+            // </Menu.Menu>
           ) : null}
         </Menu>
         {this.props.who_am_i.isAdmin && !this.props.who_am_i.isStudent ? (
@@ -211,6 +262,20 @@ export default class Nav extends Component {
             </Menu.Item>
           </Menu>
         )}
+        <div
+         styleName={[
+          "navCss.menu-div",
+          "navCss.menu-bar",
+          sideBarVisibility ? "" : "navCss.closed-menu-bar",
+          ].join(" ")}
+        >
+          <MenuBar
+            sidebarStatus={ sideBarVisibility }
+            linkClick={this.onSidebarClick}
+            styleName="blocks.main-menu"
+            {...this.props}
+            />
+        </div>
       </React.Fragment>
     )
   }

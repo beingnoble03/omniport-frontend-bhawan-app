@@ -23,6 +23,12 @@
   flex-grow: 1;
 }
 
+.main-menu {
+  height: 100%;
+  flex: 0 0 250px;
+  float: right;
+}
+
 .student-complains {
   background-color: #304FFE !important;
   color: #FFFFFF !important;
@@ -31,7 +37,6 @@
   border-radius: 4px !important;
   margin-top: 1em !important;
 }
-
 
 .active-button {
   background-color: #304FFE !important;
@@ -72,4 +77,22 @@
 
 .color-black {
   color: #000000;
+}
+
+@media (max-width: 1000px) {
+  .main-component {
+    margin-left: 0;
+  }
+
+  .menu-bar {
+    z-index: 100;
+  }
+
+  .closed-menu-bar {
+    display: none !important;
+  }
+
+  .side-info {
+    display: none !important;
+  }
 }

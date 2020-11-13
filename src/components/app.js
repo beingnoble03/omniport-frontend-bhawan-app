@@ -1,7 +1,8 @@
 import React, { Suspense, lazy } from "react";
 import { connect } from "react-redux";
 import { Switch, Route, Link } from "react-router-dom";
-import { Grid, Button, GridColumn } from "semantic-ui-react";
+
+import { Grid, Button } from "semantic-ui-react";
 
 import { AppHeader, AppFooter, Loading } from "formula_one";
 const Nav = lazy(() => import("./navbar/index"));
@@ -20,9 +21,11 @@ const MyProfile = lazy(() => import("./my_profile/index"));
 const AdminAuthorities = lazy(() => import("./admin_authorities/index"));
 const EditAuthorities = lazy(() => import("./edit-authorities/index"));
 const AddFacility = lazy(() => import("./add-facility/index"));
+
 import { whoami } from "../actions/who_am_i";
 import { getConstants } from "../actions/get-constants";
 import { constantsUrl } from "../urls";
+
 import main from "formula_one/src/css/app.css";
 import blocks from "../css/app.css";
 import RegisterStudent from "./register_student/index";
@@ -288,7 +291,7 @@ class App extends React.Component {
                         path={`${match.path}`}
                         exact
                         render={(props) => (
-                          <Grid.Column width={3} floated="right">
+                          <Grid.Column width={3} floated="right" styleName="blocks.side-info">
                             <MyInfo {...props} who_am_i={who_am_i} />
                             <EventsCard {...props} who_am_i={who_am_i} />
                             {who_am_i.isAdmin && who_am_i.isStudent ? (
@@ -305,7 +308,7 @@ class App extends React.Component {
                         path={`${match.path}complain`}
                         exact
                         render={(props) => (
-                          <Grid.Column width={3} floated="right">
+                          <Grid.Column width={3} floated="right" styleName="blocks.side-info">
                             <MyInfo {...props} who_am_i={who_am_i} />
                             <EventsCard {...props} who_am_i={who_am_i} />
                           </Grid.Column>
@@ -316,7 +319,7 @@ class App extends React.Component {
                           path={`${match.path}book_room`}
                           exact
                           render={(props) => (
-                            <Grid.Column width={3} floated="right">
+                            <Grid.Column width={3} floated="right" styleName="blocks.side-info">
                               <MyInfo {...props} who_am_i={who_am_i} />
                               <EventsCard {...props} who_am_i={who_am_i} />
                             </Grid.Column>
@@ -327,7 +330,7 @@ class App extends React.Component {
                         path={`${match.path}events`}
                         exact
                         render={(props) => (
-                          <Grid.Column width={3} floated="right">
+                          <Grid.Column width={3} floated="right" styleName="blocks.side-info">
                             <EventsCard {...props} who_am_i={who_am_i} />
                           </Grid.Column>
                         )}
