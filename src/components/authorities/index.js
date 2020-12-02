@@ -17,7 +17,7 @@ class Authorities extends React.Component {
     }
   }
   componentDidMount() {
-    this.props.getAllAuthorities(this.props.who_am_i.residence)
+    this.props.getAllAuthorities(this.props.who_am_i.hostel)
   }
 
   increaseCount = () => {

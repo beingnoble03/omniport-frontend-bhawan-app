@@ -24,7 +24,7 @@ export default class MyInfo extends React.Component {
               </Card.Content>
               <Card.Description styleName='font_color' onClick={this.handleRedirect}>
                 <Icon name='home' size='small' />
-                {who_am_i.residence}
+                {who_am_i.hostel}
               </Card.Description>
               <Card.Description styleName='font_color' onClick={this.handleRedirect}>
                 <Icon name='hotel' size='small'/>

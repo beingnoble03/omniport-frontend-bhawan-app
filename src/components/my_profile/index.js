@@ -18,7 +18,7 @@ class MyProfile extends React.Component {
   state = { activeItem: 'upcoming' };
   componentDidMount() {
     this.props.setNavigation('Profile');
-    this.props.getComplains(complainsUrl(this.props.who_am_i.residence));
+    this.props.getComplains(complainsUrl(this.props.who_am_i.hostel));
   } 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
   render() {

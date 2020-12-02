@@ -51,9 +51,9 @@ class Facility extends React.Component {
 
   componentDidMount() {
     this.props.setNavigation('Facilities');
-    this.props.getFacilities(facilitiesUrl(this.props.who_am_i.residence));
+    this.props.getFacilities(facilitiesUrl(this.props.who_am_i.hostel));
     this.props.getFacility(
-      this.props.who_am_i.residence,
+      this.props.who_am_i.hostel,
       this.state.id,
       this.successCallBack,
       this.errCallBack
@@ -145,7 +145,7 @@ class Facility extends React.Component {
         };
       }
       this.props.editFacility(
-        facilityUrl(this.props.who_am_i.residence, this.state.id),
+        facilityUrl(this.props.who_am_i.hostel, this.state.id),
         data,
         this.editFacilityCallBack,
         this.errCallBack
@@ -234,7 +234,7 @@ class Facility extends React.Component {
       description: [],
     });
     this.props.getFacility(
-      this.props.who_am_i.residence,
+      this.props.who_am_i.hostel,
       this.state.id,
       this.successCallBack,
       this.errCallBack
@@ -265,7 +265,7 @@ class Facility extends React.Component {
       id,
     });
     this.props.getFacility(
-      this.props.who_am_i.residence,
+      this.props.who_am_i.hostel,
       id,
       this.successCallBack,
       this.errCallBack

@@ -43,7 +43,7 @@ class AdminAuthorities extends React.Component {
       }
       this.props.addAuthority(
         data,
-        authoritiesUrl(this.props.who_am_i.residence),
+        authoritiesUrl(this.props.who_am_i.hostel),
         this.adminCallBack,
         this.errCallBack
       )

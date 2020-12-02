@@ -63,22 +63,35 @@ class App extends React.Component {
       consLoaded: false,
       loaded: false,
       activeNav: "Home",
+      isMobile: false,
+      width: 0
     };
   }
 
+  resize = () => {
+    if (this.state.width !== window.innerWidth) {
+      this.setState({
+        width: window.innerWidth,
+        isMobile: window.innerWidth <= 1000,
+        columns: window.innerWidth <= 1000 ? 16: 12
+      });
+    }
+  }
+
   componentDidMount() {
-    this.props.whoami(this.successCallBack, this.errCallBack);
+    this.resize()
+    this.props.whoami(this.successCallBack, this.errCallBack)
     this.props.getConstants(
       constantsUrl(),
       this.consSuccessCallBack,
       this.errCallBack
-    );
+    )
   }
   setNavigation = (activeNav) => {
     this.setState({
       activeNav,
-    });
-  };
+    })
+  }
   successCallBack = (res) => {
     this.setState({
       success: true,
@@ -111,7 +124,7 @@ class App extends React.Component {
   render() {
     const { match, who_am_i, constants } = this.props;
     if (this.state.loaded && this.state.consLoaded) {
-      if (who_am_i.residence) {
+      if (who_am_i.hostel) {
         return (
           <div ref={this.divRef} styleName="blocks.app-wrapper">
             <Suspense fallback={<Loading />}>
@@ -242,7 +255,7 @@ class App extends React.Component {
                         path={`${match.path}`}
                         exact
                         render={(props) => (
-                          <Grid.Column width={12} floated="left">
+                          <Grid.Column width={this.state.columns} floated="left">
                             <Facilities
                               who_am_i={who_am_i}
                               setNavigation={this.setNavigation}

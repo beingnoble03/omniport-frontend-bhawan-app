@@ -54,17 +54,23 @@ class BookRoom extends React.Component {
             />
           </Form.Field>
           <Form.Field>
-            <label>Identity Proof</label>
+            <label for={`uploadPhoto${i}`}>Identity Proof</label>
             <input
               type='file'
               accept='image/*'
+              class="upload-btn"
+              style={{
+                width: "210px",
+                height: "38px",
+                padding: "3px 0 3px 5px"
+                }}
               onChange={(e) => this.handleSelectPicture(e, i)}
               name={`picture${i}`}
               id={`uploadPhoto${i}`}
             />
-          </Form.Field>{this.state.visitors.length > 1 ? (
+          </Form.Field>{this.state.visitors.length > 1 && (
             <Icon name='close' size='big' onClick={() => this.removeClick(i)} styleName='cross-mark' />
-          ) : null}
+          )}
         </Form.Group>
       </div>
     ))
@@ -119,7 +125,7 @@ class BookRoom extends React.Component {
     })
     this.props.bookRoom(
       formData,
-      this.props.who_am_i.residence,
+      this.props.who_am_i.hostel,
       this.successCallBack,
       this.errCallBack
     )
@@ -177,6 +183,7 @@ class BookRoom extends React.Component {
                 name='fromDate'
                 value={this.state.fromDate}
                 onChange={this.handleChange}
+                styleName="date-time-width"
               />
             </Form.Field>
             <Form.Field>
@@ -185,6 +192,7 @@ class BookRoom extends React.Component {
                 name='endDate'
                 value={this.state.endDate}
                 onChange={this.handleChange}
+                styleName="date-time-width"
               />
             </Form.Field>
           </Form.Group>

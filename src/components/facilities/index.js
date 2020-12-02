@@ -18,7 +18,7 @@ class Facilities extends React.Component {
   }
   componentDidMount() {
     this.props.setNavigation('Home');
-    this.props.getFacilities(facilitiesUrl(this.props.who_am_i.residence));
+    this.props.getFacilities(facilitiesUrl(this.props.who_am_i.hostel));
   }
 
   increaseCount = () => {

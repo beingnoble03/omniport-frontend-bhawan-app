@@ -50,7 +50,7 @@ class Facility extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getFacilities(facilitiesUrl(this.props.who_am_i.residence));
+    this.props.getFacilities(facilitiesUrl(this.props.who_am_i.hostel));
   }
 
   fileChange = async (e) => {
@@ -98,7 +98,7 @@ class Facility extends React.Component {
     }
     formData.append('displayPicture', displayImage);
     this.props.addFacility(
-      facilitiesUrl(this.props.who_am_i.residence),
+      facilitiesUrl(this.props.who_am_i.hostel),
       formData,
       this.successCallBack,
       this.errCallBack

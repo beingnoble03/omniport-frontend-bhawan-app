@@ -42,7 +42,7 @@ class EditAuthorities extends React.Component {
       this.props.editAuthority(
         data,
         specificAuthoritiesUrl(
-          this.props.who_am_i.residence,
+          this.props.who_am_i.hostel,
           this.props.activeAuthority.id
         ),
         this.adminCallBack,

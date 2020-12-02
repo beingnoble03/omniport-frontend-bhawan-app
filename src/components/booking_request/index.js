@@ -43,14 +43,14 @@ class BookingRequests extends Component {
   componentDidMount() {
     this.props.getPresentRoomBookings(
       statusBookingsUrl(
-        this.props.who_am_i.residence,
+        this.props.who_am_i.hostel,
         this.props.constants.statues.BOOKING_STATUSES.pen,
         'False'
       )
     )
     this.props.getPastRoomBookings(
       statusBookingsUrl(
-        this.props.who_am_i.residence,
+        this.props.who_am_i.hostel,
         this.props.constants.statues.BOOKING_STATUSES.cnf,
         true
       )
@@ -80,13 +80,13 @@ class BookingRequests extends Component {
   handleItemClick = (e, { name }) => {
     this.setState({ activeItem: name, activePage: 1 })
     this.props.getPresentRoomBookings(
-      statusBookingsUrl(this.props.who_am_i.residence, name, 'False')
+      statusBookingsUrl(this.props.who_am_i.hostel, name, 'False')
     )
   }
   handlePastItemClick = (e, { name }) => {
     this.setState({ activePastItem: name, activeAprPage: 1 })
     this.props.getPastRoomBookings(
-      statusBookingsUrl(this.props.who_am_i.residence, name, true)
+      statusBookingsUrl(this.props.who_am_i.hostel, name, true)
     )
   }
 
@@ -95,7 +95,7 @@ class BookingRequests extends Component {
       status: 'rej'
     }
     this.props.updateBooking(
-      specificBookingUrl(this.props.who_am_i.residence, this.state.activeId),
+      specificBookingUrl(this.props.who_am_i.hostel, this.state.activeId),
       body,
       this.successCallBack,
       this.errCallBack
@@ -116,7 +116,7 @@ class BookingRequests extends Component {
           : 'cnf'
     }
     this.props.updateBooking(
-      specificBookingUrl(this.props.who_am_i.residence, activeId),
+      specificBookingUrl(this.props.who_am_i.hostel, activeId),
       body,
       this.successCallBack,
       this.errCallBack
@@ -134,14 +134,14 @@ class BookingRequests extends Component {
     })
     this.props.getPresentRoomBookings(
       statusBookingsUrl(
-        this.props.who_am_i.residence,
+        this.props.who_am_i.hostel,
         this.state.activeItem,
         'False'
       )
     )
     this.props.getPastRoomBookings(
       statusBookingsUrl(
-        this.props.who_am_i.residence,
+        this.props.who_am_i.hostel,
         this.state.activePastItem,
         'true'
       )
@@ -174,7 +174,7 @@ class BookingRequests extends Component {
     this.setState({ activePage })
     this.props.getPresentRoomBookings(
       `${statusBookingsUrl(
-        this.props.who_am_i.residence,
+        this.props.who_am_i.hostel,
         this.state.activeItem,
         'False'
       )}&page=${activePage}`
@@ -184,7 +184,7 @@ class BookingRequests extends Component {
     this.setState({ activeAprPage: activePage })
     this.props.getPresentRoomBookings(
       `${statusBookingsUrl(
-        this.props.who_am_i.residence,
+        this.props.who_am_i.hostel,
         this.state.activePastItem,
         true
       )}&page=${activePage}`

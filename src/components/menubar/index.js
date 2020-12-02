@@ -9,7 +9,7 @@ import {
   complainUrl,
   profilePageUrl,
   bookingUrl,
-  registrationUrl,
+  eventUrl
 } from "../../urls";
 
 import "./index.css";
@@ -17,17 +17,56 @@ import "./index.css";
 class MenuBar extends Component {
   constructor(props) {
     super(props);
-    this.state = { activeItem: "" };
+    this.state = {
+      activeItem: "",
+      activeSubGroup: 'home'
+    };
+  }
+
+  componentDidMount() {
+    switch (location.pathname) {
+      case homePageUrl(): {
+        this.setState({
+          activeSubGroup: 'home'
+        })
+        return
+      }
+      case complainUrl(): {
+        this.setState({
+          activeSubGroup: 'complains'
+        })
+        return
+      }
+      case bookingUrl(): {
+        this.setState({
+          activeSubGroup: 'bookings'
+        })
+        return
+      }
+      case eventUrl(): {
+        this.setState({
+          activeSubGroup: 'events'
+        })
+        return
+      }
+      case profilePageUrl(): {
+        this.setState({
+          activeSubGroup: 'profile'
+        })
+        return
+      }
+    }
   }
 
   handleItemClick = (e, { name }) => {
     this.props.linkClick();
+    this.setState({ activeSubGroup: name })
     this.setState({ activeItem: name });
   };
 
   render() {
     const { sidebarStatus } = this.props;
-    const { activeItem } = this.state;
+    const { activeSubGroup } = this.state;
     return (
       <Menu
         styleName={[
@@ -44,12 +83,13 @@ class MenuBar extends Component {
         <Scrollbars autoHide >
           <Link to={bookingUrl()}>
             <Menu.Item
-              name="booking"
+              name="bookings"
               onClick={this.handleItemClick}
               //   active={
               //     isActiveItem(urlLibraryView(), true) ||
               //     isActiveItem(urlLibraryCourseView(), false)
               //   }
+              active={activeSubGroup === 'bookings'}
               className={["menu-icon-bar", "menu-items"].join(" ")}
             >
               <Icon name="book" />
@@ -64,6 +104,7 @@ class MenuBar extends Component {
               //     isActiveItem(urlLibraryView(), true) ||
               //     isActiveItem(urlLibraryCourseView(), false)
               //   }
+              active={activeSubGroup === 'complains'}
               className={["menu-icon-bar", "menu-items"].join(" ")}
             >
               <Icon name="book" />
@@ -78,10 +119,26 @@ class MenuBar extends Component {
               //     isActiveItem(urlLibraryView(), true) ||
               //     isActiveItem(urlLibraryCourseView(), false)
               //   }
+              active={activeSubGroup === 'profile'}
               className={["menu-icon-bar", "menu-items"].join(" ")}
             >
               <Icon name="book" />
               Visit My Profile
+            </Menu.Item>
+          </Link>
+          <Link to={eventUrl()}>
+            <Menu.Item
+              name="events"
+              onClick={this.handleItemClick}
+              //   active={
+              //     isActiveItem(urlLibraryView(), true) ||
+              //     isActiveItem(urlLibraryCourseView(), false)
+              //   }
+              active={activeSubGroup === 'events'}
+              className={["menu-icon-bar", "menu-items"].join(" ")}
+            >
+              <Icon name="book" />
+              Events
             </Menu.Item>
           </Link>
           <Link to={homePageUrl()}>
@@ -92,6 +149,7 @@ class MenuBar extends Component {
               //     isActiveItem(urlLibraryView(), true) ||
               //     isActiveItem(urlLibraryCourseView(), false)
               //   }
+              active={activeSubGroup === 'home'}
               className={["menu-icon-bar", "menu-items"].join(" ")}
             >
               <Icon name="book" />

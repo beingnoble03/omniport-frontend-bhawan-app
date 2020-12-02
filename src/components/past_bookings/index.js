@@ -12,13 +12,13 @@ import './index.css';
 class PastBookings extends Component {
   state = { activePage: 1 };
   componentDidMount() {
-    this.props.getRoomBookings(bookingsUrl(this.props.who_am_i.residence, true));
+    this.props.getRoomBookings(bookingsUrl(this.props.who_am_i.hostel, true));
   }
 
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage: activePage });
     this.props.getRoomBookings(
-      `${bookingsUrl(this.props.who_am_i.residence, true)}?page=${activePage}`
+      `${bookingsUrl(this.props.who_am_i.hostel, true)}?page=${activePage}`
     );
   };
 

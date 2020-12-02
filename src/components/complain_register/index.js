@@ -36,7 +36,7 @@ class ComplainRegister extends React.Component {
 
   componentDidMount() {
     this.props.setNavigation('Register a Complain');
-    this.props.getComplains(complainsUrl(this.props.who_am_i.residence));
+    this.props.getComplains(complainsUrl(this.props.who_am_i.hostel));
   }
 
   handleChange = (event, { name, value }) => {
@@ -48,7 +48,7 @@ class ComplainRegister extends React.Component {
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage });
     this.props.getComplains(
-      `${complainsUrl(this.props.who_am_i.residence)}?page=${activePage}`
+      `${complainsUrl(this.props.who_am_i.hostel)}?page=${activePage}`
     );
   };
 
@@ -59,7 +59,7 @@ class ComplainRegister extends React.Component {
     };
     this.props.addComplaint(
       data,
-      this.props.who_am_i.residence,
+      this.props.who_am_i.hostel,
       this.successCallBack,
       this.errCallBack
     );
@@ -74,7 +74,7 @@ class ComplainRegister extends React.Component {
       complain: '',
       category: '',
     });
-    this.props.getComplains(complainsUrl(this.props.who_am_i.residence));
+    this.props.getComplains(complainsUrl(this.props.who_am_i.hostel));
   };
 
   errCallBack = (err) => {

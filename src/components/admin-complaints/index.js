@@ -72,15 +72,15 @@ class AdminComplains extends Component {
   componentDidMount() {
     this.props.setNavigation('Student Complains')
     this.props.getPendingComplains(
-      statusComplainsUrl(this.props.who_am_i.residence, ['pending'])
+      statusComplainsUrl(this.props.who_am_i.hostel, ['pending'])
     )
     this.props.getResolvedComplains(
-      statusComplainsUrl(this.props.who_am_i.residence, [
+      statusComplainsUrl(this.props.who_am_i.hostel, [
         'resolved',
         'unresolved',
       ])
     )
-    this.props.getTimeSlots(this.props.who_am_i.residence)
+    this.props.getTimeSlots(this.props.who_am_i.hostel)
   }
 
   show = (id) => {
@@ -141,7 +141,7 @@ class AdminComplains extends Component {
     this.props.resolveComplain(
       this.state.activeId,
       body,
-      this.props.who_am_i.residence,
+      this.props.who_am_i.hostel,
       this.resolveSuccessCallBack,
       this.errCallBack
     )
@@ -155,10 +155,10 @@ class AdminComplains extends Component {
       message: '',
     })
     this.props.getPendingComplains(
-      statusComplainsUrl(this.props.who_am_i.residence, ['pending'])
+      statusComplainsUrl(this.props.who_am_i.hostel, ['pending'])
     )
     this.props.getResolvedComplains(
-      statusComplainsUrl(this.props.who_am_i.residence, [
+      statusComplainsUrl(this.props.who_am_i.hostel, [
         'resolved',
         'unresolved',
       ])
@@ -208,7 +208,7 @@ class AdminComplains extends Component {
       data,
       this.state.found,
       this.state.foundId,
-      timeSlotsUrl(this.props.who_am_i.residence),
+      timeSlotsUrl(this.props.who_am_i.hostel),
       this.timeSlotSuccessCallBack,
       this.errorCallBack
     )
@@ -238,7 +238,7 @@ class AdminComplains extends Component {
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage })
     this.props.getPendingComplains(
-      `${statusComplainsUrl(this.props.who_am_i.residence, [
+      `${statusComplainsUrl(this.props.who_am_i.hostel, [
         'PENDING',
       ])}&page=${activePage}`
     )
@@ -247,7 +247,7 @@ class AdminComplains extends Component {
   handlePastPaginationChange = (e, { activePage }) => {
     this.setState({ activeAprPage: activePage })
     this.props.getResolvedComplains(
-      `${statusComplainsUrl(this.props.who_am_i.residence, [
+      `${statusComplainsUrl(this.props.who_am_i.hostel, [
         'RESOLVED',
         'UNRESOLVED',
       ])}&page=${activePage}`
@@ -256,7 +256,7 @@ class AdminComplains extends Component {
 
   increaseUnsuccesfulComplains = (id) => {
     this.props.increaseUnsuccefulAttempts(
-      increaseUnsuccesfulComplainsUrl(this.props.who_am_i.residence, id),
+      increaseUnsuccesfulComplainsUrl(this.props.who_am_i.hostel, id),
       this.resolveSuccessCallBack,
       this.errCallBack
     )

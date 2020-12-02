@@ -8,16 +8,35 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import listPlugin from '@fullcalendar/list'
 import interactionPlugin from '@fullcalendar/interaction'
 
-import { Grid } from 'semantic-ui-react'
+import { Grid, Responsive } from 'semantic-ui-react'
 import { getEvents } from '../../actions/events'
 import { setActiveDay } from '../../actions/set-active-day'
 import { eventsUrl } from '../../urls'
 
 class Events extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      isMobile: false,
+      width: 0,
+      columns: 12,
+    }
+  }
+
+  resize = () => {
+    if (this.state.width !== window.innerWidth) {
+      this.setState({
+        width: window.innerWidth,
+        isMobile: window.innerWidth <= 1000,
+        columns: window.innerWidth <= 1000 ? 16: 12
+      });
+    }
+  }
 
   componentDidMount() {
     this.props.setNavigation('Events')
-    this.props.getEvents(eventsUrl(this.props.who_am_i.residence))
+    this.props.getEvents(eventsUrl(this.props.who_am_i.hostel))
+    this.resize();
   }
 
   handleDateClick = (arg) => {
@@ -26,7 +45,7 @@ class Events extends React.Component {
 
   render() {
     return (
-      <Grid.Column width={12} floated='left'>
+      <Grid.Column width={this.state.columns} floated='left'>
         <FullCalendar
           defaultView='dayGridMonth'
           dateClick={this.handleDateClick}

@@ -110,3 +110,9 @@ export const authoritiesUrl = (residence) => {
 export const specificAuthoritiesUrl = (residence, id) => {
   return `${baseApiUrl()}${residence}/admin/${id}/`
 }
+export const residentSearchUrl = (residence, enrollmentNo) => {
+  return `${baseApiUrl()}${residence}/resident/${enrollmentNo}/`
+}
+export const residentUrl = (residence) => {
+  return `${baseApiUrl()}${residence}/resident/`
+}

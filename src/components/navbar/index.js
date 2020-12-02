@@ -111,10 +111,10 @@ export default class Nav extends Component {
         <Menu secondary styleName='navCss.upper_menu'>
           <Menu.Item>
             <Header>
-              {this.props.constants.hostels[this.props.who_am_i.residence]}
+              {this.props.constants.hostels[this.props.who_am_i.hostel]}
             </Header>
           </Menu.Item>
-          {this.props.who_am_i.isStudent ? (
+          {this.props.who_am_i.isStudent ? isMobile ? (
             <Menu.Menu position='right' styleName="navCss.right-margin">
               <button
                 styleName={`hamburger.hamburger hamburger.${
@@ -135,36 +135,37 @@ export default class Nav extends Component {
                 </span>
               </button>
             </Menu.Menu>
-            // <Menu.Menu position='right'>
-            //   <Menu.Item styleName='blocks.zero-padding'>
-            //     <Button
-            //       styleName={
-            //         location.pathname === '/bhawan_app/book_room/'
-            //           ? 'blocks.disactive-button'
-            //           : 'blocks.active-button'
-            //       }
-            //       onClick={() => {
-            //         this.props.history.push(bookingUrl())
-            //       }}
-            //     >
-            //       Book a Guest Room
-            //     </Button>
-            //   </Menu.Item>
-            //   <Menu.Item styleName='blocks.zero-padding'>
-            //     <Button
-            //       styleName={
-            //         location.pathname === '/bhawan_app/complain/'
-            //           ? 'blocks.disactive-button'
-            //           : 'blocks.active-button'
-            //       }
-            //       onClick={() => {
-            //         this.props.history.push(complainUrl())
-            //       }}
-            //     >
-            //       Register a Complaint
-            //     </Button>
-            //   </Menu.Item>
-            // </Menu.Menu>
+          ):(
+            <Menu.Menu position='right' styleName='navCss.right-margin'>
+              <Menu.Item styleName='blocks.zero-padding'>
+                <Button
+                  styleName={
+                    location.pathname === bookingUrl()
+                      ? 'blocks.disactive-button'
+                      : 'blocks.active-button'
+                  }
+                  onClick={() => {
+                    this.props.history.push(bookingUrl())
+                  }}
+                >
+                  Book a Guest Room
+                </Button>
+              </Menu.Item>
+              <Menu.Item styleName='blocks.zero-padding'>
+                <Button
+                  styleName={
+                    location.pathname === complainUrl()
+                      ? 'blocks.disactive-button'
+                      : 'blocks.active-button'
+                  }
+                  onClick={() => {
+                    this.props.history.push(complainUrl())
+                  }}
+                >
+                  Register a Complaint
+                </Button>
+              </Menu.Item>
+            </Menu.Menu>
           ) : null}
         </Menu>
         {this.props.who_am_i.isAdmin && !this.props.who_am_i.isStudent ? (
@@ -176,7 +177,7 @@ export default class Nav extends Component {
               styleName='navCss.navColor'
               active={activeSubGroup == 'complains'}
               onClick={() =>
-                this.handleGroupClick('complains', '/bhawan_app/admin_complain')
+                this.handleGroupClick('complains', adminComplainUrl())
               }
             >
               Complaints
@@ -189,7 +190,7 @@ export default class Nav extends Component {
               styleName='navCss.navColor'
               active={activeSubGroup == 'bookings'}
               onClick={() =>
-                this.handleGroupClick('bookings', '/bhawan_app/book_room')
+                this.handleGroupClick('bookings', bookingUrl())
               }
             >
               Guest Room Bookings
@@ -202,7 +203,7 @@ export default class Nav extends Component {
               styleName='navCss.navColor'
               active={activeSubGroup == 'events'}
               onClick={() =>
-                this.handleGroupClick('events', '/bhawan_app/events')
+                this.handleGroupClick('events', eventUrl())
               }
             >
               Events

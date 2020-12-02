@@ -21,7 +21,7 @@ class EventsCard extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getEvents(eventsUrl(this.props.who_am_i.residence));
+    this.props.getEvents(eventsUrl(this.props.who_am_i.hostel));
   }
 
   handleChange = (event, { name, value }) => {
@@ -47,7 +47,7 @@ class EventsCard extends React.Component {
     };
     this.props.addEvent(
       data,
-      eventsUrl(this.props.who_am_i.residence),
+      eventsUrl(this.props.who_am_i.hostel),
       this.successCallBack,
       this.errCallBack
     );

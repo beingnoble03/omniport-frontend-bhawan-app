@@ -13,12 +13,12 @@ class Complains extends React.Component {
     activePage: 1,
   }
   componentDidMount() {
-    this.props.getComplains(complainsUrl(this.props.who_am_i.residence))
+    this.props.getComplains(complainsUrl(this.props.who_am_i.hostel))
   }
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage })
     this.props.getComplains(
-      `${complainsUrl(this.props.who_am_i.residence)}?page=${activePage}`
+      `${complainsUrl(this.props.who_am_i.hostel)}?page=${activePage}`
     )
   }
   render() {
