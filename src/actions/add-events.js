@@ -6,7 +6,7 @@ import { toast } from 'react-semantic-toasts'
 export const addEvent = (data, url, successCallBack, errCallBack) => {
   let headers = {
     'Content-Type': 'application/json',
-    'X-CSRFToken': getCookie('csrftoken'),
+    'X-CSRFToken': getCookie('csrftoken')
   }
   return (dispatch) => {
     axios

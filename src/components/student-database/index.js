@@ -1,18 +1,112 @@
-import React, { Component } from 'react';
-import { Header, Table, Icon, Container } from 'semantic-ui-react';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-export default class StudentDatabase extends Component {
-  state = {};
+import { Header, Table, Container, Dropdown, Pagination } from 'semantic-ui-react'
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+import { residentUrl } from '../../urls'
+
+import { getResidents } from '../../actions/residents'
+
+const yearOptions = [
+  { key: 1, text: '1st Year', value: 1 },
+  { key: 2, text: '2nd Year', value: 2 },
+  { key: 3, text: '3rd Year', value: 3 },
+  { key: 4, text: '4rd Year', value: 4 },
+  { key: 5, text: '5rd Year', value: 5 }
+]
+
+const branchOptions = [
+  { key: 1, text: '1st Year', value: 1 },
+  { key: 2, text: '2nd Year', value: 2 },
+  { key: 3, text: '3rd Year', value: 3 },
+  { key: 4, text: '4rd Year', value: 4 },
+  { key: 5, text: '5rd Year', value: 5 }
+]
+
+class StudentDatabase extends Component {
+  state = {
+    activePage: 1,
+    filterYear: "",
+    filterBranch: ''
+  };
+
+  componentDidMount() {
+    this.props.getResidents(
+      residentUrl(this.props.who_am_i.hostel),
+      this.successCallBack,
+      this.errCallBack
+    )
+  }
+
+  onChange = (event, { name, value }) => {
+    if (this.state.hasOwnProperty(name)) {
+      this.setState({ [name]: value })
+    }
+    let filter="?"
+
+    if(name=='filterYear'){
+        if(value!="") filter = `${filter}year=${value}&`
+        if(this.state.filterBranch!="") filter = `${filter}year=${this.state.filterBranch}&`
+    }
+
+    else if(name=="filterBranch"){
+      if(value!="") filter = `${filter}year=${value}&`
+      if(this.state.filterYear!="") filter = `${filter}year=${this.state.filterYear}&`
+    }
+
+    this.props.getResidents(
+      `${residentUrl(this.props.who_am_i.hostel)}${filter}`,
+      this.successCallBack,
+      this.errCallBack
+    )
+
+    this.setState({
+      activePage: 1
+    })
+  }
+
+  handlePaginationChange = (e, { activePage }) => {
+    this.setState({ activePage })
+    this.props.getResidents(
+      `${residentUrl(this.props.who_am_i.hostel)}?page=${activePage}`,
+      this.successCallBack,
+      this.errCallBack
+    )
+  }
+  successCallBack() {}
+
+  errCallBack() {}
 
   render() {
-    const { activeItem } = this.state;
+    const {
+      activePage,
+      filterBranch,
+      filterYear
+    } = this.state
+    const { residents } = this.props
 
     return (
       <div>
         <Header as='h4'>Student Database </Header>
         <Container>
+        <Dropdown
+          name="filterYear"
+          clearable
+          options={yearOptions}
+          onChange={this.onChange}
+          placeholder="Filter by year"
+          value={filterYear}
+          selection
+        />
+        <Dropdown
+          name="filterYear"
+          clearable
+          placeholder="Filter by branch"
+          value={filterBranch}
+          onChange={this.onChange}
+          options={branchOptions}
+          selection
+        />
           <Table celled>
             <Table.Header>
               <Table.Row>
@@ -22,18 +116,49 @@ export default class StudentDatabase extends Component {
                 <Table.HeaderCell>Contact No.</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
-
             <Table.Body>
-              <Table.Row>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-              </Table.Row>
+              {residents.results && residents.results.length > 0
+                ? residents.results.map((resident, index) => {
+                    return (
+                      <Table.Row key={index}>
+                        <Table.Cell>
+                          {5 * (activePage - 1) + index + 1}
+                        </Table.Cell>
+                        <Table.Cell>{resident.residentName}</Table.Cell>
+                        <Table.Cell>ABC</Table.Cell>
+                        <Table.Cell>{resident.roomNumber}</Table.Cell>
+                      </Table.Row>
+                    )
+                  })
+                : null}
             </Table.Body>
           </Table>
+          {residents.count > 5 ? (
+            <Pagination
+              activePage={activePage}
+              onPageChange={this.handlePaginationChange}
+              totalPages={Math.ceil(residents.count / 5)}
+            />
+          ) : null}
         </Container>
       </div>
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    residents: state.residents,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getResidents: (url, successCallBack, errCallBack) => {
+      dispatch(getResidents(url, successCallBack, errCallBack))
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(StudentDatabase)
+

@@ -17,6 +17,7 @@ import pastBookingRequests from './past-bookings'
 import searchPersonResults from './searchPerson'
 import presentBookingRequests from './present-bookings'
 import searchResidentResult from './searchResident'
+import residents from './residents'
 
 const rootReducers = combineReducers({
   activeDay: activeDay,
@@ -36,7 +37,8 @@ const rootReducers = combineReducers({
   pastBookingRequests: pastBookingRequests,
   presentBookingRequests: presentBookingRequests,
   searchPersonResults: searchPersonResults,
-  searchResidentResult: searchResidentResult
+  searchResidentResult: searchResidentResult,
+  residents: residents
 })
 
 export default rootReducers
