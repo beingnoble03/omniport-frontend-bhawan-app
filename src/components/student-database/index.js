@@ -15,14 +15,6 @@ const yearOptions = [
   { key: 5, text: '5rd Year', value: 5 }
 ]
 
-const branchOptions = [
-  { key: 1, text: '1st Year', value: 1 },
-  { key: 2, text: '2nd Year', value: 2 },
-  { key: 3, text: '3rd Year', value: 3 },
-  { key: 4, text: '4rd Year', value: 4 },
-  { key: 5, text: '5rd Year', value: 5 }
-]
-
 class StudentDatabase extends Component {
   state = {
     activePage: 1,
@@ -32,7 +24,7 @@ class StudentDatabase extends Component {
 
   componentDidMount() {
     this.props.getResidents(
-      residentUrl(this.props.who_am_i.hostel),
+      `${residentUrl(this.props.who_am_i.hostel)}?is_student=true`,
       this.successCallBack,
       this.errCallBack
     )
@@ -42,15 +34,15 @@ class StudentDatabase extends Component {
     if (this.state.hasOwnProperty(name)) {
       this.setState({ [name]: value })
     }
-    let filter="?"
+    let filter="?is_student=true&"
 
     if(name=='filterYear'){
         if(value!="") filter = `${filter}year=${value}&`
-        if(this.state.filterBranch!="") filter = `${filter}year=${this.state.filterBranch}&`
+        if(this.state.filterBranch!="") filter = `${filter}branch=${this.state.filterBranch}&`
     }
 
     else if(name=="filterBranch"){
-      if(value!="") filter = `${filter}year=${value}&`
+      if(value!="") filter = `${filter}branch=${value}&`
       if(this.state.filterYear!="") filter = `${filter}year=${this.state.filterYear}&`
     }
 
@@ -83,7 +75,16 @@ class StudentDatabase extends Component {
       filterBranch,
       filterYear
     } = this.state
-    const { residents } = this.props
+    const { residents, constants } = this.props
+
+    let branchOptions = [];
+    for (var i in constants.branches) {
+      branchOptions.push({
+        key: i.toString(),
+        text: i.toString(),
+        value: constants.branches[i].toString(),
+      });
+    }
 
     return (
       <div>
@@ -99,7 +100,7 @@ class StudentDatabase extends Component {
           selection
         />
         <Dropdown
-          name="filterYear"
+          name="filterBranch"
           clearable
           placeholder="Filter by branch"
           value={filterBranch}
