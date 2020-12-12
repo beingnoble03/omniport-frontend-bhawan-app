@@ -12,13 +12,13 @@ import './index.css';
 class PastBookings extends Component {
   state = { activePage: 1 };
   componentDidMount() {
-    this.props.getRoomBookings(bookingsUrl(this.props.who_am_i.hostel, true));
+    this.props.getRoomBookings(bookingsUrl(this.props.activeHostel, true));
   }
 
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage: activePage });
     this.props.getRoomBookings(
-      `${bookingsUrl(this.props.who_am_i.hostel, true)}?page=${activePage}`
+      `${bookingsUrl(this.props.activeHostel, true)}?page=${activePage}`
     );
   };
 
@@ -27,7 +27,7 @@ class PastBookings extends Component {
     const { activePage } = this.state;
     return (
       <div>
-        <Table celled compact styleName='card-margin'>
+        <Table unstackable celled compact styleName='card-margin'>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>ID</Table.HeaderCell>
@@ -67,6 +67,7 @@ class PastBookings extends Component {
 function mapStateToProps(state) {
   return {
     bookingRequests: state.bookingRequests,
+    activeHostel: state.activeHostel
   };
 }
 

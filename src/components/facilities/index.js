@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Card, Container, Button } from 'semantic-ui-react';
+import { Card, Container, Button, Icon } from 'semantic-ui-react';
 import { getFacilities } from '../../actions/facilities';
 import { setActiveFacility } from '../../actions/set-active-facility'
 import { facilitiesUrl } from '../../urls';
@@ -18,7 +18,7 @@ class Facilities extends React.Component {
   }
   componentDidMount() {
     this.props.setNavigation('Home');
-    this.props.getFacilities(facilitiesUrl(this.props.who_am_i.hostel));
+    this.props.getFacilities(facilitiesUrl(this.props.activeHostel));
   }
 
   increaseCount = () => {
@@ -42,7 +42,9 @@ class Facilities extends React.Component {
           Facilities
           {(who_am_i.isAdmin && !who_am_i.isStudent) &&
           <Link to='/bhawan_app/add/facility/'>
-            <Button styleName='blocks.active-button'>Add Facilty</Button>
+            <span styleName="facilities.plus-icon">
+              <Icon name="plus" color="blue" size="small" />
+            </span>
           </Link>
           }
         </h2>
@@ -74,7 +76,7 @@ class Facilities extends React.Component {
                       </Card>
                   );
               })
-            : 'Your Bhawan admins have not added the facilities'}
+            : <h5 styleName="facilities.warning">Your Bhawan admins have not added the facilities</h5>}
         </Card.Group>
         {facilities.length > this.state.max_length ? (
           <div onClick={this.increaseCount}>See more</div>
@@ -86,6 +88,7 @@ class Facilities extends React.Component {
 function mapStateToProps(state) {
   return {
     facilities: state.facilities,
+    activeHostel: state.activeHostel
   };
 }
 const mapDispatchToProps = (dispatch) => {

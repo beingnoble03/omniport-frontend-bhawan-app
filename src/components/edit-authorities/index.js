@@ -42,7 +42,7 @@ class EditAuthorities extends React.Component {
       this.props.editAuthority(
         data,
         specificAuthoritiesUrl(
-          this.props.who_am_i.hostel,
+          this.props.activeHostel,
           this.props.activeAuthority.id
         ),
         this.adminCallBack,
@@ -183,7 +183,8 @@ class EditAuthorities extends React.Component {
 function mapStateToProps(state) {
   return {
     searchPersonResults: state.searchPersonResults,
-    activeAuthority: state.activeAuthority
+    activeAuthority: state.activeAuthority,
+    activeHostel: state.activeHostel
   }
 }
 

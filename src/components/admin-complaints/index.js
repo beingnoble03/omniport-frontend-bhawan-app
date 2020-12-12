@@ -11,7 +11,6 @@ import {
   Icon,
   Dropdown,
   Pagination,
-  FormGroup,
 } from 'semantic-ui-react'
 import moment from 'moment'
 
@@ -72,15 +71,15 @@ class AdminComplains extends Component {
   componentDidMount() {
     this.props.setNavigation('Student Complains')
     this.props.getPendingComplains(
-      statusComplainsUrl(this.props.who_am_i.hostel, ['pending'])
+      statusComplainsUrl(this.props.activeHostel, ['pending'])
     )
     this.props.getResolvedComplains(
-      statusComplainsUrl(this.props.who_am_i.hostel, [
+      statusComplainsUrl(this.props.activeHostel, [
         'resolved',
         'unresolved',
       ])
     )
-    this.props.getTimeSlots(this.props.who_am_i.hostel)
+    this.props.getTimeSlots(this.props.activeHostel)
   }
 
   show = (id) => {
@@ -141,7 +140,7 @@ class AdminComplains extends Component {
     this.props.resolveComplain(
       this.state.activeId,
       body,
-      this.props.who_am_i.hostel,
+      this.props.activeHostel,
       this.resolveSuccessCallBack,
       this.errCallBack
     )
@@ -155,10 +154,10 @@ class AdminComplains extends Component {
       message: '',
     })
     this.props.getPendingComplains(
-      statusComplainsUrl(this.props.who_am_i.hostel, ['pending'])
+      statusComplainsUrl(this.props.activeHostel, ['pending'])
     )
     this.props.getResolvedComplains(
-      statusComplainsUrl(this.props.who_am_i.hostel, [
+      statusComplainsUrl(this.props.activeHostel, [
         'resolved',
         'unresolved',
       ])
@@ -208,7 +207,7 @@ class AdminComplains extends Component {
       data,
       this.state.found,
       this.state.foundId,
-      timeSlotsUrl(this.props.who_am_i.hostel),
+      timeSlotsUrl(this.props.activeHostel),
       this.timeSlotSuccessCallBack,
       this.errorCallBack
     )
@@ -238,7 +237,7 @@ class AdminComplains extends Component {
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage })
     this.props.getPendingComplains(
-      `${statusComplainsUrl(this.props.who_am_i.hostel, [
+      `${statusComplainsUrl(this.props.activeHostel, [
         'PENDING',
       ])}&page=${activePage}`
     )
@@ -247,7 +246,7 @@ class AdminComplains extends Component {
   handlePastPaginationChange = (e, { activePage }) => {
     this.setState({ activeAprPage: activePage })
     this.props.getResolvedComplains(
-      `${statusComplainsUrl(this.props.who_am_i.hostel, [
+      `${statusComplainsUrl(this.props.activeHostel, [
         'RESOLVED',
         'UNRESOLVED',
       ])}&page=${activePage}`
@@ -256,7 +255,7 @@ class AdminComplains extends Component {
 
   increaseUnsuccesfulComplains = (id) => {
     this.props.increaseUnsuccefulAttempts(
-      increaseUnsuccesfulComplainsUrl(this.props.who_am_i.hostel, id),
+      increaseUnsuccesfulComplainsUrl(this.props.activeHostel, id),
       this.resolveSuccessCallBack,
       this.errCallBack
     )
@@ -277,7 +276,7 @@ class AdminComplains extends Component {
           <Grid.Column width={16}>
             <Container>
               <Header as='h4'>Student Complains</Header>
-              <Table celled>
+              <Table celled unstackable>
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>ID</Table.HeaderCell>
@@ -379,7 +378,7 @@ class AdminComplains extends Component {
               </Header>
               {pastComplainIcon === 'angle down' && (
                 <React.Fragment>
-                  <Table celled>
+                  <Table celled unstackable>
                     <Table.Header>
                       <Table.Row>
                         <Table.HeaderCell>ID</Table.HeaderCell>
@@ -469,6 +468,7 @@ function mapStateToProps(state) {
     pendingComplains: state.pendingComplains,
     resolvedComplains: state.resolvedComplains,
     timeSlots: state.timeSlots,
+    activeHostel: state.activeHostel
   }
 }
 

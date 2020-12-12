@@ -43,7 +43,7 @@ class AdminAuthorities extends React.Component {
       }
       this.props.addAuthority(
         data,
-        authoritiesUrl(this.props.who_am_i.hostel),
+        authoritiesUrl(this.props.activeHostel),
         this.adminCallBack,
         this.errCallBack
       )
@@ -161,6 +161,7 @@ class AdminAuthorities extends React.Component {
                     selection
                     closeOnChange
                     options={options}
+                    placeholder="Enter Name"
                   />
                 </Form.Field>
                 <Form.Field>
@@ -187,7 +188,8 @@ class AdminAuthorities extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    searchPersonResults: state.searchPersonResults
+    searchPersonResults: state.searchPersonResults,
+    activeHostel: state.activeHostel
   }
 }
 

@@ -18,6 +18,7 @@ import searchPersonResults from './searchPerson'
 import presentBookingRequests from './present-bookings'
 import searchResidentResult from './searchResident'
 import residents from './residents'
+import activeHostel from './active-hostel'
 
 const rootReducers = combineReducers({
   activeDay: activeDay,
@@ -35,6 +36,7 @@ const rootReducers = combineReducers({
   pendingComplains: pendingComplains,
   resolvedComplains: resolvedComplains,
   pastBookingRequests: pastBookingRequests,
+  activeHostel: activeHostel,
   presentBookingRequests: presentBookingRequests,
   searchPersonResults: searchPersonResults,
   searchResidentResult: searchResidentResult,

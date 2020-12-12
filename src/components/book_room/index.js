@@ -14,6 +14,7 @@ class BookRoom extends React.Component {
       fromTime: '',
       endDate: '',
       endTime: '',
+      loading: false,
       visitors: [''],
       relatives: [''],
       proof: [],
@@ -123,9 +124,12 @@ class BookRoom extends React.Component {
       )
       formData.append(`visitors${index}`, this.state.proof[index], 'hey.png')
     })
+    this.setState({
+      loading: true,
+    })
     this.props.bookRoom(
       formData,
-      this.props.who_am_i.hostel,
+      this.props.activeHostel,
       this.successCallBack,
       this.errCallBack
     )
@@ -135,6 +139,7 @@ class BookRoom extends React.Component {
       success: true,
       error: false,
       message: res.statusText,
+      loading: false,
     })
   }
 
@@ -143,6 +148,7 @@ class BookRoom extends React.Component {
       error: true,
       success: false,
       message: err,
+      loading: false,
     })
   }
   handleSelectPicture = async (e, i) => {
@@ -162,6 +168,7 @@ class BookRoom extends React.Component {
     }
   }
   render() {
+    const {loading} = this.state
     return (
       <Grid.Column width={12} floated='left'>
         {this.state.error && (
@@ -206,7 +213,7 @@ class BookRoom extends React.Component {
             />
           </Form.Field>
           <Form.Field>
-            <Button primary type='submit' onClick={this.handleSubmit}>
+            <Button primary type='submit' onClick={this.handleSubmit} loading={loading}>
               Submit
             </Button>
           </Form.Field>
@@ -235,6 +242,12 @@ function dataURLtoFile(dataurl, filename) {
   return new File([u8arr], filename, { type: mime })
 }
 
+function mapStateToProps(state) {
+  return {
+    activeHostel: state.activeHostel
+  }
+}
+
 const mapDispatchToProps = (dispatch) => {
   return {
     bookRoom: (data, residence, successCallBack, errCallBack) => {
@@ -243,4 +256,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(BookRoom)
+export default connect(mapStateToProps, mapDispatchToProps)(BookRoom)

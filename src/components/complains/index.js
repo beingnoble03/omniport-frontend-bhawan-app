@@ -13,12 +13,12 @@ class Complains extends React.Component {
     activePage: 1,
   }
   componentDidMount() {
-    this.props.getComplains(complainsUrl(this.props.who_am_i.hostel))
+    this.props.getComplains(complainsUrl(this.props.activeHostel))
   }
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage })
     this.props.getComplains(
-      `${complainsUrl(this.props.who_am_i.hostel)}?page=${activePage}`
+      `${complainsUrl(this.props.activeHostel)}?page=${activePage}`
     )
   }
   render() {
@@ -28,7 +28,7 @@ class Complains extends React.Component {
     return (
       <React.Fragment>
           <Header as='h3'>My Complains</Header>
-          <Table celled>
+          <Table unstackable celled>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>ID</Table.HeaderCell>
@@ -73,6 +73,7 @@ class Complains extends React.Component {
 function mapStateToProps(state) {
   return {
     complains: state.complains,
+    activePage: state.activePage
   }
 }
 

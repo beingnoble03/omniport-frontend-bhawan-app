@@ -18,7 +18,7 @@ class MyProfile extends React.Component {
   state = { activeItem: 'upcoming' };
   componentDidMount() {
     this.props.setNavigation('Profile');
-    this.props.getComplains(complainsUrl(this.props.who_am_i.hostel));
+    this.props.getComplains(complainsUrl(this.props.activeHostel));
   } 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
   render() {
@@ -60,6 +60,7 @@ class MyProfile extends React.Component {
 function mapStateToProps(state) {
   return {
     complains: state.complains,
+    activeHostel: state.activeHostel
   };
 }
 

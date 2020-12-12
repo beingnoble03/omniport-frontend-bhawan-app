@@ -1,11 +1,11 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 import { Card, Icon, } from 'semantic-ui-react'
 
 import './index.css'
 
-export default class MyInfo extends React.Component {
+class MyInfo extends React.Component {
 
   handleRedirect = () => {
     if(this.props.who_am_i.isStudent ) {
@@ -14,7 +14,10 @@ export default class MyInfo extends React.Component {
   };
 
   render() {
-    const { who_am_i } = this.props
+    const { who_am_i,
+            constants,
+            activeHostel
+          } = this.props
     return (
         <Card>
           <Card.Content>
@@ -24,14 +27,22 @@ export default class MyInfo extends React.Component {
               </Card.Content>
               <Card.Description styleName='font_color' onClick={this.handleRedirect}>
                 <Icon name='home' size='small' />
-                {who_am_i.hostel}
+                {constants.hostels[this.props.activeHostel]}
               </Card.Description>
               <Card.Description styleName='font_color' onClick={this.handleRedirect}>
                 <Icon name='hotel' size='small'/>
-                {who_am_i.roomNumber}
+                {constants.hostels[this.props.activeHostel]}
               </Card.Description>
           </Card.Content>
         </Card>
     )
   }
 }
+function mapStateToProps(state) {
+  return {
+    activeHostel: state.activeHostel,
+  };
+}
+
+
+export default connect(mapStateToProps, null)(MyInfo);

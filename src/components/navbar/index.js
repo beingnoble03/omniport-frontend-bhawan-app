@@ -1,10 +1,18 @@
 import React, { Component, lazy } from 'react'
+import { connect } from "react-redux"
 
-import { Header, Menu, Button, Icon } from 'semantic-ui-react'
+import { Header,
+         Menu,
+         Button,
+         Icon,
+         Dropdown
+        } from 'semantic-ui-react'
 
 import navCss from './index.css'
 import blocks from '../../css/app.css'
 import hamburger from './hamburger.css'
+
+import { setActiveHostel } from "../../actions/set-active-hostel"
 
 const MenuBar = lazy(() => import("../menubar/index"))
 
@@ -24,7 +32,7 @@ const hamburgerDefaultOptions = [
   'hamburger--squeeze'
 ]
 
-export default class Nav extends Component {
+class Nav extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -32,7 +40,9 @@ export default class Nav extends Component {
       activeSubGroup: 'facauth',
       sideBarVisibility: false,
       isMobile: false,
-      width: 0
+      defaultHostel: '',
+      width: 0,
+      hostel: ""
     }
   }
 
@@ -98,20 +108,43 @@ export default class Nav extends Component {
     this.props.history.push(url)
   }
 
+  handleChange = (event, { name, value }) => {
+    if (this.state.hasOwnProperty(name)) {
+      this.setState({ [name]: value });
+    }
+    this.props.changeActiveHostel(value)
+  }
+
   render() {
-    const { 
+    const {
       activeItem,
       activeSubGroup,
       sideBarVisibility,
       isMobile
       } = this.state
-
+    const { who_am_i, constants, activeHostel } = this.props
+    let options = []
+    for (var i = 0; i < who_am_i.hostel.length; i++ ) {
+      options.push({
+        key: i,
+        text: constants.hostels[who_am_i.hostel[i]],
+        value: who_am_i.hostel[i]
+      })
+    }
     return (
       <React.Fragment>
         <Menu secondary styleName='navCss.upper_menu'>
           <Menu.Item>
             <Header>
-              {this.props.constants.hostels[this.props.who_am_i.hostel]}
+            <Dropdown
+              name='hostel'
+              selection
+              options={options}
+              onChange={this.handleChange}
+              defaultValue={activeHostel}
+              // styleName='field-width'
+            />
+              {/* {this.props.constants.hostels[activeHostel]} */}
             </Header>
           </Menu.Item>
           {this.props.who_am_i.isStudent ? isMobile ? (
@@ -281,3 +314,19 @@ export default class Nav extends Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    activeHostel: state.activeHostel,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setActiveHostel: (hostelCode) => {
+      dispatch(setActiveHostel(hostelCode));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Nav);

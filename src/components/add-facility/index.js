@@ -50,7 +50,7 @@ class Facility extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getFacilities(facilitiesUrl(this.props.who_am_i.hostel));
+    this.props.getFacilities(facilitiesUrl(this.props.activeHostel));
   }
 
   fileChange = async (e) => {
@@ -98,7 +98,7 @@ class Facility extends React.Component {
     }
     formData.append('displayPicture', displayImage);
     this.props.addFacility(
-      facilitiesUrl(this.props.who_am_i.hostel),
+      facilitiesUrl(this.props.activeHostel),
       formData,
       this.successCallBack,
       this.errCallBack
@@ -138,7 +138,7 @@ class Facility extends React.Component {
       <div key={i}>
         <Form.Group>
           <Form.Field>
-            <label>Description</label>
+            <label>Timings Description</label>
             <Input
               value={description || ''}
               onChange={(event) => this.handleDescriptionsChange(i, event)}
@@ -230,6 +230,8 @@ class Facility extends React.Component {
       success: true,
       error: false,
       message: res.statusText,
+      name: '',
+      information: '',
     });
   };
 
@@ -272,7 +274,7 @@ class Facility extends React.Component {
           {this.state.success && (
             <Message positive>{this.state.message}</Message>
           )}
-          <Header as='h2'>XYZ</Header>
+          <Header as='h2'>Add new facility</Header>
           <Grid divided='vertically'>
             <Grid.Row columns={2}>
               <Grid.Column>
@@ -280,6 +282,7 @@ class Facility extends React.Component {
                   <label>Image:</label>
                   <input
                     type='file'
+                    accept='image/*'
                     onChange={this.handleSelectPicture}
                     name='uploadedFile'
                   />
@@ -288,7 +291,6 @@ class Facility extends React.Component {
               <Grid.Column>
                 <Container>
                   <div>
-                    <Header as='h5'>Add Information</Header>
                     <Form>
                       <Form.Field>
                         <label>Name</label>
@@ -300,6 +302,7 @@ class Facility extends React.Component {
                       </Form.Field>
                       <TextArea
                         name='information'
+                        label='Description'
                         value={information}
                         onChange={this.handleChange}
                         placeholder='Tell us more'
@@ -315,7 +318,7 @@ class Facility extends React.Component {
                         />
                       </Form.Field>
                       <Form.Group>
-                        <Form.Button onClick={this.submitData}>
+                        <Form.Button onClick={this.submitData} primary>
                           Save Changes
                         </Form.Button>
                       </Form.Group>
@@ -354,6 +357,7 @@ function dataURLtoFile(dataurl, filename) {
 function mapStateToProps(state) {
   return {
     facilities: state.facilities,
+    activeHostel: state.activeHostel
   };
 }
 

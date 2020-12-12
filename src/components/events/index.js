@@ -35,7 +35,7 @@ class Events extends React.Component {
 
   componentDidMount() {
     this.props.setNavigation('Events')
-    this.props.getEvents(eventsUrl(this.props.who_am_i.hostel))
+    this.props.getEvents(eventsUrl(this.props.activeHostel))
     this.resize();
   }
 
@@ -77,6 +77,7 @@ function mapStateToProps(state) {
   return {
     events: state.events,
     mappedEvents: mappedEvents,
+    activeHostel: state.activeHostel
   }
 }
 const mapDispatchToProps = (dispatch) => {

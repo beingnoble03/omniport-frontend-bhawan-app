@@ -13,7 +13,7 @@ import main from './index.css'
 class UpcomingBookings extends React.Component {
   componentDidMount () {
     this.props.getRoomBookings(
-      bookingsUrl(this.props.who_am_i.hostel, 'False')
+      bookingsUrl(this.props.activeHostel, 'False')
     )
   }
   render () {
@@ -27,7 +27,7 @@ class UpcomingBookings extends React.Component {
                 <Card.Content styleName='blocks.card-border'>
                   <Header as='h4' styleName='blocks.zero-bottom-margin main.large main.black'>
                     {
-                      this.props.constants.hostels[this.props.who_am_i.hostel]
+                      constants.hostels[this.props.activeHostel]
                     }{' '}
                     Room
                   </Header>
@@ -82,7 +82,8 @@ class UpcomingBookings extends React.Component {
 }
 function mapStateToProps (state) {
   return {
-    bookingRequests: state.bookingRequests
+    bookingRequests: state.bookingRequests,
+    activeHostel: state.activeHostel
   }
 }
 

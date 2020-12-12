@@ -27,7 +27,8 @@ class RegisterStudent extends React.Component {
       selected: '',
       enrollmentNo: '',
       name: '',
-      roomNo: ''
+      roomNo: '',
+      loading: false,
     }
     this.delayedCallback = _.debounce(this.ajaxCall, 300)
   }
@@ -76,7 +77,7 @@ class RegisterStudent extends React.Component {
         name: data.value.fullName
       })
     this.props.searchResident(
-      residentSearchUrl(this.props.who_am_i.hostel, data.value.roles[0].data.enrolmentNumber),
+      residentSearchUrl(this.props.activeHostel, data.value.roles[0].data.enrolmentNumber),
       this.searchResidentSuccessCallBack
     )
   }
@@ -90,6 +91,7 @@ class RegisterStudent extends React.Component {
   residentSuccessCallBack = (res) => {
     this.setState({
       errMessage: '',
+      loading: false,
       successMessage : 'Student Registered'
     })
   }
@@ -98,6 +100,7 @@ class RegisterStudent extends React.Component {
     this.setState({
       errMessage: 'Failed to register student',
       successMessage: '',
+      loading: false,
     })
   }
 
@@ -107,9 +110,12 @@ class RegisterStudent extends React.Component {
       "person" : selected.id,
       "room_number" : roomNo
     }
+    this.setState({
+      loading: true
+    })
     this.props.addResident(
       data,
-      residentUrl(this.props.who_am_i.hostel),
+      residentUrl(this.props.activeHostel),
       this.residentSuccessCallBack,
       this.residentErrCallBack
     )
@@ -213,7 +219,8 @@ class RegisterStudent extends React.Component {
 function mapStateToProps(state) {
   return {
     searchPersonResults: state.searchPersonResults,
-    searchResidentResult: state.searchResidentResult
+    searchResidentResult: state.searchResidentResult,
+    activeHostel: state.activeHostel
   }
 }
 

@@ -45,6 +45,14 @@
     border-radius: 4px !important;
   }
 
+.warning {
+    margin-left: 13px;
+}
+
+.plus-icon {
+    margin-left: 10px;
+}
+
 .top-margin {
     margin-top: 50px;
   }

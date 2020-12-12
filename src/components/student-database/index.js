@@ -24,7 +24,7 @@ class StudentDatabase extends Component {
 
   componentDidMount() {
     this.props.getResidents(
-      `${residentUrl(this.props.who_am_i.hostel)}?is_student=true`,
+      `${residentUrl(this.props.activeHostel)}?is_student=true`,
       this.successCallBack,
       this.errCallBack
     )
@@ -47,7 +47,7 @@ class StudentDatabase extends Component {
     }
 
     this.props.getResidents(
-      `${residentUrl(this.props.who_am_i.hostel)}${filter}`,
+      `${residentUrl(this.props.activeHostel)}${filter}`,
       this.successCallBack,
       this.errCallBack
     )
@@ -60,7 +60,7 @@ class StudentDatabase extends Component {
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage })
     this.props.getResidents(
-      `${residentUrl(this.props.who_am_i.hostel)}?page=${activePage}`,
+      `${residentUrl(this.props.activeHostel)}?page=${activePage}`,
       this.successCallBack,
       this.errCallBack
     )
@@ -108,7 +108,7 @@ class StudentDatabase extends Component {
           options={branchOptions}
           selection
         />
-          <Table celled>
+          <Table unstackable celled>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Name</Table.HeaderCell>
@@ -150,6 +150,7 @@ class StudentDatabase extends Component {
 function mapStateToProps(state) {
   return {
     residents: state.residents,
+    activeHostel: state.activeHostel
   }
 }
 

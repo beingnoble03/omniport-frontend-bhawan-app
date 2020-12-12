@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import { Container, Card, Image, Header, Button } from 'semantic-ui-react'
+import { Container, Card, Image, Header, Icon } from 'semantic-ui-react'
 
 import './index.css'
 
@@ -17,7 +17,7 @@ class Authorities extends React.Component {
     }
   }
   componentDidMount() {
-    this.props.getAllAuthorities(this.props.who_am_i.hostel)
+    this.props.getAllAuthorities(this.props.activeHostel)
   }
 
   increaseCount = () => {
@@ -42,7 +42,9 @@ class Authorities extends React.Component {
           Authorities
           {!who_am_i.isStudent && (
             <Link to='/bhawan_app/create-authority'>
-            <Button styleName='active-button'>Add new Admin</Button>
+              <span styleName="plus-icon">
+                <Icon name="plus" color="blue" size="small"/>
+              </span>
           </Link>
           )}
         </h2>
@@ -94,7 +96,7 @@ class Authorities extends React.Component {
                     </Card>
                   )
               })
-            : 'Your Bhawan admins have not added the authorities as yet'}
+            : <h5 styleName="warning">Your Bhawan admins have not added the authorities as yet</h5>}
         </Card.Group>
         {authorities.length > this.state.max_length ? (
           <div onClick={this.increaseCount}>See more</div>
@@ -107,6 +109,7 @@ class Authorities extends React.Component {
 function mapStateToProps(state) {
   return {
     authorities: state.authorities,
+    activeHostel: state.activeHostel
   }
 }
 

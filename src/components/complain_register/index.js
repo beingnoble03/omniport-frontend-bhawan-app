@@ -27,6 +27,7 @@ class ComplainRegister extends React.Component {
     this.state = {
       complain: '',
       category: '',
+      loading: false,
       success: false,
       error: false,
       message: '',
@@ -36,7 +37,7 @@ class ComplainRegister extends React.Component {
 
   componentDidMount() {
     this.props.setNavigation('Register a Complain');
-    this.props.getComplains(complainsUrl(this.props.who_am_i.hostel));
+    this.props.getComplains(complainsUrl(this.props.activeHostel));
   }
 
   handleChange = (event, { name, value }) => {
@@ -48,7 +49,7 @@ class ComplainRegister extends React.Component {
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage });
     this.props.getComplains(
-      `${complainsUrl(this.props.who_am_i.hostel)}?page=${activePage}`
+      `${complainsUrl(this.props.activeHostel)}?page=${activePage}`
     );
   };
 
@@ -57,9 +58,12 @@ class ComplainRegister extends React.Component {
       complaintType: this.state.category,
       description: this.state.complain,
     };
+    this.setState({
+      loading: true,
+    })
     this.props.addComplaint(
       data,
-      this.props.who_am_i.hostel,
+      this.props.activeHostel,
       this.successCallBack,
       this.errCallBack
     );
@@ -70,11 +74,11 @@ class ComplainRegister extends React.Component {
       success: true,
       error: false,
       message: res.statusText,
+      loading: false,
       convenientTime: '',
       complain: '',
-      category: '',
     });
-    this.props.getComplains(complainsUrl(this.props.who_am_i.hostel));
+    this.props.getComplains(complainsUrl(this.props.activeHostel));
   };
 
   errCallBack = (err) => {
@@ -82,11 +86,12 @@ class ComplainRegister extends React.Component {
       error: true,
       success: false,
       message: err,
+      loading: false,
     });
   };
   render() {
     const { complains, constants } = this.props;
-    const { activePage } = this.state;
+    const { activePage, loading } = this.state;
     let options = [];
     for (var i in constants.complaint_types) {
       options.push({
@@ -139,13 +144,14 @@ class ComplainRegister extends React.Component {
             styleName='button'
             onClick={this.handleSubmit}
             width={3}
+            loading={loading}
           >
             Submit
           </Button>
         </Form>
         <React.Fragment>
           <Header as='h3'>My Complains</Header>
-          <Table celled>
+          <Table unstackable celled>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>ID</Table.HeaderCell>
@@ -199,6 +205,7 @@ class ComplainRegister extends React.Component {
 function mapStateToProps(state) {
   return {
     complains: state.complains,
+    activeHostel: state.activeHostel
   };
 }
 

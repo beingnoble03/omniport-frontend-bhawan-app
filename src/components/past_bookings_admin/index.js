@@ -17,7 +17,7 @@ export default class BookingRequests extends Component {
         </Header>
 
         <Container>
-          <Table celled>
+          <Table unstackable celled>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Header</Table.HeaderCell>

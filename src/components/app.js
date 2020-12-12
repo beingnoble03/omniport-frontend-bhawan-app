@@ -5,6 +5,7 @@ import { Switch, Route, Link } from "react-router-dom";
 import { Grid, Button } from "semantic-ui-react";
 
 import { AppHeader, AppFooter, Loading } from "formula_one";
+
 const Nav = lazy(() => import("./navbar/index"));
 const BookRoom = lazy(() => import("./book_room/index"));
 const ComplainRegister = lazy(() => import("./complain_register/index"));
@@ -24,6 +25,7 @@ const AddFacility = lazy(() => import("./add-facility/index"));
 
 import { whoami } from "../actions/who_am_i";
 import { getConstants } from "../actions/get-constants";
+import { setActiveHostel } from "../actions/set-active-hostel";
 import { constantsUrl } from "../urls";
 
 import main from "formula_one/src/css/app.css";
@@ -38,12 +40,12 @@ const creators = [
   },
   {
     name: "Ritvik Jain",
-    role: "Backend developer",
+    role: "Backend Developer",
     link: "https://github.com/ritvikjain99/",
   },
   {
     name: "Suyash Salampuria",
-    role: "Frontend developer",
+    role: "Frontend Developer",
     link: "https://github.com/SuyashSalampuria/",
   },
   {
@@ -78,21 +80,31 @@ class App extends React.Component {
     }
   }
 
+  changeActiveHostel = (hostelCode) => {
+    this.props.setActiveHostel(hostelCode)
+  }
+  setDefaultHostel = (hostel) => {
+    if(hostel && hostel.length>0) {
+      this.changeActiveHostel(hostel[0]);
+    }
+  }
   componentDidMount() {
     this.resize()
-    this.props.whoami(this.successCallBack, this.errCallBack)
     this.props.getConstants(
       constantsUrl(),
       this.consSuccessCallBack,
       this.errCallBack
     )
   }
+
   setNavigation = (activeNav) => {
     this.setState({
       activeNav,
     })
   }
+
   successCallBack = (res) => {
+    this.setDefaultHostel(res.data.hostel);
     this.setState({
       success: true,
       error: false,
@@ -103,6 +115,7 @@ class App extends React.Component {
   };
 
   consSuccessCallBack = (res) => {
+    this.props.whoami(this.successCallBack, this.errCallBack)
     this.setState({
       success: true,
       error: false,
@@ -111,6 +124,7 @@ class App extends React.Component {
       consLoading: false,
     });
   };
+
   errCallBack = (err) => {
     this.setState({
       error: true,
@@ -122,9 +136,9 @@ class App extends React.Component {
   };
 
   render() {
-    const { match, who_am_i, constants } = this.props;
+    const { match, who_am_i, constants, activeHostel } = this.props;
     if (this.state.loaded && this.state.consLoaded) {
-      if (who_am_i.hostel) {
+      if (activeHostel!="") {
         return (
           <div ref={this.divRef} styleName="blocks.app-wrapper">
             <Suspense fallback={<Loading />}>
@@ -145,6 +159,7 @@ class App extends React.Component {
                         who_am_i={who_am_i}
                         constants={constants}
                         activeNav={this.state.activeNav}
+                        changeActiveHostel={this.changeActiveHostel}
                         {...props}
                       />
                     );
@@ -183,6 +198,7 @@ class App extends React.Component {
                       render={(props) => (
                         <Facility
                           who_am_i={who_am_i}
+                          constants={constants}
                           setNavigation={this.setNavigation}
                           {...props}
                         />
@@ -305,7 +321,7 @@ class App extends React.Component {
                         exact
                         render={(props) => (
                           <Grid.Column width={3} floated="right" styleName="blocks.side-info">
-                            <MyInfo {...props} who_am_i={who_am_i} />
+                            <MyInfo {...props} who_am_i={who_am_i} constants={constants}/>
                             <EventsCard {...props} who_am_i={who_am_i} />
                             {who_am_i.isAdmin && who_am_i.isStudent ? (
                               <Link to="/bhawan_app/admin_complain">
@@ -322,7 +338,7 @@ class App extends React.Component {
                         exact
                         render={(props) => (
                           <Grid.Column width={3} floated="right" styleName="blocks.side-info">
-                            <MyInfo {...props} who_am_i={who_am_i} />
+                            <MyInfo {...props} who_am_i={who_am_i} constants={constants} />
                             <EventsCard {...props} who_am_i={who_am_i} />
                           </Grid.Column>
                         )}
@@ -333,7 +349,7 @@ class App extends React.Component {
                           exact
                           render={(props) => (
                             <Grid.Column width={3} floated="right" styleName="blocks.side-info">
-                              <MyInfo {...props} who_am_i={who_am_i} />
+                              <MyInfo {...props} who_am_i={who_am_i} constants={constants}/>
                               <EventsCard {...props} who_am_i={who_am_i} />
                             </Grid.Column>
                           )}
@@ -376,6 +392,7 @@ function mapStateToProps(state) {
   return {
     who_am_i: state.who_am_i,
     constants: state.constants,
+    activeHostel: state.activeHostel
   };
 }
 const mapDispatchToProps = (dispatch) => {
@@ -386,6 +403,9 @@ const mapDispatchToProps = (dispatch) => {
     getConstants: (url, successCallBack, errCallBack) => {
       dispatch(getConstants(url, successCallBack, errCallBack));
     },
+    setActiveHostel: (hostelCode) => {
+      dispatch(setActiveHostel(hostelCode));
+    }
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(App);

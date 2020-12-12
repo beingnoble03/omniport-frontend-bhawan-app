@@ -8,7 +8,7 @@ import {
 } from '../../actions/get-room-bookings'
 import { updateBooking } from '../../actions/book-room'
 
-import { bookingsUrl, statusBookingsUrl, specificBookingUrl } from '../../urls'
+import { statusBookingsUrl, specificBookingUrl } from '../../urls'
 
 import {
   Menu,
@@ -22,7 +22,9 @@ import {
   Message,
   Grid
 } from 'semantic-ui-react'
+
 import './index.css'
+import activeHostel from '../../reducers/active-hostel'
 
 class BookingRequests extends Component {
   state = {
@@ -43,14 +45,14 @@ class BookingRequests extends Component {
   componentDidMount() {
     this.props.getPresentRoomBookings(
       statusBookingsUrl(
-        this.props.who_am_i.hostel,
+        this.props.activeHostel,
         this.props.constants.statues.BOOKING_STATUSES.pen,
         'False'
       )
     )
     this.props.getPastRoomBookings(
       statusBookingsUrl(
-        this.props.who_am_i.hostel,
+        this.props.activeHostel,
         this.props.constants.statues.BOOKING_STATUSES.cnf,
         true
       )
@@ -80,13 +82,13 @@ class BookingRequests extends Component {
   handleItemClick = (e, { name }) => {
     this.setState({ activeItem: name, activePage: 1 })
     this.props.getPresentRoomBookings(
-      statusBookingsUrl(this.props.who_am_i.hostel, name, 'False')
+      statusBookingsUrl(this.props.activeHostel, name, 'False')
     )
   }
   handlePastItemClick = (e, { name }) => {
     this.setState({ activePastItem: name, activeAprPage: 1 })
     this.props.getPastRoomBookings(
-      statusBookingsUrl(this.props.who_am_i.hostel, name, true)
+      statusBookingsUrl(this.props.activeHostel, name, true)
     )
   }
 
@@ -95,7 +97,7 @@ class BookingRequests extends Component {
       status: 'rej'
     }
     this.props.updateBooking(
-      specificBookingUrl(this.props.who_am_i.hostel, this.state.activeId),
+      specificBookingUrl(this.props.activeHostel, this.state.activeId),
       body,
       this.successCallBack,
       this.errCallBack
@@ -116,7 +118,7 @@ class BookingRequests extends Component {
           : 'cnf'
     }
     this.props.updateBooking(
-      specificBookingUrl(this.props.who_am_i.hostel, activeId),
+      specificBookingUrl(this.props.activeHostel, activeId),
       body,
       this.successCallBack,
       this.errCallBack
@@ -134,14 +136,14 @@ class BookingRequests extends Component {
     })
     this.props.getPresentRoomBookings(
       statusBookingsUrl(
-        this.props.who_am_i.hostel,
+        this.props.activeHostel,
         this.state.activeItem,
         'False'
       )
     )
     this.props.getPastRoomBookings(
       statusBookingsUrl(
-        this.props.who_am_i.hostel,
+        this.props.activeHostel,
         this.state.activePastItem,
         'true'
       )
@@ -174,7 +176,7 @@ class BookingRequests extends Component {
     this.setState({ activePage })
     this.props.getPresentRoomBookings(
       `${statusBookingsUrl(
-        this.props.who_am_i.hostel,
+        this.props.activeHostel,
         this.state.activeItem,
         'False'
       )}&page=${activePage}`
@@ -184,7 +186,7 @@ class BookingRequests extends Component {
     this.setState({ activeAprPage: activePage })
     this.props.getPresentRoomBookings(
       `${statusBookingsUrl(
-        this.props.who_am_i.hostel,
+        this.props.activeHostel,
         this.state.activePastItem,
         true
       )}&page=${activePage}`
@@ -256,7 +258,7 @@ class BookingRequests extends Component {
               Confirmed
             </Menu.Item>
           </Menu>
-          <Table celled>
+          <Table unstackable celled>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>ID</Table.HeaderCell>
@@ -383,7 +385,7 @@ class BookingRequests extends Component {
                   Rejected
                 </Menu.Item>
               </Menu>
-              <Table celled>
+              <Table unstackable celled>
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>ID</Table.HeaderCell>
@@ -525,6 +527,7 @@ function mapStateToProps(state) {
     bookingRequests: state.bookingRequests,
     presentBookingRequests: state.presentBookingRequests,
     pastBookingRequests: state.pastBookingRequests,
+    activeHostel: state.activeHostel
     // bookingOptions: state.bookingOptions
   }
 }
