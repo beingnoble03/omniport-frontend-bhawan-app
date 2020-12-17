@@ -15,3 +15,9 @@
 .cursor {
     cursor: pointer;
 }
+.info-icon{
+    margin-left: 10px;
+}
+.table-height {
+    min-height: 280px;
+}

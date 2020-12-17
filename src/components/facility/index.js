@@ -306,8 +306,8 @@ class Facility extends React.Component {
             <React.Fragment>
               <Header as='h2'>{facility.name}</Header>
               <Grid divided='vertically'>
-                <Grid.Row columns={2}>
-                  <Grid.Column>
+                <Grid.Row columns={3}>
+                  <Grid.Column width={4}>
                     <Image
                       src={
                         facility.displayPicture ||
@@ -316,7 +316,7 @@ class Facility extends React.Component {
                       size='medium'
                     />
                   </Grid.Column>
-                  <Grid.Column>
+                  <Grid.Column width={8}>
                     <Container>
                       {this.state.editMode ? (
                         <div>

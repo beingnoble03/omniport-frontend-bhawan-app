@@ -163,7 +163,12 @@ class EditAuthorities extends React.Component {
                       options={options}
                     />
                   </Form.Field>
-                  <Button size='medium' onClick={this.handleSubmit} width={3}>
+                  <Button
+                   size='medium'
+                   onClick={this.handleSubmit}
+                   primary
+                   width={3}
+                  >
                     Submit
                   </Button>
                 </Form>

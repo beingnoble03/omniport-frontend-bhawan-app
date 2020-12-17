@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { toast } from 'react-semantic-toasts'
 
 import {
   Button,
@@ -28,7 +29,14 @@ class RegisterStudent extends React.Component {
       enrollmentNo: '',
       name: '',
       roomNo: '',
+      emailAddress : '',
+      currentYear : '',
+      department : '',
+      phoneNumber : '',
+      dateOfBirth :'',
+      displayPicture: '',
       loading: false,
+      registerLoading: false,
     }
     this.delayedCallback = _.debounce(this.ajaxCall, 300)
   }
@@ -67,14 +75,22 @@ class RegisterStudent extends React.Component {
 
   searchResidentSuccessCallBack = (res) => {
     this.setState({
-      roomNo: res.roomNumber
+      loading: false,
+      roomNo: res.roomNumber,
+      emailAddress : res.emailAddress,
+      currentYear : res.currentYear,
+      department : res.department,
+      phoneNumber : res.phoneNumber,
+      dateOfBirth : res.dateOfBirth,
+      displayPicture : res.displayPicture
     })
   }
 
   onChange = (e, data) => {
     this.setState(
       { selected: data.value,
-        name: data.value.fullName
+        name: data.value.fullName,
+        loading: true,
       })
     this.props.searchResident(
       residentSearchUrl(this.props.activeHostel, data.value.roles[0].data.enrolmentNumber),
@@ -91,8 +107,23 @@ class RegisterStudent extends React.Component {
   residentSuccessCallBack = (res) => {
     this.setState({
       errMessage: '',
-      loading: false,
+      registerLoading: false,
+      roomNo: '',
+      emailAddress : '',
+      currentYear : '',
+      department : '',
+      phoneNumber : '',
+      dateOfBirth : '',
+      displayPicture : '',
       successMessage : 'Student Registered'
+    })
+    toast({
+      type: 'success',
+      title: 'Student Registered SuccesFully',
+      description: 'Event added succesfully',
+      animation: 'fade up',
+      icon: 'smile outline',
+      time: 4000,
     })
   }
 
@@ -108,10 +139,10 @@ class RegisterStudent extends React.Component {
     const { selected, roomNo } = this.state
     let data = {
       "person" : selected.id,
-      "room_number" : roomNo
+      "room_number" : roomNo,
     }
     this.setState({
-      loading: true
+      registerLoading: true
     })
     this.props.addResident(
       data,
@@ -126,14 +157,25 @@ class RegisterStudent extends React.Component {
       selected,
       options,
       name,
-      roomNo
+      roomNo,
+      emailAddress,
+      currentYear,
+      department,
+      phoneNumber,
+      dateOfBirth,
+      displayPicture,
+      loading
     } = this.state
     return (
       <Grid container centered>
         <Grid.Column width={6} centered>
           <Container centered>
             <Image
-              src='https://react.semantic-ui.com/images/wireframe/square-image.png'
+              // src='https://react.semantic-ui.com/images/wireframe/square-image.png'
+              src={displayPicture?
+                    displayPicture:
+                    "https://react.semantic-ui.com/images/wireframe/square-image.png"
+                  }
               size='tiny'
               circular
               centered
@@ -158,13 +200,20 @@ class RegisterStudent extends React.Component {
                   <Input
                     name='name'
                     value={name}
+                    disabled
+                    loading={loading}
                   />
                 </Form.Field>
               </Form.Group>
               <Form.Group>
                 <Form.Field>
-                  <label>Block</label>
-                  <Input placeholder='Search...' />
+                  <label>Email Address</label>
+                  <Input
+                    name="emailAddress"
+                    value={emailAddress}
+                    disabled
+                    loading={loading}
+                  />
                 </Form.Field>
                 <Form.Field>
                   <label>Room No.</label>
@@ -172,33 +221,48 @@ class RegisterStudent extends React.Component {
                     name='roomNo'
                     value={roomNo}
                     onChange={this.fieldsChange}
+                    loading={loading}
                   />
                 </Form.Field>
               </Form.Group>
               <Form.Group>
                 <Form.Field>
-                  <label>Fathers Name</label>
-                  <Input placeholder='Search...' />
+                    <label>Current Year</label>
+                    <Input
+                      name="currentYear"
+                      value={currentYear}
+                      disabled
+                      loading={loading}
+                    />
                 </Form.Field>
                 <Form.Field>
-                  <label>Home Contact No</label>
-                  <Input placeholder='Search...' />
-                </Form.Field>
-              </Form.Group>
-              <Form.Group fluid>
-                <Form.Field fluid>
-                  <label>Permanent Address</label>
-                  <Input fluid placeholder='Search...' />
+                  <label>Department</label>
+                  <Input
+                    name="department"
+                    value={department}
+                    disabled
+                    loading={loading}
+                  />
                 </Form.Field>
               </Form.Group>
               <Form.Group>
                 <Form.Field>
-                  <label>Email Id</label>
-                  <Input placeholder='Search...' />
+                    <label>Phone Number</label>
+                    <Input
+                      name="phoneNumber"
+                      value={phoneNumber}
+                      disabled
+                      loading={loading}
+                    />
                 </Form.Field>
                 <Form.Field>
-                  <label>Contact No</label>
-                  <Input placeholder='Search...' />
+                  <label>Date of Birth</label>
+                  <Input
+                    name="dateOfBirth"
+                    value={dateOfBirth}
+                    disabled
+                    loading={loading}
+                  />
                 </Form.Field>
               </Form.Group>
               <Button

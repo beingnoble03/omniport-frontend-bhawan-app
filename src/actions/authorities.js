@@ -2,18 +2,22 @@ import axios from 'axios'
 
 import { getCookie } from 'formula_one/src/utils'
 
-export const getAllAuthorities = (residence) => {
+export const getAllAuthorities = (residence, successCallBack, errCallBack) => {
   return (dispatch) => {
     axios({
       method: 'get',
       url: `/api/bhawan_app/${residence}/admin/`
     })
       .then((response) => {
-        let item = response.data.results
+        successCallBack(response)
+        let item = response.data
         dispatch({
           type: 'GET_ALL_AUTHORITIES',
           payload: item
         })
+      })
+      .catch((err) => {
+        errCallBack(err)
       })
   }
 }

@@ -10,6 +10,8 @@ import {
   Input,
   Icon,
   Message,
+  Image,
+  Button,
 } from 'semantic-ui-react';
 import { TimeInput } from 'semantic-ui-calendar-react';
 import { getFacilities, addFacility } from '../../actions/facilities';
@@ -40,12 +42,14 @@ class Facility extends React.Component {
       displayImage: null,
       validImage: true,
       imageCrop: true,
+      imageURL: '',
       imageSrc: null,
       pixel: null,
       crop: {
         aspect: 1,
       },
       open: false,
+      loading: false
     };
   }
 
@@ -97,6 +101,9 @@ class Facility extends React.Component {
       }
     }
     formData.append('displayPicture', displayImage);
+    this.setState({
+      loading: true
+    })
     this.props.addFacility(
       facilitiesUrl(this.props.activeHostel),
       formData,
@@ -232,6 +239,7 @@ class Facility extends React.Component {
       message: res.statusText,
       name: '',
       information: '',
+      loading: false
     });
   };
 
@@ -240,6 +248,7 @@ class Facility extends React.Component {
       error: true,
       success: false,
       message: err,
+      loading: false
     });
   };
 
@@ -256,15 +265,16 @@ class Facility extends React.Component {
 
       this.setState({
         displayImage: displayImageFile,
+        imageURL: displayImage
       });
     }
   };
   render() {
-    const { information, name } = this.state;
+    const { information, name, loading, imageURL } = this.state;
     const { facilities } = this.props;
     return (
       <Grid.Column width={12} floated='left'>
-        <Grid.Column>
+        <Grid.Column width={3}>
           {this.state.error && (
             <Message warning>
               <Icon name='warning' />
@@ -276,19 +286,15 @@ class Facility extends React.Component {
           )}
           <Header as='h2'>Add new facility</Header>
           <Grid divided='vertically'>
-            <Grid.Row columns={2}>
-              <Grid.Column>
-                <Form.Field required>
-                  <label>Image:</label>
-                  <input
-                    type='file'
-                    accept='image/*'
-                    onChange={this.handleSelectPicture}
-                    name='uploadedFile'
-                  />
-                </Form.Field>
+            <Grid.Row columns={3}>
+              <Grid.Column width={4}>
+                {(imageURL && imageURL!="") &&
+                    <Image
+                    src={imageURL}
+                    />
+                  }
               </Grid.Column>
-              <Grid.Column>
+              <Grid.Column width={8}>
                 <Container>
                   <div>
                     <Form>
@@ -300,14 +306,25 @@ class Facility extends React.Component {
                           onChange={this.handleChange}
                         />
                       </Form.Field>
-                      <TextArea
-                        name='information'
-                        label='Description'
-                        value={information}
-                        onChange={this.handleChange}
-                        placeholder='Tell us more'
-                        fluid
-                      />
+                      <Form.Field>
+                        <label>Information</label>
+                        <TextArea
+                          name='information'
+                          value={information}
+                          onChange={this.handleChange}
+                          placeholder='Tell us more about the facility'
+                          fluid
+                        />
+                      </Form.Field>
+                      <Form.Field required>
+                        <label>Image:</label>
+                        <input
+                          type='file'
+                          accept='image/*'
+                          onChange={this.handleSelectPicture}
+                          name='uploadedFile'
+                        />
+                      </Form.Field>
                       {this.createForm()}
                       <Form.Field>
                         <Icon
@@ -318,9 +335,9 @@ class Facility extends React.Component {
                         />
                       </Form.Field>
                       <Form.Group>
-                        <Form.Button onClick={this.submitData} primary>
+                        <Button onClick={this.submitData} loading={loading} primary>
                           Save Changes
-                        </Form.Button>
+                        </Button>
                       </Form.Group>
                     </Form>
                   </div>

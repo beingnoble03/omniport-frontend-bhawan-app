@@ -122,7 +122,7 @@ class BookRoom extends React.Component {
           relation: this.state.relatives[index],
         })
       )
-      formData.append(`visitors${index}`, this.state.proof[index], 'hey.png')
+      formData.append(`visitors_${index}`, this.state.proof[index], 'hey.png')
     })
     this.setState({
       loading: true,
@@ -140,6 +140,14 @@ class BookRoom extends React.Component {
       error: false,
       message: res.statusText,
       loading: false,
+      fromDate: '',
+      fromTime: '',
+      endDate: '',
+      endTime: '',
+      visitors: [''],
+      relatives: [''],
+      proof: [],
+      proofUrl: []
     })
   }
 

@@ -1,9 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Card, Container, Button, Icon } from 'semantic-ui-react';
+
+import { Card, Container, Button, Icon, Segment } from 'semantic-ui-react';
+
+import { Loading } from "formula_one"
+
 import { getFacilities } from '../../actions/facilities';
 import { setActiveFacility } from '../../actions/set-active-facility'
+
 import { facilitiesUrl } from '../../urls';
 import facilities from './index.css';
 import blocks from '../../css/app.css';
@@ -14,11 +19,37 @@ class Facilities extends React.Component {
     super(props);
     this.state = {
       max_length: 6,
+      loading: true,
     };
   }
   componentDidMount() {
     this.props.setNavigation('Home');
-    this.props.getFacilities(facilitiesUrl(this.props.activeHostel));
+    this.props.getFacilities(facilitiesUrl(this.props.activeHostel),
+      this.successCallBack,
+      this.errCallBack
+    );
+  }
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.activeHostel !== this.props.activeHostel){
+      this.props.getFacilities(facilitiesUrl(this.props.activeHostel),
+      this.successCallBack,
+      this.errCallBack
+      );
+    }
+  }
+
+
+  successCallBack = (res) => {
+    this.setState({
+      loading: false,
+    })
+  }
+
+  errCallBack = (err) => {
+    this.setState({
+      loading: false,
+    })
   }
 
   increaseCount = () => {
@@ -35,7 +66,7 @@ class Facilities extends React.Component {
 
   render() {
     const { facilities, who_am_i } = this.props;
-
+    const { loading } = this.state
     return (
       <Container>
         <h2>
@@ -48,39 +79,50 @@ class Facilities extends React.Component {
           </Link>
           }
         </h2>
-        <Card.Group itemsPerRow={3} stackable>
-          {facilities.length > 0
-            ? facilities.map((facility, index) => {
-                if (index < this.state.max_length)
-                  return (
-                      <Card
-                        styleName='blocks.card-border blocks.color-black'
-                        onClick={() => this.handleRedirect(facility.id)}
-                        fluid
-                      >
-                        <Card.Content>
-                          <div styleName='facilities.facility_card'>
-                            <div>{facility.name}</div>
-                            <div>
-                              {facility.timings.map((timing) => {
-                                return (
+        {!loading?
+          (
+            <React.Fragment>
+              <Card.Group itemsPerRow={3} stackable>
+                {facilities.length > 0
+                  ? facilities.map((facility, index) => {
+                      if (index < this.state.max_length)
+                        return (
+                            <Card
+                              styleName='blocks.card-border blocks.color-black'
+                              onClick={() => this.handleRedirect(facility.id)}
+                              fluid
+                            >
+                              <Card.Content>
+                                <div styleName='facilities.facility_card'>
+                                  <div>{facility.name}</div>
                                   <div>
-                                    {timing.start.substring(0, 5)} -{' '}
-                                    {timing.end.substring(0, 5)}
+                                    {facility.timings.map((timing) => {
+                                      return (
+                                        <div>
+                                          {timing.start.substring(0, 5)} -{' '}
+                                          {timing.end.substring(0, 5)}
+                                        </div>
+                                      );
+                                    })}
                                   </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </Card.Content>
-                      </Card>
-                  );
-              })
-            : <h5 styleName="facilities.warning">Your Bhawan admins have not added the facilities</h5>}
-        </Card.Group>
-        {facilities.length > this.state.max_length ? (
-          <div onClick={this.increaseCount}>See more</div>
-        ) : null}
+                                </div>
+                              </Card.Content>
+                            </Card>
+                        );
+                    })
+                  : <div styleName="facilities.warning">
+                      <Segment>Your Bhawan Admins have not added the facilities</Segment>
+                    </div>}
+              </Card.Group>
+              {facilities.length > this.state.max_length ? (
+                <div onClick={this.increaseCount}>See more</div>
+              ) : null}
+            </React.Fragment>
+          ):
+          (
+            <Loading />
+          )
+        }
       </Container>
     );
   }
@@ -93,8 +135,8 @@ function mapStateToProps(state) {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    getFacilities: (url) => {
-      dispatch(getFacilities(url));
+    getFacilities: (url, successCallBack, errCallBack) => {
+      dispatch(getFacilities(url, successCallBack, errCallBack));
     },
     setActiveFacility: (id) => {
       dispatch(setActiveFacility(id));

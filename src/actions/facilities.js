@@ -2,18 +2,22 @@ import axios from 'axios'
 
 import { getCookie } from 'formula_one/src/utils'
 
-export const getFacilities = (url) => {
+export const getFacilities = (url, successCallBack, errCallBack) => {
   return (dispatch) => {
     axios({
       method: 'get',
       url: url
     })
       .then((response) => {
-        let item = response.data.results
+        successCallBack(response)
+        let item = response.data
         dispatch({
           type: 'GET_FACILITIES',
           payload: item
         })
+      })
+      .catch((err) => {
+        errCallBack(err)
       })
   }
 }

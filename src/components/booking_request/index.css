@@ -10,10 +10,15 @@
 }
 .forward {
     color: #00661D;
+    cursor: pointer;
 }
 .reject {
     color: #D33E20;
+    cursor: pointer;
 }
 .cursor {
     cursor: pointer;
+}
+.table-height {
+    min-height: 280px;
 }

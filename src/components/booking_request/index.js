@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import { Loading } from "formula_one"
+
 import {
   getRoomBookings,
   getPresentRoomBookings,
@@ -20,7 +22,8 @@ import {
   Icon,
   Pagination,
   Message,
-  Grid
+  Grid,
+  Segment
 } from 'semantic-ui-react'
 
 import './index.css'
@@ -39,7 +42,9 @@ class BookingRequests extends Component {
     activeBooking: null,
     activePastItem: 'confirmed',
     activePage: 1,
-    openReject: false
+    openReject: false,
+    presentLoading: true,
+    pastLoading: true
   }
 
   componentDidMount() {
@@ -48,14 +53,19 @@ class BookingRequests extends Component {
         this.props.activeHostel,
         this.props.constants.statues.BOOKING_STATUSES.pen,
         'False'
-      )
+      ),
+      this.presentSuccessCallBack,
+      this.presentErrCallBack
+
     )
     this.props.getPastRoomBookings(
       statusBookingsUrl(
         this.props.activeHostel,
         this.props.constants.statues.BOOKING_STATUSES.cnf,
         true
-      )
+      ),
+      this.pastSuccessCallBack,
+      this.pastErrCallBack
     )
   }
 
@@ -80,15 +90,19 @@ class BookingRequests extends Component {
   }
 
   handleItemClick = (e, { name }) => {
-    this.setState({ activeItem: name, activePage: 1 })
+    this.setState({ activeItem: name, activePage: 1, presentLoading: true })
     this.props.getPresentRoomBookings(
-      statusBookingsUrl(this.props.activeHostel, name, 'False')
+      statusBookingsUrl(this.props.activeHostel, name, 'False'),
+      this.presentSuccessCallBack,
+      this.presentErrCallBack
     )
   }
   handlePastItemClick = (e, { name }) => {
-    this.setState({ activePastItem: name, activeAprPage: 1 })
+    this.setState({ activePastItem: name, activeAprPage: 1, pastLoading: true })
     this.props.getPastRoomBookings(
-      statusBookingsUrl(this.props.activeHostel, name, true)
+      statusBookingsUrl(this.props.activeHostel, name, true),
+      this.pastSuccessCallBack,
+      this.pastErrCallBack
     )
   }
 
@@ -132,7 +146,9 @@ class BookingRequests extends Component {
     this.setState({
       success: true,
       error: false,
-      message: res.statusText
+      message: res.statusText,
+      presentLoading: true,
+      pastLoading: true
     })
     this.props.getPresentRoomBookings(
       statusBookingsUrl(
@@ -158,6 +174,30 @@ class BookingRequests extends Component {
     })
   }
 
+  presentSuccessCallBack = (res) => {
+    this.setState({
+      presentLoading: false
+    })
+  }
+
+  presentErrCallBack = (err) => {
+    this.setState({
+      presentLoading: false
+    })
+  }
+
+  pastSuccessCallBack = (res) => {
+    this.setState({
+      pastLoading: false
+    })
+  }
+
+  pastErrCallBack = (err) => {
+    this.setState({
+      pastLoading: false
+    })
+  }
+
   togglePastIcon = () => {
     const pastBookingIcon = this.state.pastBookingIcon
     pastBookingIcon === 'angle down'
@@ -173,7 +213,7 @@ class BookingRequests extends Component {
     })
   }
   handlePaginationChange = (e, { activePage }) => {
-    this.setState({ activePage })
+    this.setState({ activePage, presentLoading: true })
     this.props.getPresentRoomBookings(
       `${statusBookingsUrl(
         this.props.activeHostel,
@@ -183,8 +223,8 @@ class BookingRequests extends Component {
     )
   }
   handlePastPaginationChange = (e, { activePage }) => {
-    this.setState({ activeAprPage: activePage })
-    this.props.getPresentRoomBookings(
+    this.setState({ activeAprPage: activePage, pastLoading: true })
+    this.props.getPastRoomBookings(
       `${statusBookingsUrl(
         this.props.activeHostel,
         this.state.activePastItem,
@@ -202,6 +242,8 @@ class BookingRequests extends Component {
       detailOpen,
       activePage,
       activeAprPage,
+      presentLoading,
+      pastLoading
     } = this.state
     const {
       bookingRequests,
@@ -220,151 +262,175 @@ class BookingRequests extends Component {
         {this.state.success && <Message positive>{this.state.message}</Message>}
         <Container>
           <Header as='h4'>Room Bookings</Header>
-          <Menu compact icon='labeled'>
-            <Menu.Item
-              name='pending'
-              active={activeItem === 'pending'}
-              onClick={this.handleItemClick}
-              color='blue'
-              styleName='booking-menu'
-            >
-              Pending
-            </Menu.Item>
-            <Menu.Item
-              name='forwarded'
-              active={activeItem === 'forwarded'}
-              onClick={this.handleItemClick}
-              color='blue'
-              styleName='booking-menu'
-            >
-              Forwarded
-            </Menu.Item>
-            <Menu.Item
-              name='approved'
-              active={activeItem === 'approved'}
-              onClick={this.handleItemClick}
-              color='blue'
-              styleName='booking-menu'
-            >
-              Approved
-            </Menu.Item>
-            <Menu.Item
-              name='confirmed'
-              active={activeItem === 'confirmed'}
-              onClick={this.handleItemClick}
-              color='blue'
-              styleName='booking-menu'
-            >
-              Confirmed
-            </Menu.Item>
-          </Menu>
-          <Table unstackable celled>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>ID</Table.HeaderCell>
-                <Table.HeaderCell>Applicant Name</Table.HeaderCell>
-                <Table.HeaderCell>Applicant Room</Table.HeaderCell>
-                <Table.HeaderCell>No of Visitors</Table.HeaderCell>
-                <Table.HeaderCell>From </Table.HeaderCell>
-                <Table.HeaderCell>To</Table.HeaderCell>
-                <Table.HeaderCell>Contact Number</Table.HeaderCell>
-                {activeItem !== 'confirmed' && (
-                  <React.Fragment>
-                    <Table.HeaderCell>
-                      {activeItem == 'pending'
-                        ? 'Forward Request'
-                        : activeItem == 'forwarded'
-                        ? 'Approve Request'
-                        : 'Confirm Request'}
-                    </Table.HeaderCell>
-                    <Table.HeaderCell>Reject request</Table.HeaderCell>
-                  </React.Fragment>
-                )}
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {presentBookingRequests.results &&
-              presentBookingRequests.results.length > 0
-                ? presentBookingRequests.results.map((request, index) => {
-                    return (
-                      <Table.Row>
-                        <Table.Cell
-                          onClick={() => this.setActiveBooking(request)}
-                        >
-                          {5 * (activePage - 1) + index + 1}
-                        </Table.Cell>
-                        <Table.Cell
-                          onClick={() => this.setActiveBooking(request)}
-                        >
-                          {request.bookedBy}
-                        </Table.Cell>
-                        <Table.Cell
-                          onClick={() => this.setActiveBooking(request)}
-                        >
-                          {request.bookedByRoomNo}
-                        </Table.Cell>
-                        <Table.Cell
-                          onClick={() => this.setActiveBooking(request)}
-                        >
-                          {request.visitor.length}
-                        </Table.Cell>
-                        <Table.Cell
-                          onClick={() => this.setActiveBooking(request)}
-                        >
-                          {request.requestedFrom}
-                        </Table.Cell>
-                        <Table.Cell
-                          onClick={() => this.setActiveBooking(request)}
-                        >
-                          {request.requestedTill}
-                        </Table.Cell>
-                        <Table.Cell
-                          onClick={() => this.setActiveBooking(request)}
-                        >
-                          {request.phoneNumber}
-                        </Table.Cell>
-                        {activeItem !== 'confirmed' && (
-                          <React.Fragment>
-                            <Table.Cell
-                              onClick={() => this.openModal(request.id)}
-                            >
-                              <span styleName='forward'>
-                                {activeItem == 'pending'
-                                  ? 'Forward'
-                                  : activeItem == 'forwarded'
-                                  ? 'Approve'
-                                  : activeItem == 'approved'
-                                  ? 'Confirm'
-                                  : 'Confirmed'}
-                              </span>
-                            </Table.Cell>
-                            <Table.Cell
-                              onClick={() => this.openRejectModal(request.id)}
-                            >
-                              <span styleName='reject'>Reject</span>
-                            </Table.Cell>
-                          </React.Fragment>
-                        )}
-                      </Table.Row>
+          {!presentLoading?
+            (
+              <React.Fragment>
+                <Menu compact icon='labeled'>
+                  <Menu.Item
+                    name='pending'
+                    active={activeItem === 'pending'}
+                    onClick={this.handleItemClick}
+                    color='blue'
+                    styleName='booking-menu'
+                  >
+                    Pending
+                  </Menu.Item>
+                  <Menu.Item
+                    name='forwarded'
+                    active={activeItem === 'forwarded'}
+                    onClick={this.handleItemClick}
+                    color='blue'
+                    styleName='booking-menu'
+                  >
+                    Forwarded
+                  </Menu.Item>
+                  <Menu.Item
+                    name='approved'
+                    active={activeItem === 'approved'}
+                    onClick={this.handleItemClick}
+                    color='blue'
+                    styleName='booking-menu'
+                  >
+                    Approved
+                  </Menu.Item>
+                  <Menu.Item
+                    name='confirmed'
+                    active={activeItem === 'confirmed'}
+                    onClick={this.handleItemClick}
+                    color='blue'
+                    styleName='booking-menu'
+                  >
+                    Confirmed
+                  </Menu.Item>
+                </Menu>
+                {(presentBookingRequests.results &&
+                    presentBookingRequests.results.length > 0) ?
+                    (
+                      <React.Fragment>
+                        <div styleName="table-height">
+                        <Table
+                  unstackable
+                  celled
+                >
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.HeaderCell>ID</Table.HeaderCell>
+                      <Table.HeaderCell>Applicant Name</Table.HeaderCell>
+                      <Table.HeaderCell>Applicant Room</Table.HeaderCell>
+                      <Table.HeaderCell>No of Visitors</Table.HeaderCell>
+                      <Table.HeaderCell>From </Table.HeaderCell>
+                      <Table.HeaderCell>To</Table.HeaderCell>
+                      <Table.HeaderCell>Contact Number</Table.HeaderCell>
+                      {activeItem !== 'confirmed' && (
+                        <React.Fragment>
+                          <Table.HeaderCell>
+                            {activeItem == 'pending'
+                              ? 'Forward Request'
+                              : activeItem == 'forwarded'
+                              ? 'Approve Request'
+                              : 'Confirm Request'}
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>Reject request</Table.HeaderCell>
+                        </React.Fragment>
+                      )}
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>
+                    {presentBookingRequests.results &&
+                    presentBookingRequests.results.length > 0
+                      ? presentBookingRequests.results.map((request, index) => {
+                          return (
+                            <Table.Row>
+                              <Table.Cell
+                                onClick={() => this.setActiveBooking(request)}
+                              >
+                                {5 * (activePage - 1) + index + 1}
+                              </Table.Cell>
+                              <Table.Cell
+                                onClick={() => this.setActiveBooking(request)}
+                              >
+                                {request.bookedBy}
+                              </Table.Cell>
+                              <Table.Cell
+                                onClick={() => this.setActiveBooking(request)}
+                              >
+                                {request.bookedByRoomNo}
+                              </Table.Cell>
+                              <Table.Cell
+                                onClick={() => this.setActiveBooking(request)}
+                              >
+                                {request.visitor.length}
+                              </Table.Cell>
+                              <Table.Cell
+                                onClick={() => this.setActiveBooking(request)}
+                              >
+                                {request.requestedFrom}
+                              </Table.Cell>
+                              <Table.Cell
+                                onClick={() => this.setActiveBooking(request)}
+                              >
+                                {request.requestedTill}
+                              </Table.Cell>
+                              <Table.Cell
+                                onClick={() => this.setActiveBooking(request)}
+                              >
+                                {request.phoneNumber}
+                              </Table.Cell>
+                              {activeItem !== 'confirmed' && (
+                                <React.Fragment>
+                                  <Table.Cell
+                                    onClick={() => this.openModal(request.id)}
+                                  >
+                                    <span styleName='forward'>
+                                      {activeItem == 'pending'
+                                        ? 'Forward'
+                                        : activeItem == 'forwarded'
+                                        ? 'Approve'
+                                        : activeItem == 'approved'
+                                        ? 'Confirm'
+                                        : 'Confirmed'}
+                                    </span>
+                                  </Table.Cell>
+                                  <Table.Cell
+                                    onClick={() => this.openRejectModal(request.id)}
+                                  >
+                                    <span styleName='reject'>Reject</span>
+                                  </Table.Cell>
+                                </React.Fragment>
+                              )}
+                            </Table.Row>
+                          )
+                        })
+                      : null}
+                  </Table.Body>
+                </Table>
+                </div>
+                {presentBookingRequests.count > 5 ? (
+                  <Pagination
+                    activePage={activePage}
+                    onPageChange={this.handlePaginationChange}
+                    totalPages={Math.ceil(presentBookingRequests.count / 5)}
+                  />
+                ) : null}
+                      </React.Fragment>
+                    ):
+                    (
+                        <Segment>No Booking Found</Segment>
                     )
-                  })
-                : null}
-            </Table.Body>
-          </Table>
-          {presentBookingRequests.count > 5 ? (
-            <Pagination
-              activePage={activePage}
-              onPageChange={this.handlePaginationChange}
-              totalPages={Math.ceil(presentBookingRequests.count / 5)}
-            />
-          ) : null}
+                }
+                    </React.Fragment>
+                  ):
+                  (
+                    <Loading/>
+                  )
+                }
 
           <Header as='h4'>
             Past Bookings
             <Icon name={pastBookingIcon} onClick={this.togglePastIcon} className='cursor'/>
           </Header>
           {pastBookingIcon === 'angle up' && (
-            <Table.Cell>
+            <React.Fragment>
               <Menu compact icon='labeled'>
                 <Menu.Item
                   name='confirmed'
@@ -385,49 +451,60 @@ class BookingRequests extends Component {
                   Rejected
                 </Menu.Item>
               </Menu>
-              <Table unstackable celled>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>ID</Table.HeaderCell>
-                    <Table.HeaderCell>Applicant Name</Table.HeaderCell>
-                    <Table.HeaderCell>Applicant Room</Table.HeaderCell>
-                    <Table.HeaderCell>No of Visitors</Table.HeaderCell>
-                    <Table.HeaderCell>From </Table.HeaderCell>
-                    <Table.HeaderCell>To</Table.HeaderCell>
-                    <Table.HeaderCell>Contact Number</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-
-                {pastBookingRequests.results &&
-                pastBookingRequests.results.length > 0
-                  ? pastBookingRequests.results.map((request, index) => {
-                      return (
-                        <Table.Row
-                          onClick={() => this.setActiveBooking(request)}
-                        >
-                          <Table.Cell>
-                            {5 * (activeAprPage - 1) + index + 1}
-                          </Table.Cell>
-                          <Table.Cell>{request.bookedBy}</Table.Cell>
-                          <Table.Cell>{request.bookedByRoomNo}</Table.Cell>
-                          <Table.Cell>{request.visitor.length}</Table.Cell>
-                          <Table.Cell>{request.requestedFrom}</Table.Cell>
-                          <Table.Cell>{request.requestedTill}</Table.Cell>
-                          <Table.Cell>{request.phoneNumber}</Table.Cell>
-                        </Table.Row>
-                      )
-                    })
-                  : null}
-              </Table>
-            </Table.Cell>
+                {(pastBookingRequests.results &&
+                  pastBookingRequests.results.length > 0)?
+                    (
+                      <React.Fragment>
+                        <div styleName="table-height">
+                          <Table unstackable celled>
+                            <Table.Header>
+                              <Table.Row>
+                                <Table.HeaderCell>ID</Table.HeaderCell>
+                                <Table.HeaderCell>Applicant Name</Table.HeaderCell>
+                                <Table.HeaderCell>Applicant Room</Table.HeaderCell>
+                                <Table.HeaderCell>No of Visitors</Table.HeaderCell>
+                                <Table.HeaderCell>From </Table.HeaderCell>
+                                <Table.HeaderCell>To</Table.HeaderCell>
+                                <Table.HeaderCell>Contact Number</Table.HeaderCell>
+                              </Table.Row>
+                            </Table.Header>
+                            {pastBookingRequests.results &&
+                            pastBookingRequests.results.length > 0
+                              ? pastBookingRequests.results.map((request, index) => {
+                                  return (
+                                    <Table.Row
+                                      onClick={() => this.setActiveBooking(request)}
+                                    >
+                                      <Table.Cell>
+                                        {5 * (activeAprPage - 1) + index + 1}
+                                      </Table.Cell>
+                                      <Table.Cell>{request.bookedBy}</Table.Cell>
+                                      <Table.Cell>{request.bookedByRoomNo}</Table.Cell>
+                                      <Table.Cell>{request.visitor.length}</Table.Cell>
+                                      <Table.Cell>{request.requestedFrom}</Table.Cell>
+                                      <Table.Cell>{request.requestedTill}</Table.Cell>
+                                      <Table.Cell>{request.phoneNumber}</Table.Cell>
+                                    </Table.Row>
+                                  )
+                                })
+                              : null}
+                          </Table>
+                          </div>
+                          {pastBookingRequests.count > 5 ? (
+                        <Pagination
+                          activePage={activeAprPage}
+                          onPageChange={this.handlePastPaginationChange}
+                          totalPages={Math.ceil(pastBookingRequests.count / 5)}
+                        />
+                      ) : null}
+                      </React.Fragment>
+                    ):
+                    (
+                      <Segment>No Booking Request Found</Segment>
+                    )
+                }
+            </React.Fragment>
           )}
-          {pastBookingRequests.count > 5 ? (
-            <Pagination
-              activePage={activeAprPage}
-              onPageChange={this.handlePastPaginationChange}
-              totalPages={Math.ceil(pastBookingRequests.count / 5)}
-            />
-          ) : null}
         </Container>
 
         <Modal size='mini' open={openReject} onClose={this.close}>
@@ -537,11 +614,11 @@ const mapDispatchToProps = (dispatch) => {
     getRoomBookings: (residence) => {
       dispatch(getRoomBookings(residence))
     },
-    getPresentRoomBookings: (url) => {
-      dispatch(getPresentRoomBookings(url))
+    getPresentRoomBookings: (url, successCallBack, errCallBack) => {
+      dispatch(getPresentRoomBookings(url, successCallBack, errCallBack))
     },
-    getPastRoomBookings: (url) => {
-      dispatch(getPastRoomBookings(url))
+    getPastRoomBookings: (url, successCallBack, errCallBack) => {
+      dispatch(getPastRoomBookings(url, successCallBack, errCallBack))
     },
     updateBooking: (id, data, residence, successCallBack, errCallBack) => {
       dispatch(

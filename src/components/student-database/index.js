@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { Header, Table, Container, Dropdown, Pagination } from 'semantic-ui-react'
+import { Header, Table, Container, Dropdown, Pagination, Segment } from 'semantic-ui-react'
+
+import { Loading } from "formula_one";
 
 import { residentUrl } from '../../urls'
 
@@ -19,7 +21,8 @@ class StudentDatabase extends Component {
   state = {
     activePage: 1,
     filterYear: "",
-    filterBranch: ''
+    filterBranch: '',
+    loading: true,
   };
 
   componentDidMount() {
@@ -46,6 +49,10 @@ class StudentDatabase extends Component {
       if(this.state.filterYear!="") filter = `${filter}year=${this.state.filterYear}&`
     }
 
+    this.setState({
+      loading: true,
+    })
+
     this.props.getResidents(
       `${residentUrl(this.props.activeHostel)}${filter}`,
       this.successCallBack,
@@ -58,22 +65,31 @@ class StudentDatabase extends Component {
   }
 
   handlePaginationChange = (e, { activePage }) => {
-    this.setState({ activePage })
+    this.setState({ activePage, loading: false })
     this.props.getResidents(
       `${residentUrl(this.props.activeHostel)}?page=${activePage}`,
       this.successCallBack,
       this.errCallBack
     )
   }
-  successCallBack() {}
+  successCallBack = () => {
+    this.setState({
+      loading: false
+    })
+  }
 
-  errCallBack() {}
+  errCallBack = () => {
+    this.setState({
+      loading: false,
+    })
+  }
 
   render() {
     const {
       activePage,
       filterBranch,
-      filterYear
+      filterYear,
+      loading
     } = this.state
     const { residents, constants } = this.props
 
@@ -108,39 +124,70 @@ class StudentDatabase extends Component {
           options={branchOptions}
           selection
         />
-          <Table unstackable celled>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell>Enrollment No</Table.HeaderCell>
-                <Table.HeaderCell>Room No.</Table.HeaderCell>
-                <Table.HeaderCell>Contact No.</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {residents.results && residents.results.length > 0
-                ? residents.results.map((resident, index) => {
-                    return (
-                      <Table.Row key={index}>
-                        <Table.Cell>
-                          {5 * (activePage - 1) + index + 1}
-                        </Table.Cell>
-                        <Table.Cell>{resident.residentName}</Table.Cell>
-                        <Table.Cell>ABC</Table.Cell>
-                        <Table.Cell>{resident.roomNumber}</Table.Cell>
+        {!loading?
+          (
+            <React.Fragment>
+              {(residents.results && residents.results.length > 0)
+                ?
+                (
+                  <React.Fragment>
+                    <Table unstackable celled>
+                    <Table.Header>
+                      <Table.Row>
+                      <Table.HeaderCell>Enrollment No</Table.HeaderCell>
+                        <Table.HeaderCell>Name</Table.HeaderCell>
+                        <Table.HeaderCell>Room No.</Table.HeaderCell>
+                        <Table.HeaderCell>Contact No.</Table.HeaderCell>
+                        <Table.HeaderCell>Email Address</Table.HeaderCell>
+                        <Table.HeaderCell>Current Year</Table.HeaderCell>
+                        <Table.HeaderCell>Department</Table.HeaderCell>
+                        <Table.HeaderCell>Date Of Birth</Table.HeaderCell>
+                        <Table.HeaderCell>Display Picture</Table.HeaderCell>
                       </Table.Row>
-                    )
-                  })
-                : null}
-            </Table.Body>
-          </Table>
-          {residents.count > 5 ? (
-            <Pagination
-              activePage={activePage}
-              onPageChange={this.handlePaginationChange}
-              totalPages={Math.ceil(residents.count / 5)}
-            />
-          ) : null}
+                    </Table.Header>
+                    <Table.Body>
+                      {residents.results && residents.results.length > 0
+                        ? residents.results.map((resident, index) => {
+                            return (
+                              <Table.Row key={index}>
+                                <Table.Cell>{resident.enrolmentNumber}</Table.Cell>
+                                <Table.Cell>{resident.residentName}</Table.Cell>
+                                <Table.Cell>{resident.roomNumber}</Table.Cell>
+                                <Table.Cell>{resident.phoneNumber}</Table.Cell>
+                                <Table.Cell>{resident.emailAddress}</Table.Cell>
+                                <Table.Cell>{resident.currentYear}</Table.Cell>
+                                <Table.Cell>{resident.department}</Table.Cell>
+                                <Table.Cell>{resident.dateOfBirth}</Table.Cell>
+                                <Table.Cell>
+                                  <a href={resident.displayPicture} download={resident.residentName}>
+                                    Download
+                                  </a>
+                                </Table.Cell>
+                              </Table.Row>
+                            )
+                          })
+                        : null}
+                    </Table.Body>
+                  </Table>
+                  {residents.count > 5 ? (
+                    <Pagination
+                      activePage={activePage}
+                      onPageChange={this.handlePaginationChange}
+                      totalPages={Math.ceil(residents.count / 5)}
+                    />
+                  ) : null}
+                  </React.Fragment>
+                ):
+                (
+                  <Segment>No Student with applied filters found</Segment>
+                )
+              }
+            </React.Fragment>
+          ):
+          (
+            <Loading />
+          )
+        }
         </Container>
       </div>
     );

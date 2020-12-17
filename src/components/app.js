@@ -1,27 +1,28 @@
-import React, { Suspense, lazy } from "react";
-import { connect } from "react-redux";
-import { Switch, Route, Link } from "react-router-dom";
+import React, { Suspense, lazy } from "react"
+import { connect } from "react-redux"
+import { Switch, Route, Link } from "react-router-dom"
 
-import { Grid, Button } from "semantic-ui-react";
+import { Grid, Button, Segment } from "semantic-ui-react"
 
-import { AppHeader, AppFooter, Loading } from "formula_one";
+import { AppHeader, AppFooter, Loading } from "formula_one"
 
-const Nav = lazy(() => import("./navbar/index"));
-const BookRoom = lazy(() => import("./book_room/index"));
-const ComplainRegister = lazy(() => import("./complain_register/index"));
-const Authorities = lazy(() => import("./authorities/index"));
-const Facilities = lazy(() => import("./facilities/index"));
-const MyInfo = lazy(() => import("./my_info/index"));
-const StudentDatabase = lazy(() => import("./student-database/index"));
-const EventsCard = lazy(() => import("./events-card/index"));
-const Events = lazy(() => import("./events/index"));
-const AdminComplains = lazy(() => import("./admin-complaints/index"));
-const BookingRequests = lazy(() => import("./booking_request/index"));
-const Facility = lazy(() => import("./facility/index"));
-const MyProfile = lazy(() => import("./my_profile/index"));
-const AdminAuthorities = lazy(() => import("./admin_authorities/index"));
-const EditAuthorities = lazy(() => import("./edit-authorities/index"));
-const AddFacility = lazy(() => import("./add-facility/index"));
+const Nav = lazy(() => import("./navbar/index"))
+const BookRoom = lazy(() => import("./book_room/index"))
+const ComplainRegister = lazy(() => import("./complain_register/index"))
+const Authorities = lazy(() => import("./authorities/index"))
+const Facilities = lazy(() => import("./facilities/index"))
+const MyInfo = lazy(() => import("./my_info/index"))
+const StudentDatabase = lazy(() => import("./student-database/index"))
+const EventsCard = lazy(() => import("./events-card/index"))
+const Events = lazy(() => import("./events/index"))
+const AdminComplains = lazy(() => import("./admin-complaints/index"))
+const BookingRequests = lazy(() => import("./booking_request/index"))
+const Facility = lazy(() => import("./facility/index"))
+const MyProfile = lazy(() => import("./my_profile/index"))
+const AdminAuthorities = lazy(() => import("./admin_authorities/index"))
+const EditAuthorities = lazy(() => import("./edit-authorities/index"))
+const AddFacility = lazy(() => import("./add-facility/index"))
+const RegisterStudent = lazy(() => import("./register_student/index"))
 
 import { whoami } from "../actions/who_am_i";
 import { getConstants } from "../actions/get-constants";
@@ -30,7 +31,6 @@ import { constantsUrl } from "../urls";
 
 import main from "formula_one/src/css/app.css";
 import blocks from "../css/app.css";
-import RegisterStudent from "./register_student/index";
 
 const creators = [
   {
@@ -39,14 +39,14 @@ const creators = [
     link: "https://github.com/algomaster99/",
   },
   {
+    name: "Suyash Salampuria",
+    role: "Fullstack Developer",
+    link: "https://github.com/SuyashSalampuria/",
+  },
+  {
     name: "Ritvik Jain",
     role: "Backend Developer",
     link: "https://github.com/ritvikjain99/",
-  },
-  {
-    name: "Suyash Salampuria",
-    role: "Frontend Developer",
-    link: "https://github.com/SuyashSalampuria/",
   },
   {
     name: "Kashish Jagyasi",
@@ -81,13 +81,16 @@ class App extends React.Component {
   }
 
   changeActiveHostel = (hostelCode) => {
+    this.props.history.push('/bhawan_app/')
     this.props.setActiveHostel(hostelCode)
   }
+
   setDefaultHostel = (hostel) => {
     if(hostel && hostel.length>0) {
-      this.changeActiveHostel(hostel[0]);
+      this.props.setActiveHostel(hostel[0]);
     }
   }
+
   componentDidMount() {
     this.resize()
     this.props.getConstants(
@@ -321,8 +324,8 @@ class App extends React.Component {
                         exact
                         render={(props) => (
                           <Grid.Column width={3} floated="right" styleName="blocks.side-info">
-                            <MyInfo {...props} who_am_i={who_am_i} constants={constants}/>
-                            <EventsCard {...props} who_am_i={who_am_i} />
+                            <MyInfo {...props} who_am_i={who_am_i} constants={constants} activeHostel={activeHostel}/>
+                            <EventsCard {...props} who_am_i={who_am_i} activeHostel={activeHostel} />
                             {who_am_i.isAdmin && who_am_i.isStudent ? (
                               <Link to="/bhawan_app/admin_complain">
                                 <Button fluid styleName="blocks.student-complains">
@@ -338,8 +341,8 @@ class App extends React.Component {
                         exact
                         render={(props) => (
                           <Grid.Column width={3} floated="right" styleName="blocks.side-info">
-                            <MyInfo {...props} who_am_i={who_am_i} constants={constants} />
-                            <EventsCard {...props} who_am_i={who_am_i} />
+                            <MyInfo {...props} who_am_i={who_am_i} constants={constants} activeHostel={activeHostel} />
+                            <EventsCard {...props} who_am_i={who_am_i} activeHostel={activeHostel} />
                           </Grid.Column>
                         )}
                       />
@@ -349,8 +352,8 @@ class App extends React.Component {
                           exact
                           render={(props) => (
                             <Grid.Column width={3} floated="right" styleName="blocks.side-info">
-                              <MyInfo {...props} who_am_i={who_am_i} constants={constants}/>
-                              <EventsCard {...props} who_am_i={who_am_i} />
+                              <MyInfo {...props} who_am_i={who_am_i} constants={constants} activeHostel={activeHostel}/>
+                              <EventsCard {...props} who_am_i={who_am_i} activeHostel={activeHostel} />
                             </Grid.Column>
                           )}
                         />
@@ -360,7 +363,7 @@ class App extends React.Component {
                         exact
                         render={(props) => (
                           <Grid.Column width={3} floated="right" styleName="blocks.side-info">
-                            <EventsCard {...props} who_am_i={who_am_i} />
+                            <EventsCard {...props} who_am_i={who_am_i} activeHostel={activeHostel} />
                           </Grid.Column>
                         )}
                       />
@@ -375,7 +378,7 @@ class App extends React.Component {
       } else {
         return (
           <React.Fragment>
-            Contact IMG. Your Bhawan details have not been filled
+            <Segment>Contact your Chief Warden. Your Bhawan details have not been filled</Segment>
           </React.Fragment>
         );
       }

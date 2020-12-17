@@ -7,7 +7,7 @@ import './index.css';
 import { getEvents } from '../../actions/events';
 import { eventsUrl, eventUrl } from '../../urls';
 import { addEvent } from '../../actions/add-events';
-import moment from 'moment'
+import moment from 'moment' 
 
 class EventsCard extends React.Component {
   constructor(props) {
@@ -22,6 +22,12 @@ class EventsCard extends React.Component {
 
   componentDidMount() {
     this.props.getEvents(eventsUrl(this.props.activeHostel));
+  }
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.activeHostel !== this.props.activeHostel){
+      this.props.getEvents(eventsUrl(this.props.activeHostel));
+    }
   }
 
   handleChange = (event, { name, value }) => {
@@ -149,7 +155,7 @@ class EventsCard extends React.Component {
                       onChange={this.handleChange}
                     />
                   </Form.Field>
-                  <Button type='submit' fluid onClick={this.handleSubmit}>
+                  <Button primary type='submit' fluid onClick={this.handleSubmit}>
                     Submit
                   </Button>
                 </Form>

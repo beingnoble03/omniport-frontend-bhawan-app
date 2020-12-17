@@ -110,7 +110,10 @@ class Nav extends Component {
 
   handleChange = (event, { name, value }) => {
     if (this.state.hasOwnProperty(name)) {
-      this.setState({ [name]: value });
+      this.setState({
+        [name]: value,
+        activeSubGroup: 'facauth'
+      });
     }
     this.props.changeActiveHostel(value)
   }
@@ -135,17 +138,16 @@ class Nav extends Component {
       <React.Fragment>
         <Menu secondary styleName='navCss.upper_menu'>
           <Menu.Item>
-            <Header>
             <Dropdown
               name='hostel'
               selection
               options={options}
               onChange={this.handleChange}
               defaultValue={activeHostel}
+              simple
               // styleName='field-width'
             />
               {/* {this.props.constants.hostels[activeHostel]} */}
-            </Header>
           </Menu.Item>
           {this.props.who_am_i.isStudent ? isMobile ? (
             <Menu.Menu position='right' styleName="navCss.right-margin">

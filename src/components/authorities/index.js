@@ -2,7 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import { Container, Card, Image, Header, Icon } from 'semantic-ui-react'
+import { Loading } from "formula_one"
+
+import { Container, Card, Image, Header, Icon, Segment } from 'semantic-ui-react'
 
 import './index.css'
 
@@ -14,16 +16,43 @@ class Authorities extends React.Component {
     super(props)
     this.state = {
       max_length: 6,
+      loading: true,
     }
   }
   componentDidMount() {
-    this.props.getAllAuthorities(this.props.activeHostel)
+    this.props.getAllAuthorities(
+      this.props.activeHostel,
+      this.successCallBack,
+      this.errCallBack
+    )
+  }
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.activeHostel !== this.props.activeHostel){
+      this.props.getAllAuthorities(
+        this.props.activeHostel,
+        this.successCallBack,
+        this.errCallBack
+      )
+    }
   }
 
   increaseCount = () => {
     const max_length = this.state.max_length + 3
     this.setState({
       max_length,
+    })
+  }
+
+  successCallBack = (res) => {
+    this.setState({
+      loading: false
+    })
+  }
+
+  errCallBack =(err) => {
+    this.setState({
+      loading: false
     })
   }
 
@@ -36,6 +65,8 @@ class Authorities extends React.Component {
 
   render() {
     const { authorities, constants, who_am_i} = this.props
+    const { loading } = this.state
+
     return (
       <Container styleName='top-margin'>
         <h2>
@@ -48,7 +79,10 @@ class Authorities extends React.Component {
           </Link>
           )}
         </h2>
-        <Card.Group itemsPerRow={3} stackable>
+        {!loading?
+          (
+            <React.Fragment>
+              <Card.Group itemsPerRow={3} stackable>
           {authorities.length > 0
             ? authorities.map((authority, index) => {
                 if (index < this.state.max_length)
@@ -96,11 +130,20 @@ class Authorities extends React.Component {
                     </Card>
                   )
               })
-            : <h5 styleName="warning">Your Bhawan admins have not added the authorities as yet</h5>}
+            : <div styleName="warning">
+                <Segment>Your Bhawan admins have not added the authorities as yet</Segment>
+              </div>}
         </Card.Group>
         {authorities.length > this.state.max_length ? (
           <div onClick={this.increaseCount}>See more</div>
         ) : null}
+            </React.Fragment>
+          ):
+          (
+            <Loading />
+          )
+
+        }
       </Container>
     )
   }
@@ -115,8 +158,8 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getAllAuthorities: (residence) => {
-      dispatch(getAllAuthorities(residence))
+    getAllAuthorities: (residence, successCallBack, errCallBack) => {
+      dispatch(getAllAuthorities(residence, successCallBack, errCallBack))
     },
     setActiveAuthority: (id) => {
       dispatch(setActiveAuthority(id))

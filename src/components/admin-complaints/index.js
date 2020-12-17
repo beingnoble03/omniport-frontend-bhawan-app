@@ -11,8 +11,12 @@ import {
   Icon,
   Dropdown,
   Pagination,
+  Popup,
+  Segment,
 } from 'semantic-ui-react'
 import moment from 'moment'
+
+import { Loading } from "formula_one"
 
 import {
   getPendingComplains,
@@ -58,6 +62,8 @@ class AdminComplains extends Component {
     success: false,
     err: false,
     message: '',
+    pendingLoading: true,
+    pastLoading: true,
     type: '',
     activeId: null,
     activeItem: 'apr',
@@ -71,13 +77,17 @@ class AdminComplains extends Component {
   componentDidMount() {
     this.props.setNavigation('Student Complains')
     this.props.getPendingComplains(
-      statusComplainsUrl(this.props.activeHostel, ['pending'])
+      statusComplainsUrl(this.props.activeHostel, ['pending']),
+      this.pendingSuccessCallBack,
+      this.pendingErrCallBack
     )
     this.props.getResolvedComplains(
       statusComplainsUrl(this.props.activeHostel, [
         'resolved',
         'unresolved',
-      ])
+      ]),
+      this.pastSuccessCallBack,
+      this.pastErrCallBack
     )
     this.props.getTimeSlots(this.props.activeHostel)
   }
@@ -154,32 +164,43 @@ class AdminComplains extends Component {
       message: '',
     })
     this.props.getPendingComplains(
-      statusComplainsUrl(this.props.activeHostel, ['pending'])
+      statusComplainsUrl(this.props.activeHostel, ['pending']),
+      this.pendingSuccessCallBack,
+      this.pendingErrCallBack
     )
     this.props.getResolvedComplains(
       statusComplainsUrl(this.props.activeHostel, [
         'resolved',
         'unresolved',
-      ])
+      ]),
+      this.resolveSuccessCallBack,
+      this.resolvedErrCallBack
     )
   }
 
-  successCallBack = (res) => {
+  pendingSuccessCallBack = (res) => {
     this.setState({
-      success: true,
-      error: false,
-      message: '',
+      pendingLoading: false
     })
   }
 
-  errCallBack = (err) => {
+  pendingErrCallBack = (err) => {
     this.setState({
-      error: true,
-      success: false,
-      message: err,
+      pendingLoading: false
     })
   }
 
+  pastSuccessCallBack = (res) => {
+    this.setState({
+      pastLoading: false
+    })
+  }
+
+  pastErrCallBack = (err) => {
+    this.setState({
+      pastLoading: false
+    })
+  }
   changeTiming = () => {
     let dayTiming = []
 
@@ -236,6 +257,9 @@ class AdminComplains extends Component {
 
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage })
+    this.setState({
+      pendingLoading: true
+    })
     this.props.getPendingComplains(
       `${statusComplainsUrl(this.props.activeHostel, [
         'PENDING',
@@ -245,11 +269,16 @@ class AdminComplains extends Component {
 
   handlePastPaginationChange = (e, { activePage }) => {
     this.setState({ activeAprPage: activePage })
+    this.setState({
+      pastLoading: true
+    })
     this.props.getResolvedComplains(
       `${statusComplainsUrl(this.props.activeHostel, [
         'RESOLVED',
         'UNRESOLVED',
-      ])}&page=${activePage}`
+      ])}&page=${activePage}`,
+      this.pastSuccessCallBack,
+      this.pastErrCallBack
     )
   }
 
@@ -265,10 +294,10 @@ class AdminComplains extends Component {
     const {
       open,
       pastComplainIcon,
-      activeItem,
       activePage,
-      activeRejPage,
       activeAprPage,
+      pendingLoading,
+      pastLoading
     } = this.state
     const { pendingComplains, resolvedComplains, constants } = this.props
     return (
@@ -276,72 +305,93 @@ class AdminComplains extends Component {
           <Grid.Column width={16}>
             <Container>
               <Header as='h4'>Student Complains</Header>
-              <Table celled unstackable>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>ID</Table.HeaderCell>
-                    <Table.HeaderCell>Complaint</Table.HeaderCell>
-                    <Table.HeaderCell>Applicant Name</Table.HeaderCell>
-                    <Table.HeaderCell>Complaint Date</Table.HeaderCell>
-                    <Table.HeaderCell>Complaint Type</Table.HeaderCell>
-                    <Table.HeaderCell>Contact Number</Table.HeaderCell>
-                    <Table.HeaderCell>Applicant Room</Table.HeaderCell>
-                    <Table.HeaderCell>
-                      Unsuccesful attempts to solve
-                    </Table.HeaderCell>
-                    <Table.HeaderCell>Mark as resolved</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {pendingComplains.results &&
-                  pendingComplains.results.length > 0
-                    ? pendingComplains.results.map((complain, index) => {
-                        return (
+              {!pendingLoading?
+                (
+                  <React.Fragment>
+                  {(pendingComplains.results &&
+                    pendingComplains.results.length >0)?
+                    (
+                      <React.Fragment>
+                      <div styleName="table-height">
+                      <Table celled unstackable>
+                        <Table.Header>
                           <Table.Row>
-                            <Table.Cell>
-                              {5 * (activePage - 1) + index + 1}
-                            </Table.Cell>
-                            <Table.Cell>{complain.description}</Table.Cell>
-                            <Table.Cell>{complain.complainant}</Table.Cell>
-                            <Table.Cell>
-                              {moment(
-                                complain.datetimeCreated.substring(0, 10),
-                                'YYYY-MM-DD'
-                              ).format('DD/MM/YY')}
-                            </Table.Cell>
-                            <Table.Cell>
-                              {
-                                constants.complaint_types[
-                                  complain.complaintType
-                                ]
-                              }
-                            </Table.Cell>
-                            <Table.Cell>{complain.phoneNumber}</Table.Cell>
-                            <Table.Cell>{complain.roomNo}</Table.Cell>
-                            <Table.Cell
-                              onClick={() =>
-                                this.increaseUnsuccesfulComplains(complain.id)
-                              }
-                            >
-                              {complain.failedAttempts}
-                              <span styleName='cursor'> + </span>
-                            </Table.Cell>
-                            <Table.Cell onClick={() => this.show(complain.id)}>
-                              <span styleName='resolve-style'>Resolve</span>
-                            </Table.Cell>
+                            <Table.HeaderCell>ID</Table.HeaderCell>
+                            <Table.HeaderCell>Complaint</Table.HeaderCell>
+                            <Table.HeaderCell>Applicant Name</Table.HeaderCell>
+                            <Table.HeaderCell>Complaint Date</Table.HeaderCell>
+                            <Table.HeaderCell>Complaint Type</Table.HeaderCell>
+                            <Table.HeaderCell>Contact Number</Table.HeaderCell>
+                            <Table.HeaderCell>Applicant Room</Table.HeaderCell>
+                            <Table.HeaderCell>
+                              Unsuccesful attempts to solve
+                            </Table.HeaderCell>
+                            <Table.HeaderCell>Mark as resolved</Table.HeaderCell>
                           </Table.Row>
-                        )
-                      })
-                    : null}
-                </Table.Body>
-              </Table>
-              {pendingComplains.count > 5 ? (
-                <Pagination
-                  activePage={activePage}
-                  onPageChange={this.handlePaginationChange}
-                  totalPages={Math.ceil(pendingComplains.count / 5)}
-                />
-              ) : null}
+                        </Table.Header>
+                        <Table.Body>
+                          {pendingComplains.results &&
+                            pendingComplains.results.length > 0
+                            ? pendingComplains.results.map((complain, index) => {
+                                return (
+                                  <Table.Row>
+                                    <Table.Cell>
+                                      {5 * (activePage - 1) + index + 1}
+                                    </Table.Cell>
+                                    <Table.Cell>{complain.description}</Table.Cell>
+                                    <Table.Cell>{complain.complainant}</Table.Cell>
+                                    <Table.Cell>
+                                      {moment(
+                                        complain.datetimeCreated.substring(0, 10),
+                                        'YYYY-MM-DD'
+                                      ).format('DD/MM/YY')}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                      {
+                                        constants.complaint_types[
+                                          complain.complaintType
+                                        ]
+                                      }
+                                    </Table.Cell>
+                                    <Table.Cell>{complain.phoneNumber}</Table.Cell>
+                                    <Table.Cell>{complain.roomNo}</Table.Cell>
+                                    <Table.Cell
+                                      onClick={() =>
+                                        this.increaseUnsuccesfulComplains(complain.id)
+                                      }
+                                    >
+                                      {complain.failedAttempts}
+                                      <span styleName='cursor'> + </span>
+                                    </Table.Cell>
+                                    <Table.Cell onClick={() => this.show(complain.id)}>
+                                      <span styleName='resolve-style'>Resolve</span>
+                                    </Table.Cell>
+                                  </Table.Row>
+                                )
+                              })
+                            : null}
+                        </Table.Body>
+                      </Table>
+                      </div>
+                      {pendingComplains.count > 5 ? (
+                        <Pagination
+                          activePage={activePage}
+                          onPageChange={this.handlePaginationChange}
+                          totalPages={Math.ceil(pendingComplains.count / 5)}
+                        />
+                      ) : null}
+                      </React.Fragment>
+                    ):
+                    (
+                      <Segment>No pending complains found</Segment>
+                    )
+                  }
+                  </React.Fragment>
+                ):
+                (
+                  < Loading />
+                )
+              }
 
               <Header as='h4'>
                 Select slot for
@@ -354,7 +404,20 @@ class AdminComplains extends Component {
                   compact
                 />
                 from
-                {/* <FormGroup> */}
+                  <span styleName="info-icon">
+                  <Popup
+                    content='Set the time to send emails automatically for this type of complain'
+                    trigger={
+                      <Icon
+                        name='info'
+                        size="small"
+                        color="blue"
+                        circular
+                        aria-label='Set the time to send emails automatically for this type of complain'
+                      />
+                    }
+                  />
+                  </span>
                   <TimeInput
                     name='from'
                     placeholder='From'
@@ -369,7 +432,6 @@ class AdminComplains extends Component {
                     iconPosition='left'
                     onChange={this.handleChange}
                   />
-                {/* </FormGroup> */}
                 <Button onClick={this.changeTiming}>Change</Button>
               </Header>
               <Header as='h4'>
@@ -378,64 +440,72 @@ class AdminComplains extends Component {
               </Header>
               {pastComplainIcon === 'angle down' && (
                 <React.Fragment>
-                  <Table celled unstackable>
-                    <Table.Header>
-                      <Table.Row>
-                        <Table.HeaderCell>ID</Table.HeaderCell>
-                        <Table.HeaderCell>Complaint</Table.HeaderCell>
-                        <Table.HeaderCell>Applicant Name</Table.HeaderCell>
-                        <Table.HeaderCell>Complaint Date</Table.HeaderCell>
-                        <Table.HeaderCell>Complaint Type</Table.HeaderCell>
-                        <Table.HeaderCell>Contact Number</Table.HeaderCell>
-                        <Table.HeaderCell>Applicant Room</Table.HeaderCell>
-                        <Table.HeaderCell>
-                          Unsuccesful attempts to solve
-                        </Table.HeaderCell>
-                        <Table.HeaderCell>Complain Status</Table.HeaderCell>
-                      </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                      {resolvedComplains.results &&
-                      resolvedComplains.results.length > 0
-                        ? resolvedComplains.results.map((complain, index) => {
-                            return (
+                  {!pastLoading?
+                    (
+                      <React.Fragment>
+                        {(resolvedComplains.results && resolvedComplains.results.length > 0) ?
+                      (
+                      <React.Fragment>
+                        <div styleName="table-height">
+                          <Table celled unstackable>
+                            <Table.Header>
                               <Table.Row>
-                                <Table.Cell>
-                                  {5 * (activeAprPage - 1) + index + 1}
-                                </Table.Cell>
-                                <Table.Cell>{complain.description}</Table.Cell>
-                                <Table.Cell>{complain.complainant}</Table.Cell>
-                                <Table.Cell>
-                                  {moment(
-                                    complain.datetimeCreated.substring(0, 10),
-                                    'YYYY-MM-DD'
-                                  ).format('DD/MM/YY')}
-                                </Table.Cell>
-                                <Table.Cell>
-                                  {
-                                    constants.complaint_types[
-                                      complain.complaintType
-                                    ]
-                                  }
-                                </Table.Cell>
-                                <Table.Cell>{complain.phoneNumber}</Table.Cell>
-                                <Table.Cell>{complain.roomNo}</Table.Cell>
-                                <Table.Cell>
-                                  {complain.failedAttempts}
-                                </Table.Cell>
-                                <Table.Cell>
-                                  {
-                                    constants.statues.COMLAINT_STATUSES[
-                                      complain.status
-                                    ]
-                                  }
-                                </Table.Cell>
+                                <Table.HeaderCell>ID</Table.HeaderCell>
+                                <Table.HeaderCell>Complaint</Table.HeaderCell>
+                                <Table.HeaderCell>Applicant Name</Table.HeaderCell>
+                                <Table.HeaderCell>Complaint Date</Table.HeaderCell>
+                                <Table.HeaderCell>Complaint Type</Table.HeaderCell>
+                                <Table.HeaderCell>Contact Number</Table.HeaderCell>
+                                <Table.HeaderCell>Applicant Room</Table.HeaderCell>
+                                <Table.HeaderCell>
+                                  Unsuccesful attempts to solve
+                                </Table.HeaderCell>
+                                <Table.HeaderCell>Complain Status</Table.HeaderCell>
                               </Table.Row>
-                            )
-                          })
-                        : null}
-                    </Table.Body>
-                  </Table>
+                            </Table.Header>
+                            <Table.Body>
+                              {resolvedComplains.results &&
+                              resolvedComplains.results.length > 0
+                                ? resolvedComplains.results.map((complain, index) => {
+                                    return (
+                                      <Table.Row>
+                                        <Table.Cell>
+                                          {5 * (activeAprPage - 1) + index + 1}
+                                        </Table.Cell>
+                                        <Table.Cell>{complain.description}</Table.Cell>
+                                        <Table.Cell>{complain.complainant}</Table.Cell>
+                                        <Table.Cell>
+                                          {moment(
+                                            complain.datetimeCreated.substring(0, 10),
+                                            'YYYY-MM-DD'
+                                          ).format('DD/MM/YY')}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                          {
+                                            constants.complaint_types[
+                                              complain.complaintType
+                                            ]
+                                          }
+                                        </Table.Cell>
+                                        <Table.Cell>{complain.phoneNumber}</Table.Cell>
+                                        <Table.Cell>{complain.roomNo}</Table.Cell> 
+                                        <Table.Cell>
+                                          {complain.failedAttempts}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                          {
+                                            constants.statues.COMLAINT_STATUSES[
+                                              complain.status
+                                            ]
+                                          }
+                                        </Table.Cell>
+                                      </Table.Row>
+                                    )
+                                  })
+                                : null}
+                            </Table.Body>
+                          </Table>
+                        </div>
                   {resolvedComplains.count > 5 ? (
                     <Pagination
                       activePage={activeAprPage}
@@ -443,6 +513,16 @@ class AdminComplains extends Component {
                       totalPages={Math.ceil(resolvedComplains.count / 5)}
                     />
                   ) : null}
+                      </React.Fragment>
+                    ):
+                    <Segment>No resolved complains found</Segment>
+                  }
+                      </React.Fragment>
+                    ):
+                    (
+                      <Loading />
+                    )
+                  }
                 </React.Fragment>
               )}
             </Container>
@@ -474,11 +554,11 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getPendingComplains: (url) => {
-      dispatch(getPendingComplains(url))
+    getPendingComplains: (url, successCallBack, errCallBack) => {
+      dispatch(getPendingComplains(url, successCallBack, errCallBack))
     },
-    getResolvedComplains: (url) => {
-      dispatch(getResolvedComplains(url))
+    getResolvedComplains: (url, successCallBack, errCallBack) => {
+      dispatch(getResolvedComplains(url, successCallBack, errCallBack))
     },
     getTimeSlots: (residence) => {
       dispatch(getTimeSlots(residence))

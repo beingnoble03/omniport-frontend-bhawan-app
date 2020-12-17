@@ -7,6 +7,7 @@ import {
   Form,
   TextArea,
   Message,
+  Segment,
   Icon,
   Header,
   Dropdown,
@@ -14,6 +15,8 @@ import {
   Table,
   Grid,
 } from 'semantic-ui-react';
+
+import { Loading } from "formula_one"
 
 import './index.css';
 
@@ -32,12 +35,30 @@ class ComplainRegister extends React.Component {
       error: false,
       message: '',
       activePage: 1,
+      complainsLoading: true,
     };
   }
 
   componentDidMount() {
     this.props.setNavigation('Register a Complain');
-    this.props.getComplains(complainsUrl(this.props.activeHostel));
+
+    this.props.getComplains(
+      complainsUrl(this.props.activeHostel),
+      this.complainsSuccessCallBack,
+      this.complainsErrCallBack
+    );
+  }
+
+  complainsSuccessCallBack = (res) => {
+    this.setState({
+      complainsLoading: false,
+    })
+  }
+
+  complainsErrCallBack = (err) => {
+    this.setState({
+      complainsLoading: false,
+    })
   }
 
   handleChange = (event, { name, value }) => {
@@ -47,9 +68,11 @@ class ComplainRegister extends React.Component {
   };
 
   handlePaginationChange = (e, { activePage }) => {
-    this.setState({ activePage });
+    this.setState({ activePage, complainsLoading: true });
     this.props.getComplains(
-      `${complainsUrl(this.props.activeHostel)}?page=${activePage}`
+      `${complainsUrl(this.props.activeHostel)}?page=${activePage}`,
+      this.complainsSuccessCallBack,
+      this.complainsErrCallBack
     );
   };
 
@@ -60,6 +83,7 @@ class ComplainRegister extends React.Component {
     };
     this.setState({
       loading: true,
+      complainsLoading: true,
     })
     this.props.addComplaint(
       data,
@@ -78,7 +102,11 @@ class ComplainRegister extends React.Component {
       convenientTime: '',
       complain: '',
     });
-    this.props.getComplains(complainsUrl(this.props.activeHostel));
+    this.props.getComplains(
+      complainsUrl(this.props.activeHostel),
+      this.complainsSuccessCallBack,
+      this.complainsErrCallBack
+    );
   };
 
   errCallBack = (err) => {
@@ -91,7 +119,7 @@ class ComplainRegister extends React.Component {
   };
   render() {
     const { complains, constants } = this.props;
-    const { activePage, loading } = this.state;
+    const { activePage, loading, complainsLoading } = this.state;
     let options = [];
     for (var i in constants.complaint_types) {
       options.push({
@@ -149,8 +177,14 @@ class ComplainRegister extends React.Component {
             Submit
           </Button>
         </Form>
-        <React.Fragment>
-          <Header as='h3'>My Complains</Header>
+        <Header as='h3'>My Complains</Header>
+        {!complainsLoading?
+          (
+            <React.Fragment>
+              {(complains.results && complains.results.length > 0)?
+          (
+            <React.Fragment>
+          <div styleName="table-height">
           <Table unstackable celled>
             <Table.Header>
               <Table.Row>
@@ -190,14 +224,27 @@ class ComplainRegister extends React.Component {
                 : null}
             </Table.Body>
           </Table>
+          </div>
           {complains.count > 5 ? (
             <Pagination
               activePage={activePage}
               onPageChange={this.handlePaginationChange}
-              totalPages={Math.ceil(complains.count / 10)}
+              totalPages={Math.ceil(complains.count / 5)}
             />
           ) : null}
         </React.Fragment>
+          ):
+          (
+            <Segment>No Complains Made Yet</Segment>
+          )
+        }
+            </React.Fragment>
+          ):
+          (
+            <Loading />
+          )
+        }
+
       </Grid.Column>
     );
   }
@@ -211,8 +258,8 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getComplains: (url) => {
-      dispatch(getComplains(url));
+    getComplains: (url, successCallBack, errCallBack) => {
+      dispatch(getComplains(url, successCallBack, errCallBack));
     },
     addComplaint: (data, residence, successCallBack, errCallBack) => {
       dispatch(addComplaint(data, residence, successCallBack, errCallBack));

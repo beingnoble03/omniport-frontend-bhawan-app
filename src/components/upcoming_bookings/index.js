@@ -2,7 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import moment from 'moment'
-import { Card, Header, Icon } from 'semantic-ui-react'
+import { Card, Header, Icon, Segment } from 'semantic-ui-react'
+
+import { Loading } from "formula_one"
 
 import { getRoomBookings } from '../../actions/get-room-bookings'
 import { bookingsUrl } from '../../urls'
@@ -11,16 +13,38 @@ import blocks from '../../css/app.css'
 import main from './index.css'
 
 class UpcomingBookings extends React.Component {
+  state = {
+    loading: true
+  }
+
   componentDidMount () {
     this.props.getRoomBookings(
-      bookingsUrl(this.props.activeHostel, 'False')
+      bookingsUrl(this.props.activeHostel, 'False'),
+      this.successCallBack,
+      this.errCallBack
     )
   }
+
+  successCallBack = (res) => {
+    this.setState({
+      loading: false
+    })
+  }
+
+  errCallBack = (err) => {
+    this.setState({
+      loading: false
+    })
+  }
+
   render () {
     const { bookingRequests, constants } = this.props
     return (
       <React.Fragment>
-        {bookingRequests.results && bookingRequests.results.length > 0
+        {!this.state.loading?
+          (
+            <React.Fragment>
+              {bookingRequests.results && bookingRequests.results.length > 0
           ? bookingRequests.results.map((request, index) => {
             return (
               <Card fluid>
@@ -75,7 +99,13 @@ class UpcomingBookings extends React.Component {
               </Card>
             )
           })
-          : null}
+          : <Segment>No Upcoming Bookings found</Segment>}
+            </React.Fragment>
+          ):
+          (
+            <Loading />
+          )
+        }
       </React.Fragment>
     )
   }
@@ -89,8 +119,8 @@ function mapStateToProps (state) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getRoomBookings: (residence) => {
-      dispatch(getRoomBookings(residence))
+    getRoomBookings: (residence, successCallBack, errCallBack) => {
+      dispatch(getRoomBookings(residence, successCallBack, errCallBack))
     },
   }
 }

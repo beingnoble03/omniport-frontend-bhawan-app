@@ -51,7 +51,6 @@ class AdminAuthorities extends React.Component {
   }
 
   adminCallBack = (res) => {
-    console.log(res)
     this.setState({
       success: true,
       error: false,
@@ -59,7 +58,6 @@ class AdminAuthorities extends React.Component {
     })
   }
   errCallBack = (err) => {
-    console.log(err)
     this.setState({
       error: true,
       success: false,
@@ -157,8 +155,8 @@ class AdminAuthorities extends React.Component {
                     onSearchChange={this.onSearchChange}
                     onChange={this.onChange}
                     value={selected}
-                    search
                     selection
+                    search
                     closeOnChange
                     options={options}
                     placeholder="Enter Name"
@@ -175,7 +173,7 @@ class AdminAuthorities extends React.Component {
                     options={designations}
                   />
                 </Form.Field>
-                <Button size='medium' onClick={this.handleSubmit} width={3}>
+                <Button primary size='medium' onClick={this.handleSubmit} width={3}>
                   Submit
                 </Button>
               </Form>

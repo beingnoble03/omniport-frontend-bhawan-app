@@ -7,7 +7,6 @@ import { getFacilities } from '../../actions/facilities';
 import UpcomingBookings from '../upcoming_bookings/index';
 import PastBookings from '../past_bookings/index';
 import Complains from '../complains/index';
-import { getComplains } from '../../actions/complains';
 
 import facilities from './index.css';
 import blocks from '../../css/app.css';
@@ -16,14 +15,16 @@ import { complainsUrl } from '../../urls';
 
 class MyProfile extends React.Component {
   state = { activeItem: 'upcoming' };
+
   componentDidMount() {
     this.props.setNavigation('Profile');
-    this.props.getComplains(complainsUrl(this.props.activeHostel));
-  } 
+  }
+
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+
   render() {
     const { activeItem } = this.state;
-    const { complains, who_am_i, constants } = this.props;
+    const { who_am_i, constants } = this.props;
     return (
         <Grid.Column width={16}>
           <Complains {...this.props} />
@@ -64,11 +65,5 @@ function mapStateToProps(state) {
   };
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getComplains: (residence) => {
-      dispatch(getComplains(residence));
-    },
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(MyProfile);
+
+export default connect(mapStateToProps, null)(MyProfile);
