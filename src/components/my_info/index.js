@@ -29,10 +29,12 @@ class MyInfo extends React.Component {
                 <Icon name='home' size='small' />
                 {constants.hostels[this.props.activeHostel]}
               </Card.Description>
-              <Card.Description styleName='font_color' onClick={this.handleRedirect}>
+              {who_am_i.roomNumber && (
+                <Card.Description styleName='font_color' onClick={this.handleRedirect}>
                 <Icon name='hotel' size='small'/>
-                {constants.hostels[this.props.activeHostel]}
+                {who_am_i.roomNumber}
               </Card.Description>
+              )}
           </Card.Content>
         </Card>
     )

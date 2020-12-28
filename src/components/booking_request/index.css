@@ -21,4 +21,8 @@
 }
 .table-height {
     min-height: 280px;
+    overflow-x: scroll;
+    width: auto;
+    display: block;
+    margin: 0.5em;
 }

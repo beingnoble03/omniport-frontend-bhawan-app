@@ -312,7 +312,7 @@ class AdminComplains extends Component {
                     pendingComplains.results.length >0)?
                     (
                       <React.Fragment>
-                      <div styleName="table-height">
+                      <div styleName="table-height table-overflow">
                       <Table celled unstackable>
                         <Table.Header>
                           <Table.Row>
@@ -432,7 +432,7 @@ class AdminComplains extends Component {
                     iconPosition='left'
                     onChange={this.handleChange}
                   />
-                <Button onClick={this.changeTiming}>Change</Button>
+                <Button primary onClick={this.changeTiming}>Change</Button>
               </Header>
               <Header as='h4'>
                 Past Complains

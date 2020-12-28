@@ -52,7 +52,7 @@ class BookingRequests extends Component {
       statusBookingsUrl(
         this.props.activeHostel,
         this.props.constants.statues.BOOKING_STATUSES.pen,
-        'False'
+        'false'
       ),
       this.presentSuccessCallBack,
       this.presentErrCallBack
@@ -62,7 +62,7 @@ class BookingRequests extends Component {
       statusBookingsUrl(
         this.props.activeHostel,
         this.props.constants.statues.BOOKING_STATUSES.cnf,
-        true
+        'true'
       ),
       this.pastSuccessCallBack,
       this.pastErrCallBack
@@ -92,7 +92,7 @@ class BookingRequests extends Component {
   handleItemClick = (e, { name }) => {
     this.setState({ activeItem: name, activePage: 1, presentLoading: true })
     this.props.getPresentRoomBookings(
-      statusBookingsUrl(this.props.activeHostel, name, 'False'),
+      statusBookingsUrl(this.props.activeHostel, name, 'false'),
       this.presentSuccessCallBack,
       this.presentErrCallBack
     )
@@ -100,7 +100,7 @@ class BookingRequests extends Component {
   handlePastItemClick = (e, { name }) => {
     this.setState({ activePastItem: name, activeAprPage: 1, pastLoading: true })
     this.props.getPastRoomBookings(
-      statusBookingsUrl(this.props.activeHostel, name, true),
+      statusBookingsUrl(this.props.activeHostel, name, 'true'),
       this.pastSuccessCallBack,
       this.pastErrCallBack
     )
@@ -155,14 +155,18 @@ class BookingRequests extends Component {
         this.props.activeHostel,
         this.state.activeItem,
         'False'
-      )
+      ),
+      this.presentSuccessCallBack,
+      this.presentErrCallBack
     )
     this.props.getPastRoomBookings(
       statusBookingsUrl(
         this.props.activeHostel,
         this.state.activePastItem,
         'true'
-      )
+      ),
+      this.pastSuccessCallBack,
+      this.pastErrCallBack
     )
   }
 
@@ -219,7 +223,9 @@ class BookingRequests extends Component {
         this.props.activeHostel,
         this.state.activeItem,
         'False'
-      )}&page=${activePage}`
+      )}&page=${activePage}`,
+      this.presentSuccessCallBack,
+      this.presentErrCallBack
     )
   }
   handlePastPaginationChange = (e, { activePage }) => {
@@ -229,7 +235,9 @@ class BookingRequests extends Component {
         this.props.activeHostel,
         this.state.activePastItem,
         true
-      )}&page=${activePage}`
+      )}&page=${activePage}`,
+      this.pastSuccessCallBack,
+      this.pastErrCallBack
     )
   }
   render() {
@@ -246,7 +254,6 @@ class BookingRequests extends Component {
       pastLoading
     } = this.state
     const {
-      bookingRequests,
       presentBookingRequests,
       pastBookingRequests,
       constants,

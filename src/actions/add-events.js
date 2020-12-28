@@ -18,7 +18,7 @@ export const addEvent = (data, url, successCallBack, errCallBack) => {
           description: 'Event added succesfully',
           animation: 'fade up',
           icon: 'smile outline',
-          time: 4000,
+          time: 4000
         })
         successCallBack(res)
         const response = {
@@ -27,10 +27,18 @@ export const addEvent = (data, url, successCallBack, errCallBack) => {
         }
         dispatch({
           type: 'ADD_EVENT',
-          payload: res.data,
+          payload: res.data
         })
       })
       .catch((err) => {
+        toast({
+          type: 'failure',
+          title: 'Event could not be created',
+          description: 'There were errors with your submission',
+          animation: 'fade up',
+          icon: 'frown outline',
+          time: 4000
+        })
         errCallBack(err)
       })
   }

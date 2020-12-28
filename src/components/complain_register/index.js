@@ -79,11 +79,10 @@ class ComplainRegister extends React.Component {
   handleSubmit = (e) => {
     let data = {
       complaintType: this.state.category,
-      description: this.state.complain,
+      description: this.state.complain.trim(),
     };
     this.setState({
       loading: true,
-      complainsLoading: true,
     })
     this.props.addComplaint(
       data,
@@ -101,6 +100,8 @@ class ComplainRegister extends React.Component {
       loading: false,
       convenientTime: '',
       complain: '',
+      complaintType: '',
+      complainsLoading: true,
     });
     this.props.getComplains(
       complainsUrl(this.props.activeHostel),
@@ -115,11 +116,12 @@ class ComplainRegister extends React.Component {
       success: false,
       message: err,
       loading: false,
+      activePage:1,
     });
   };
   render() {
     const { complains, constants } = this.props;
-    const { activePage, loading, complainsLoading } = this.state;
+    const { activePage, loading, complainsLoading, complain, complaintType } = this.state;
     let options = [];
     for (var i in constants.complaint_types) {
       options.push({
@@ -140,14 +142,16 @@ class ComplainRegister extends React.Component {
           <Message positive>Your complain has been made succesfully</Message>
         )}
         <Form>
-          <Form.Field>
+          <Form.Field required>
             <label>Category</label>
             <Dropdown
               name='category'
               selection
               options={options}
+              value={complaintType}
               onChange={this.handleChange}
               styleName='field-width'
+              required
             />
           </Form.Field>
           <div styleName='info'>
@@ -158,7 +162,7 @@ class ComplainRegister extends React.Component {
           </div>
           <Form.Field
             name='complain'
-            value={this.state.complain}
+            value={complain}
             onChange={this.handleChange}
             control={TextArea}
             label='Complaint'
@@ -173,6 +177,7 @@ class ComplainRegister extends React.Component {
             onClick={this.handleSubmit}
             width={3}
             loading={loading}
+            disabled={complain.trim()=='' || complaintType==''}
           >
             Submit
           </Button>

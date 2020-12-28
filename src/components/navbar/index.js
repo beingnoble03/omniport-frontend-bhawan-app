@@ -145,9 +145,7 @@ class Nav extends Component {
               onChange={this.handleChange}
               defaultValue={activeHostel}
               simple
-              // styleName='field-width'
             />
-              {/* {this.props.constants.hostels[activeHostel]} */}
           </Menu.Item>
           {this.props.who_am_i.isStudent ? isMobile ? (
             <Menu.Menu position='right' styleName="navCss.right-margin">

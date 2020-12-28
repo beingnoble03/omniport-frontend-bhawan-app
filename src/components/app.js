@@ -244,12 +244,14 @@ class App extends React.Component {
                         path={`${match.path}book_room`}
                         exact
                         render={(props) =>
-                          who_am_i.isStudent && (
+                          who_am_i.isStudent ? (
                             <BookRoom
                               who_am_i={who_am_i}
                               constants={constants}
                               setNavigation={this.setNavigation}
                             />
+                          ): (
+                            <div></div>
                           )
                         }
                       />

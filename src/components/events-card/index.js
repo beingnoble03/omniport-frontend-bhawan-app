@@ -37,7 +37,6 @@ class EventsCard extends React.Component {
   };
 
   handleSubmit = (e) => {
-    this.toggleAddEvent();
     let data = {
       name: this.state.event,
       date: this.props.activeDay,
@@ -81,6 +80,7 @@ class EventsCard extends React.Component {
     });
   };
   render() {
+    const { event, venue, time } = this.state
     const { dayEvents } = this.props;
 
     return (
@@ -155,8 +155,14 @@ class EventsCard extends React.Component {
                       onChange={this.handleChange}
                     />
                   </Form.Field>
-                  <Button primary type='submit' fluid onClick={this.handleSubmit}>
-                    Submit
+                  <Button
+                    primary
+                    type='submit'
+                    fluid
+                    onClick={this.handleSubmit}
+                    disabled={event.trim() == '' || venue.trim() == '' || time.trim() == ''}
+                    >
+                      Submit
                   </Button>
                 </Form>
               ) : null}

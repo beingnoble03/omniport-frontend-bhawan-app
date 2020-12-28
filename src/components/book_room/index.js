@@ -40,21 +40,21 @@ class BookRoom extends React.Component {
     return this.state.visitors.map((visitor, i) => (
       <div key={i}>
         <Form.Group>
-          <Form.Field>
+          <Form.Field required>
             <label>Name of Visitor</label>
             <Input
               value={visitor || ''}
               onChange={(event) => this.handleVisitorChange(i, event)}
             />
           </Form.Field>
-          <Form.Field>
+          <Form.Field required>
             <label>Relation</label>
             <Input
               value={this.state.relatives[i] || ''}
               onChange={(event) => this.handleRelativeChange(i, event)}
             />
           </Form.Field>
-          <Form.Field>
+          <Form.Field required>
             <label for={`uploadPhoto${i}`}>Identity Proof</label>
             <input
               type='file'
@@ -122,7 +122,7 @@ class BookRoom extends React.Component {
           relation: this.state.relatives[index],
         })
       )
-      formData.append(`visitors_${index}`, this.state.proof[index], 'hey.png')
+      formData.append(`visitors${index}`, this.state.proof[index], 'hey.png')
     })
     this.setState({
       loading: true,
@@ -176,7 +176,21 @@ class BookRoom extends React.Component {
     }
   }
   render() {
-    const {loading} = this.state
+    const {loading, fromDate, endDate, visitors, relatives, proof } = this.state
+    const isTimeInvalid = moment(moment(fromDate, "DD-MM-YYYY")).isAfter
+                    (moment(endDate, "DD-MM-YYYY"))
+    let disabled = false
+    visitors.forEach(visitor => {
+        if(visitor.trim() == '')
+          disabled = true
+    });
+    relatives.forEach(relative => {
+        if(relative.trim() == '')
+          disabled = true
+    });
+    if(proof.length < visitors.length)
+      disabled = true
+
     return (
       <Grid.Column width={12} floated='left'>
         {this.state.error && (
@@ -185,6 +199,11 @@ class BookRoom extends React.Component {
             Your Booking Request could not be made. Please try again
           </Message>
         )}
+        {isTimeInvalid && (
+            <Message negative>
+              Start time cannot be after End time
+            </Message>
+          )}
         {this.state.success && (
           <Message positive>
             Your Booking Request has been made succesfully
@@ -192,22 +211,24 @@ class BookRoom extends React.Component {
         )}
         <Form>
           <Form.Group>
-            <Form.Field>
+            <Form.Field required>
               <label>From Date</label>
               <DateInput
                 name='fromDate'
-                value={this.state.fromDate}
+                value={fromDate}
                 onChange={this.handleChange}
                 styleName="date-time-width"
+                error={isTimeInvalid}
               />
             </Form.Field>
-            <Form.Field>
+            <Form.Field required>
               <label>Until Date</label>
               <DateInput
                 name='endDate'
-                value={this.state.endDate}
+                value={endDate}
                 onChange={this.handleChange}
                 styleName="date-time-width"
+                error={isTimeInvalid}
               />
             </Form.Field>
           </Form.Group>
@@ -221,7 +242,13 @@ class BookRoom extends React.Component {
             />
           </Form.Field>
           <Form.Field>
-            <Button primary type='submit' onClick={this.handleSubmit} loading={loading}>
+            <Button
+              primary
+              type='submit'
+              onClick={this.handleSubmit}
+              loading={loading}
+              disabled={fromDate=='' || endDate=='' || isTimeInvalid || disabled}
+            >
               Submit
             </Button>
           </Form.Field>

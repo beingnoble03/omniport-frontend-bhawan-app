@@ -15,7 +15,7 @@ class PastBookings extends Component {
   state = { activePage: 1, loading: true };
   componentDidMount() {
     this.props.getRoomBookings(
-      bookingsUrl(this.props.activeHostel, true),
+      bookingsUrl(this.props.activeHostel, 'true'),
       this.successCallBack,
       this.errCallBack
     );
@@ -36,7 +36,7 @@ class PastBookings extends Component {
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage: activePage, loading: true });
     this.props.getRoomBookings(
-      `${bookingsUrl(this.props.activeHostel, true)}?page=${activePage}`,
+      `${bookingsUrl(this.props.activeHostel, 'true')}&page=${activePage}`,
       this.successCallBack,
       this.errCallBack
     );

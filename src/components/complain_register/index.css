@@ -36,4 +36,8 @@
 
 .table-height {
     min-width: 280px;
+    overflow-x: scroll;
+    width: auto;
+    display: block;
+    margin: 0.5em;
 }

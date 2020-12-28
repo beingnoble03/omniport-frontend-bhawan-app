@@ -19,7 +19,7 @@ class UpcomingBookings extends React.Component {
 
   componentDidMount () {
     this.props.getRoomBookings(
-      bookingsUrl(this.props.activeHostel, 'False'),
+      bookingsUrl(this.props.activeHostel, 'false'),
       this.successCallBack,
       this.errCallBack
     )
@@ -82,7 +82,7 @@ class UpcomingBookings extends React.Component {
                         </div>
                       </div>
                       <div styleName='main.margin'>
-                        <div styleName='main.large main.grey'>Check In</div>
+                        <div styleName='main.large main.grey'>Check Out</div>
                         <div styleName='main.mid main.black'>
                           {moment(request.requestedTill, 'YYYY-MM-DD').format(
                             'LL'

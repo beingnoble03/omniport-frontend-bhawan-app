@@ -37,6 +37,16 @@ class RegisterStudent extends React.Component {
       displayPicture: '',
       loading: false,
       registerLoading: false,
+      address: '',
+      state: '',
+      city: '',
+      country: '',
+      postalCode: '',
+      havingComputer: false,
+      fathersName: '',
+      fathersContact: '',
+      mothersName: '',
+      mothersContact: '',
     }
     this.delayedCallback = _.debounce(this.ajaxCall, 300)
   }
@@ -82,7 +92,17 @@ class RegisterStudent extends React.Component {
       department : res.department,
       phoneNumber : res.phoneNumber,
       dateOfBirth : res.dateOfBirth,
-      displayPicture : res.displayPicture
+      displayPicture : res.displayPicture,
+      havingComputer: res.havingComputer,
+      address: res.address,
+      state: res.state,
+      city: res.city,
+      postalCode: res.postalCode,
+      country: res.country,
+      fathersName: res.fathersName,
+      fathersContact: res.fathersContact,
+      mothersName: res.mothersName,
+      mothersContact: res.mothersContact
     })
   }
 
@@ -115,12 +135,19 @@ class RegisterStudent extends React.Component {
       phoneNumber : '',
       dateOfBirth : '',
       displayPicture : '',
-      successMessage : 'Student Registered'
+      successMessage : 'Student Registered',
+      address: '',
+      city: '',
+      postalCode: '',
+      country: '',
+      fathersName: '',
+      fathersContact: '',
+      mothersName: '',
+      mothersContact: '',
     })
     toast({
       type: 'success',
       title: 'Student Registered SuccesFully',
-      description: 'Event added succesfully',
       animation: 'fade up',
       icon: 'smile outline',
       time: 4000,
@@ -131,15 +158,36 @@ class RegisterStudent extends React.Component {
     this.setState({
       errMessage: 'Failed to register student',
       successMessage: '',
-      loading: false,
+      registerLoading: false,
+    })
+    console.log(err)
+    toast({
+      type: 'failure',
+      title: 'Unable to register Student',
+      animation: 'fade up',
+      icon: 'frown outline',
+      time: 4000,
     })
   }
 
   registerStudent = () => {
-    const { selected, roomNo } = this.state
+    const {
+      selected,
+      roomNo,
+      havingComputer,
+      fathersName,
+      fathersContact,
+      mothersName,
+      mothersContact
+    } = this.state
     let data = {
       "person" : selected.id,
       "room_number" : roomNo,
+      "having_computer" : havingComputer,
+      "fathers_name": fathersName,
+      "mothers_name": mothersName,
+      "fathers_contact": fathersContact,
+      "mothers_contact": mothersContact
     }
     this.setState({
       registerLoading: true
@@ -151,6 +199,11 @@ class RegisterStudent extends React.Component {
       this.residentErrCallBack
     )
   }
+  toggle = () =>
+      this.setState((prevState) =>
+      ({ havingComputer: !prevState.havingComputer }
+        )
+    )
 
   render () {
     const {
@@ -164,14 +217,23 @@ class RegisterStudent extends React.Component {
       phoneNumber,
       dateOfBirth,
       displayPicture,
-      loading
+      loading,
+      address,
+      city,
+      havingComputer,
+      state,
+      country,
+      postalCode,
+      fathersName,
+      fathersContact,
+      mothersName,
+      mothersContact
     } = this.state
     return (
       <Grid container centered>
         <Grid.Column width={6} centered>
           <Container centered>
             <Image
-              // src='https://react.semantic-ui.com/images/wireframe/square-image.png'
               src={displayPicture?
                     displayPicture:
                     "https://react.semantic-ui.com/images/wireframe/square-image.png"
@@ -200,26 +262,62 @@ class RegisterStudent extends React.Component {
                   <Input
                     name='name'
                     value={name}
-                    disabled
+                    readOnly
                     loading={loading}
                   />
                 </Form.Field>
               </Form.Group>
-              <Form.Group>
-                <Form.Field>
-                  <label>Email Address</label>
-                  <Input
-                    name="emailAddress"
-                    value={emailAddress}
-                    disabled
-                    loading={loading}
-                  />
-                </Form.Field>
+              <Form.Group fluid widths='equal'>
+                <Form.Checkbox
+                  label='Having Computer'
+                  checked={havingComputer}
+                  onChange={this.toggle}
+                />
                 <Form.Field>
                   <label>Room No.</label>
                   <Input
                     name='roomNo'
                     value={roomNo}
+                    onChange={this.fieldsChange}
+                    loading={loading}
+                  />
+                </Form.Field>
+              </Form.Group>
+              <Form.Group fluid widths='equal'>
+                <Form.Field>
+                  <label>Fathers Name</label>
+                  <Input
+                    name='fathersName'
+                    value={fathersName}
+                    onChange={this.fieldsChange}
+                    loading={loading}
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <label>Fathers Contact</label>
+                  <Input
+                    name='fathersContact'
+                    value={fathersContact}
+                    onChange={this.fieldsChange}
+                    loading={loading}
+                  />
+                </Form.Field>
+              </Form.Group>
+              <Form.Group fluid widths='equal'>
+                <Form.Field>
+                  <label>Mothers Name</label>
+                  <Input
+                    name='mothersName'
+                    value={mothersName}
+                    onChange={this.fieldsChange}
+                    loading={loading}
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <label>Mothers Contact</label>
+                  <Input
+                    name='mothersContact'
+                    value={mothersContact}
                     onChange={this.fieldsChange}
                     loading={loading}
                   />
@@ -231,7 +329,7 @@ class RegisterStudent extends React.Component {
                     <Input
                       name="currentYear"
                       value={currentYear}
-                      disabled
+                      readOnly
                       loading={loading}
                     />
                 </Form.Field>
@@ -240,7 +338,7 @@ class RegisterStudent extends React.Component {
                   <Input
                     name="department"
                     value={department}
-                    disabled
+                    readOnly
                     loading={loading}
                   />
                 </Form.Field>
@@ -251,7 +349,7 @@ class RegisterStudent extends React.Component {
                     <Input
                       name="phoneNumber"
                       value={phoneNumber}
-                      disabled
+                      readOnly
                       loading={loading}
                     />
                 </Form.Field>
@@ -260,7 +358,67 @@ class RegisterStudent extends React.Component {
                   <Input
                     name="dateOfBirth"
                     value={dateOfBirth}
-                    disabled
+                    readOnly
+                    loading={loading}
+                  />
+                </Form.Field>
+              </Form.Group>
+              <Form.Group>
+                <Form.Field>
+                    <label>Address</label>
+                    <Input
+                      name="address"
+                      value={address}
+                      readOnly
+                      loading={loading}
+                    />
+                </Form.Field>
+                <Form.Field>
+                  <label>City</label>
+                  <Input
+                    name="city"
+                    value={city}
+                    readOnly
+                    loading={loading}
+                  />
+                </Form.Field>
+              </Form.Group>
+              <Form.Group>
+                <Form.Field>
+                    <label>State</label>
+                    <Input
+                      name="state"
+                      value={state}
+                      readOnly
+                      loading={loading}
+                    />
+                </Form.Field>
+                <Form.Field>
+                  <label>Country</label>
+                  <Input
+                    name="country"
+                    value={country}
+                    readOnly
+                    loading={loading}
+                  />
+                </Form.Field>
+              </Form.Group>
+              <Form.Group>
+                <Form.Field>
+                  <label>Email Address</label>
+                  <Input
+                    name="emailAddress"
+                    value={emailAddress}
+                    readOnly
+                    loading={loading}
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <label>Postal Code</label>
+                  <Input
+                    name="postalCode"
+                    value={postalCode}
+                    readOnly
                     loading={loading}
                   />
                 </Form.Field>
@@ -269,6 +427,13 @@ class RegisterStudent extends React.Component {
                 primary
                 type='submit'
                 onClick={this.registerStudent}
+                disabled={
+                  !roomNo ||
+                  !fathersName ||
+                  !fathersContact ||
+                  !mothersName ||
+                  !mothersContact
+                }
               >
                 Register
               </Button>

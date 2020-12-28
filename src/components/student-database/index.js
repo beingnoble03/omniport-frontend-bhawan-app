@@ -9,6 +9,8 @@ import { residentUrl } from '../../urls'
 
 import { getResidents } from '../../actions/residents'
 
+import './index.css'
+
 const yearOptions = [
   { key: 1, text: '1st Year', value: 1 },
   { key: 2, text: '2nd Year', value: 2 },
@@ -97,8 +99,8 @@ class StudentDatabase extends Component {
     for (var i in constants.branches) {
       branchOptions.push({
         key: i.toString(),
-        text: i.toString(),
-        value: constants.branches[i].toString(),
+        value: i.toString(),
+        text: constants.branches[i].toString(),
       });
     }
 
@@ -130,7 +132,7 @@ class StudentDatabase extends Component {
               {(residents.results && residents.results.length > 0)
                 ?
                 (
-                  <React.Fragment>
+                  <div styleName = "table-overflow">
                     <Table unstackable celled>
                     <Table.Header>
                       <Table.Row>
@@ -159,9 +161,15 @@ class StudentDatabase extends Component {
                                 <Table.Cell>{resident.department}</Table.Cell>
                                 <Table.Cell>{resident.dateOfBirth}</Table.Cell>
                                 <Table.Cell>
-                                  <a href={resident.displayPicture} download={resident.residentName}>
-                                    Download
-                                  </a>
+                                  {resident.displayPicture? (
+                                    <a href={resident.displayPicture} download={resident.residentName}>
+                                      Download
+                                    </a>
+                                    ):
+                                    (
+                                      <span>No Display Image</span>
+                                    )
+                                  }
                                 </Table.Cell>
                               </Table.Row>
                             )
@@ -176,7 +184,7 @@ class StudentDatabase extends Component {
                       totalPages={Math.ceil(residents.count / 5)}
                     />
                   ) : null}
-                  </React.Fragment>
+                  </div>
                 ):
                 (
                   <Segment>No Student with applied filters found</Segment>
