@@ -39,7 +39,7 @@ class BookRoom extends React.Component {
   createForm = () => {
     return this.state.visitors.map((visitor, i) => (
       <div key={i}>
-        <Form.Group>
+        <Form.Group widths='four'>
           <Form.Field required>
             <label>Name of Visitor</label>
             <Input
@@ -210,14 +210,13 @@ class BookRoom extends React.Component {
           </Message>
         )}
         <Form>
-          <Form.Group>
+          <Form.Group widths='four'>
             <Form.Field required>
               <label>From Date</label>
               <DateInput
                 name='fromDate'
                 value={fromDate}
                 onChange={this.handleChange}
-                styleName="date-time-width"
                 error={isTimeInvalid}
               />
             </Form.Field>
@@ -227,7 +226,6 @@ class BookRoom extends React.Component {
                 name='endDate'
                 value={endDate}
                 onChange={this.handleChange}
-                styleName="date-time-width"
                 error={isTimeInvalid}
               />
             </Form.Field>
