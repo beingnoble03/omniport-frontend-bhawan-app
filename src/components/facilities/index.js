@@ -65,13 +65,13 @@ class Facilities extends React.Component {
   };
 
   render() {
-    const { facilities, who_am_i } = this.props;
+    const { facilities, who_am_i, constants, activePost } = this.props;
     const { loading } = this.state
     return (
       <Container>
         <h2>
           Facilities
-          {(who_am_i.isAdmin && !who_am_i.isStudent) &&
+          {(constants['administrative_council'].includes(activePost)) &&
           <Link to='/bhawan_app/add/facility/'>
             <span styleName="facilities.plus-icon">
               <Icon name="plus" color="blue" size="small" />
@@ -130,7 +130,8 @@ class Facilities extends React.Component {
 function mapStateToProps(state) {
   return {
     facilities: state.facilities,
-    activeHostel: state.activeHostel
+    activeHostel: state.activeHostel,
+    activePost: state.activePost
   };
 }
 const mapDispatchToProps = (dispatch) => {

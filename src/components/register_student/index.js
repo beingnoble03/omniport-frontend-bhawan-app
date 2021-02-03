@@ -42,7 +42,6 @@ class RegisterStudent extends React.Component {
       city: '',
       country: '',
       postalCode: '',
-      havingComputer: false,
       fathersName: '',
       fathersContact: '',
       mothersName: '',
@@ -174,7 +173,6 @@ class RegisterStudent extends React.Component {
     const {
       selected,
       roomNo,
-      havingComputer,
       fathersName,
       fathersContact,
       mothersName,
@@ -183,7 +181,6 @@ class RegisterStudent extends React.Component {
     let data = {
       "person" : selected.id,
       "room_number" : roomNo,
-      "having_computer" : havingComputer,
       "fathers_name": fathersName,
       "mothers_name": mothersName,
       "fathers_contact": fathersContact,
@@ -220,7 +217,6 @@ class RegisterStudent extends React.Component {
       loading,
       address,
       city,
-      havingComputer,
       state,
       country,
       postalCode,
@@ -263,17 +259,13 @@ class RegisterStudent extends React.Component {
                     name='name'
                     value={name}
                     readOnly
+                    disabled
                     loading={loading}
                   />
                 </Form.Field>
               </Form.Group>
               <Form.Group fluid widths='equal'>
-                <Form.Checkbox
-                  label='Having Computer'
-                  checked={havingComputer}
-                  onChange={this.toggle}
-                />
-                <Form.Field>
+                <Form.Field required>
                   <label>Room No.</label>
                   <Input
                     name='roomNo'
@@ -330,6 +322,7 @@ class RegisterStudent extends React.Component {
                       name="currentYear"
                       value={currentYear}
                       readOnly
+                      disabled
                       loading={loading}
                     />
                 </Form.Field>
@@ -339,6 +332,7 @@ class RegisterStudent extends React.Component {
                     name="department"
                     value={department}
                     readOnly
+                    disabled
                     loading={loading}
                   />
                 </Form.Field>
@@ -350,6 +344,7 @@ class RegisterStudent extends React.Component {
                       name="phoneNumber"
                       value={phoneNumber}
                       readOnly
+                      disabled
                       loading={loading}
                     />
                 </Form.Field>
@@ -359,6 +354,7 @@ class RegisterStudent extends React.Component {
                     name="dateOfBirth"
                     value={dateOfBirth}
                     readOnly
+                    disabled
                     loading={loading}
                   />
                 </Form.Field>
@@ -370,6 +366,7 @@ class RegisterStudent extends React.Component {
                       name="address"
                       value={address}
                       readOnly
+                      disabled
                       loading={loading}
                     />
                 </Form.Field>
@@ -379,6 +376,7 @@ class RegisterStudent extends React.Component {
                     name="city"
                     value={city}
                     readOnly
+                    disabled
                     loading={loading}
                   />
                 </Form.Field>
@@ -390,6 +388,7 @@ class RegisterStudent extends React.Component {
                       name="state"
                       value={state}
                       readOnly
+                      disabled
                       loading={loading}
                     />
                 </Form.Field>
@@ -399,6 +398,7 @@ class RegisterStudent extends React.Component {
                     name="country"
                     value={country}
                     readOnly
+                    disabled
                     loading={loading}
                   />
                 </Form.Field>
@@ -410,6 +410,7 @@ class RegisterStudent extends React.Component {
                     name="emailAddress"
                     value={emailAddress}
                     readOnly
+                    disabled
                     loading={loading}
                   />
                 </Form.Field>
@@ -419,6 +420,7 @@ class RegisterStudent extends React.Component {
                     name="postalCode"
                     value={postalCode}
                     readOnly
+                    disabled
                     loading={loading}
                   />
                 </Form.Field>
@@ -427,13 +429,7 @@ class RegisterStudent extends React.Component {
                 primary
                 type='submit'
                 onClick={this.registerStudent}
-                disabled={
-                  !roomNo ||
-                  !fathersName ||
-                  !fathersContact ||
-                  !mothersName ||
-                  !mothersContact
-                }
+                disabled={!roomNo}
               >
                 Register
               </Button>

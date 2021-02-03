@@ -57,21 +57,23 @@ class Authorities extends React.Component {
   }
 
   handleRedirect = (authority) => {
+    const { constants, activePost } = this.props
+
     this.props.setActiveAuthority(authority)
-    if(this.props.who_am_i.isAdmin && !this.props.who_am_i.isStudent ) {
-    this.props.history.push('/bhawan_app/edit-authority')
+    if(constants['administrative_council'].includes(activePost)) {
+      this.props.history.push('/bhawan_app/edit-authority')
     }
   }
 
   render() {
-    const { authorities, constants, who_am_i} = this.props
+    const { authorities, constants, activePost} = this.props
     const { loading } = this.state
 
     return (
       <Container styleName='top-margin'>
         <h2>
           Authorities
-          {!who_am_i.isStudent && (
+          {constants['administrative_council'].includes(activePost) && (
             <Link to='/bhawan_app/create-authority'>
               <span styleName="plus-icon">
                 <Icon name="plus" color="blue" size="small"/>
@@ -152,7 +154,8 @@ class Authorities extends React.Component {
 function mapStateToProps(state) {
   return {
     authorities: state.authorities,
-    activeHostel: state.activeHostel
+    activeHostel: state.activeHostel,
+    activePost: state.activePost
   }
 }
 

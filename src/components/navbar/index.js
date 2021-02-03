@@ -109,29 +109,35 @@ class Nav extends Component {
   }
 
   handleChange = (event, { name, value }) => {
+    const { who_am_i } = this.props
     if (this.state.hasOwnProperty(name)) {
       this.setState({
         [name]: value,
         activeSubGroup: 'facauth'
       });
     }
-    this.props.changeActiveHostel(value)
+    this.props.changeActiveHostel(
+      who_am_i.hostel[value][0],
+      who_am_i.hostel[value][1]
+    )
   }
 
   render() {
     const {
-      activeItem,
       activeSubGroup,
       sideBarVisibility,
       isMobile
       } = this.state
-    const { who_am_i, constants, activeHostel } = this.props
+    const { who_am_i, constants, activePost } = this.props
     let options = []
     for (var i = 0; i < who_am_i.hostel.length; i++ ) {
+      const text = constants.hostels[who_am_i.hostel[i][0]]
+      if(who_am_i.hostel[i][1])
+        text = `${text} (${who_am_i.hostel[i][1]})`
       options.push({
         key: i,
-        text: constants.hostels[who_am_i.hostel[i]],
-        value: who_am_i.hostel[i]
+        text: text,
+        value: i,
       })
     }
     return (
@@ -142,12 +148,12 @@ class Nav extends Component {
               name='hostel'
               selection
               options={options}
+              defaultValue={0}
               onChange={this.handleChange}
-              defaultValue={activeHostel}
               simple
             />
           </Menu.Item>
-          {this.props.who_am_i.isStudent ? isMobile ? (
+          {!constants['administrative_council'].includes(activePost) ? isMobile ? (
             <Menu.Menu position='right' styleName="navCss.right-margin">
               <button
                 styleName={`hamburger.hamburger hamburger.${
@@ -201,7 +207,7 @@ class Nav extends Component {
             </Menu.Menu>
           ) : null}
         </Menu>
-        {this.props.who_am_i.isAdmin && !this.props.who_am_i.isStudent ? (
+        { constants['administrative_council'].includes(activePost) ? (
           <Menu size='mini' secondary styleName='navCss.lower_menu'>
             <Menu.Item
               size='mini'
@@ -318,6 +324,7 @@ class Nav extends Component {
 function mapStateToProps(state) {
   return {
     activeHostel: state.activeHostel,
+    activePost: state.activePost
   };
 }
 

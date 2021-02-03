@@ -100,7 +100,7 @@ class ComplainRegister extends React.Component {
       loading: false,
       convenientTime: '',
       complain: '',
-      complaintType: '',
+      category: '',
       complainsLoading: true,
     });
     this.props.getComplains(
@@ -121,7 +121,7 @@ class ComplainRegister extends React.Component {
   };
   render() {
     const { complains, constants } = this.props;
-    const { activePage, loading, complainsLoading, complain, complaintType } = this.state;
+    const { activePage, loading, complainsLoading, complain, category } = this.state;
     let options = [];
     for (var i in constants.complaint_types) {
       options.push({
@@ -148,7 +148,7 @@ class ComplainRegister extends React.Component {
               name='category'
               selection
               options={options}
-              value={complaintType}
+              value={category}
               onChange={this.handleChange}
               styleName='field-width'
               required
@@ -177,7 +177,7 @@ class ComplainRegister extends React.Component {
             onClick={this.handleSubmit}
             width={3}
             loading={loading}
-            disabled={complain.trim()=='' || complaintType==''}
+            disabled={complain.trim()=='' || category==''}
           >
             Submit
           </Button>

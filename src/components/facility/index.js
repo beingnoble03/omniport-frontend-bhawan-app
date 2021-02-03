@@ -51,12 +51,16 @@ class Facility extends React.Component {
 
   componentDidMount() {
     this.props.setNavigation('Facilities');
-    this.props.getFacilities(facilitiesUrl(this.props.activeHostel));
+    this.props.getFacilities(
+      facilitiesUrl(this.props.activeHostel),
+      this.successCallBack,
+      this.errCallBack
+    );
     this.props.getFacility(
       this.props.activeHostel,
       this.state.id,
       this.successCallBack,
-      this.errCallBack
+      this.facilityErrCallBack
     );
   }
 
@@ -248,6 +252,7 @@ class Facility extends React.Component {
       message: err,
     });
   };
+  facilityErrCallBack = (err) => {};
   toggleEditMode = () => {
     const editMode = this.state.editMode;
     this.setState({
@@ -273,7 +278,7 @@ class Facility extends React.Component {
   };
 
   render() {
-    const { facility, facilities } = this.props;
+    const { facility, facilities, activePost } = this.props;
     const { information } = this.state;
 
     return (
@@ -373,7 +378,7 @@ class Facility extends React.Component {
                                 );
                               })
                             : null}
-                          {this.props.who_am_i.isAdmin && (
+                          {activePost != "" && (
                             <Button
                               basic
                               color='blue'
@@ -401,14 +406,15 @@ function mapStateToProps(state) {
     activeFacility: state.activeFacility,
     facility: state.facility,
     facilities: state.facilities,
-    activeHostel: state.activeHostel
+    activeHostel: state.activeHostel,
+    activePost: state.activePost
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getFacilities: (url) => {
-      dispatch(getFacilities(url));
+    getFacilities: (url, successCallBack, errCallBack) => {
+      dispatch(getFacilities(url, successCallBack, errCallBack));
     },
     getFacility: (residence, id, successCallBack, errCallBack) => {
       dispatch(getFacility(residence, id, successCallBack, errCallBack));

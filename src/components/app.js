@@ -27,6 +27,7 @@ const RegisterStudent = lazy(() => import("./register_student/index"))
 import { whoami } from "../actions/who_am_i";
 import { getConstants } from "../actions/get-constants";
 import { setActiveHostel } from "../actions/set-active-hostel";
+import { setActivePost } from "../actions/set-active-post"
 import { constantsUrl } from "../urls";
 
 import main from "formula_one/src/css/app.css";
@@ -40,12 +41,12 @@ const creators = [
   },
   {
     name: "Suyash Salampuria",
-    role: "Fullstack Developer",
+    role: "Developer",
     link: "https://github.com/SuyashSalampuria/",
   },
   {
     name: "Ritvik Jain",
-    role: "Backend Developer",
+    role: "Developer",
     link: "https://github.com/ritvikjain99/",
   },
   {
@@ -80,14 +81,16 @@ class App extends React.Component {
     }
   }
 
-  changeActiveHostel = (hostelCode) => {
+  changeActiveHostel = (hostelCode, designation) => {
     this.props.history.push('/bhawan_app/')
     this.props.setActiveHostel(hostelCode)
+    this.props.setActivePost(designation)
   }
 
   setDefaultHostel = (hostel) => {
     if(hostel && hostel.length>0) {
-      this.props.setActiveHostel(hostel[0]);
+      this.props.setActiveHostel(hostel[0][0])
+      this.props.setActivePost(hostel[0][1])
     }
   }
 
@@ -133,15 +136,15 @@ class App extends React.Component {
       error: true,
       success: false,
       message: err,
-      loading: true,
-      loaded: false,
+      loading: false,
+      loaded: true,
     });
   };
 
   render() {
-    const { match, who_am_i, constants, activeHostel } = this.props;
+    const { match, who_am_i, constants, activeHostel, activePost } = this.props;
     if (this.state.loaded && this.state.consLoaded) {
-      if (activeHostel!="") {
+      if (activeHostel!='') {
         return (
           <div ref={this.divRef} styleName="blocks.app-wrapper">
             <Suspense fallback={<Loading />}>
@@ -187,7 +190,7 @@ class App extends React.Component {
                       path={`${match.path}book_room`}
                       exact
                       render={(props) =>
-                        !who_am_i.isStudent && (
+                        constants['administrative_council'].includes(activePost) && (
                           <BookingRequests
                             who_am_i={who_am_i}
                             constants={constants}
@@ -244,7 +247,7 @@ class App extends React.Component {
                         path={`${match.path}book_room`}
                         exact
                         render={(props) =>
-                          who_am_i.isStudent ? (
+                          !constants['administrative_council'].includes(activePost) ? (
                             <BookRoom
                               who_am_i={who_am_i}
                               constants={constants}
@@ -269,7 +272,7 @@ class App extends React.Component {
                       />
                       <Route
                         path={`${match.path}add/facility`}
-                        render={(props) => <AddFacility who_am_i={who_am_i} />}
+                        render={(props) => <AddFacility who_am_i={who_am_i} {...this.props} />}
                       />
 
                       <Route
@@ -328,7 +331,7 @@ class App extends React.Component {
                           <Grid.Column width={3} floated="right" styleName="blocks.side-info">
                             <MyInfo {...props} who_am_i={who_am_i} constants={constants} activeHostel={activeHostel}/>
                             <EventsCard {...props} who_am_i={who_am_i} activeHostel={activeHostel} />
-                            {who_am_i.isAdmin && who_am_i.isStudent ? (
+                            { constants['student_council'].includes(activePost) ? (
                               <Link to="/bhawan_app/admin_complain">
                                 <Button fluid styleName="blocks.student-complains">
                                   Student Complains
@@ -348,7 +351,7 @@ class App extends React.Component {
                           </Grid.Column>
                         )}
                       />
-                      {who_am_i.isStudent && (
+                      {!constants['administrative_council'].includes(activePost) && (
                         <Route
                           path={`${match.path}book_room`}
                           exact
@@ -397,20 +400,24 @@ function mapStateToProps(state) {
   return {
     who_am_i: state.who_am_i,
     constants: state.constants,
-    activeHostel: state.activeHostel
+    activeHostel: state.activeHostel,
+    activePost: state.activePost
   };
 }
 const mapDispatchToProps = (dispatch) => {
   return {
     whoami: (successCallBack, errCallBack) => {
-      dispatch(whoami(successCallBack, errCallBack));
+      dispatch(whoami(successCallBack, errCallBack))
     },
     getConstants: (url, successCallBack, errCallBack) => {
-      dispatch(getConstants(url, successCallBack, errCallBack));
+      dispatch(getConstants(url, successCallBack, errCallBack))
     },
     setActiveHostel: (hostelCode) => {
-      dispatch(setActiveHostel(hostelCode));
+      dispatch(setActiveHostel(hostelCode))
+    },
+    setActivePost: (designation) => {
+      dispatch(setActivePost(designation))
     }
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App)

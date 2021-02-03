@@ -27,7 +27,6 @@ import {
 } from 'semantic-ui-react'
 
 import './index.css'
-import activeHostel from '../../reducers/active-hostel'
 
 class BookingRequests extends Component {
   state = {
@@ -48,25 +47,49 @@ class BookingRequests extends Component {
   }
 
   componentDidMount() {
-    this.props.getPresentRoomBookings(
-      statusBookingsUrl(
-        this.props.activeHostel,
-        this.props.constants.statues.BOOKING_STATUSES.pen,
-        'false'
-      ),
-      this.presentSuccessCallBack,
-      this.presentErrCallBack
+    const { activePost } = this.props
 
-    )
-    this.props.getPastRoomBookings(
-      statusBookingsUrl(
-        this.props.activeHostel,
-        this.props.constants.statues.BOOKING_STATUSES.cnf,
-        'true'
-      ),
-      this.pastSuccessCallBack,
-      this.pastErrCallBack
-    )
+    if(activePost == 'sup'){
+      this.props.getPresentRoomBookings(
+        statusBookingsUrl(
+          this.props.activeHostel,
+          this.props.constants.statues.BOOKING_STATUSES.pen,
+          'false'
+        ),
+        this.presentSuccessCallBack,
+        this.presentErrCallBack
+
+      )
+      this.props.getPastRoomBookings(
+        statusBookingsUrl(
+          this.props.activeHostel,
+          this.props.constants.statues.BOOKING_STATUSES.cnf,
+          'true'
+        ),
+        this.pastSuccessCallBack,
+        this.pastErrCallBack
+      )
+    }else {
+      this.setState({ activeItem: 'forwarded' })
+      this.props.getPresentRoomBookings(
+        statusBookingsUrl(
+          this.props.activeHostel,
+          this.props.constants.statues.BOOKING_STATUSES.fwd,
+          'false'
+        ),
+        this.presentSuccessCallBack,
+        this.presentErrCallBack
+      )
+      this.props.getPastRoomBookings(
+        statusBookingsUrl(
+          this.props.activeHostel,
+          this.props.constants.statues.BOOKING_STATUSES.cnf,
+          'true'
+        ),
+        this.pastSuccessCallBack,
+        this.pastErrCallBack
+      )
+    }
   }
 
   close = () => this.setState({ open: false, openReject: false })
@@ -251,12 +274,12 @@ class BookingRequests extends Component {
       activePage,
       activeAprPage,
       presentLoading,
-      pastLoading
     } = this.state
     const {
       presentBookingRequests,
       pastBookingRequests,
       constants,
+      activePost
     } = this.props
     return (
       <Grid.Column width={16}>
@@ -273,15 +296,17 @@ class BookingRequests extends Component {
             (
               <React.Fragment>
                 <Menu compact icon='labeled'>
-                  <Menu.Item
-                    name='pending'
-                    active={activeItem === 'pending'}
-                    onClick={this.handleItemClick}
-                    color='blue'
-                    styleName='booking-menu'
-                  >
-                    Pending
-                  </Menu.Item>
+                  {activePost == 'sup' && (
+                    <Menu.Item
+                      name='pending'
+                      active={activeItem === 'pending'}
+                      onClick={this.handleItemClick}
+                      color='blue'
+                      styleName='booking-menu'
+                    >
+                      Pending
+                    </Menu.Item>
+                  )}
                   <Menu.Item
                     name='forwarded'
                     active={activeItem === 'forwarded'}
@@ -611,8 +636,8 @@ function mapStateToProps(state) {
     bookingRequests: state.bookingRequests,
     presentBookingRequests: state.presentBookingRequests,
     pastBookingRequests: state.pastBookingRequests,
-    activeHostel: state.activeHostel
-    // bookingOptions: state.bookingOptions
+    activeHostel: state.activeHostel,
+    activePost: state.activePost
   }
 }
 

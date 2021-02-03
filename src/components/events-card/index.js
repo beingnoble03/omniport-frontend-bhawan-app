@@ -81,7 +81,7 @@ class EventsCard extends React.Component {
   };
   render() {
     const { event, venue, time } = this.state
-    const { dayEvents } = this.props;
+    const { dayEvents, activePost } = this.props;
 
     return (
       <React.Fragment>
@@ -120,7 +120,7 @@ class EventsCard extends React.Component {
                     );
                   })
                 : 'No events today'}
-              {this.props.who_am_i.isAdmin &&
+              { activePost &&
               location.pathname === '/bhawan_app/events' ? (
                 <Header as='h5' onClick={this.toggleAddEvent}>
                   {!this.state.addEvent ? <span>+</span> : null}
@@ -183,8 +183,10 @@ function mapStateToProps(state) {
     events: state.events,
     activeDay: state.activeDay,
     dayEvents: dayEvents,
+    activePost: state.activePost,
   };
 }
+
 const mapDispatchToProps = (dispatch) => {
   return {
     getEvents: (url) => {

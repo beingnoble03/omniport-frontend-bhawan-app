@@ -15,6 +15,7 @@ import {
 } from 'semantic-ui-react';
 import { TimeInput } from 'semantic-ui-calendar-react';
 import { getFacilities, addFacility } from '../../actions/facilities';
+import { setActiveFacility } from '../../actions/set-active-facility'
 import { facilitiesUrl } from '../../urls';
 import './index.css';
 
@@ -233,6 +234,9 @@ class Facility extends React.Component {
   };
 
   successCallBack = (res) => {
+    const id = res.data.id
+    this.props.setActiveFacility(id)
+    this.props.history.push('/bhawan_app/facility')
     this.setState({
       success: true,
       error: false,
@@ -290,7 +294,7 @@ class Facility extends React.Component {
               <Grid.Column width={4}>
                 {(imageURL && imageURL!="") &&
                     <Image
-                    src={imageURL}
+                      src={imageURL}
                     />
                   }
               </Grid.Column>
@@ -386,6 +390,9 @@ const mapDispatchToProps = (dispatch) => {
     addFacility: (url, data, successCallBack, errCallBack) => {
       dispatch(addFacility(url, data, successCallBack, errCallBack));
     },
+    setActiveFacility: (id) => {
+      dispatch(setActiveFacility(id));
+    }
   };
 };
 

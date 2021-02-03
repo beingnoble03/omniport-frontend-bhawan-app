@@ -8,7 +8,8 @@ import './index.css'
 class MyInfo extends React.Component {
 
   handleRedirect = () => {
-    if(this.props.who_am_i.isStudent ) {
+    const { constants, activePost } = this.props
+    if(!constants['administrative_council'].includes(activePost) ) {
     this.props.history.push('/bhawan_app/profile')
     }
   };
@@ -16,7 +17,6 @@ class MyInfo extends React.Component {
   render() {
     const { who_am_i,
             constants,
-            activeHostel
           } = this.props
     return (
         <Card>
@@ -29,7 +29,7 @@ class MyInfo extends React.Component {
                 <Icon name='home' size='small' />
                 {constants.hostels[this.props.activeHostel]}
               </Card.Description>
-              {who_am_i.roomNumber && (
+              {(who_am_i.roomNumber && !constants['administrative_council'].includes(this.props.activePost) )&& (
                 <Card.Description styleName='font_color' onClick={this.handleRedirect}>
                 <Icon name='hotel' size='small'/>
                 {who_am_i.roomNumber}
@@ -43,6 +43,7 @@ class MyInfo extends React.Component {
 function mapStateToProps(state) {
   return {
     activeHostel: state.activeHostel,
+    activePost: state.activePost
   };
 }
 
