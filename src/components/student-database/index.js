@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { Header, Table, Container, Dropdown, Pagination, Segment } from 'semantic-ui-react'
+import { Header, Table, Container, Dropdown, Pagination, Segment, Button } from 'semantic-ui-react'
 
 import { Loading } from "formula_one";
 
-import { residentUrl } from '../../urls'
+import { residentUrl, residentDownloadUrl } from '../../urls'
 
-import { getResidents } from '../../actions/residents'
+import { getResidents, downloadResidents } from '../../actions/residents'
 
 import './index.css'
 
@@ -25,6 +25,7 @@ class StudentDatabase extends Component {
     filterYear: "",
     filterBranch: '',
     loading: true,
+    currentResidentDownloadUrl: ''
   };
 
   componentDidMount() {
@@ -33,6 +34,9 @@ class StudentDatabase extends Component {
       this.successCallBack,
       this.errCallBack
     )
+    this.setState({
+      currentResidentDownloadUrl: residentDownloadUrl(this.props.activeHostel)
+    })
   }
 
   onChange = (event, { name, value }) => {
@@ -62,7 +66,8 @@ class StudentDatabase extends Component {
     )
 
     this.setState({
-      activePage: 1
+      activePage: 1,
+      currentResidentDownloadUrl: `${residentDownloadUrl(this.props.activeHostel)}${filter}`,
     })
   }
 
@@ -74,6 +79,7 @@ class StudentDatabase extends Component {
       this.errCallBack
     )
   }
+
   successCallBack = () => {
     this.setState({
       loading: false
@@ -91,7 +97,8 @@ class StudentDatabase extends Component {
       activePage,
       filterBranch,
       filterYear,
-      loading
+      loading,
+      currentResidentDownloadUrl
     } = this.state
     const { residents, constants } = this.props
 
@@ -126,6 +133,13 @@ class StudentDatabase extends Component {
           options={branchOptions}
           selection
         />
+        <a href={currentResidentDownloadUrl} download>
+          <Button
+           primary
+          >
+            Download list
+          </Button>
+        </a>
         {!loading?
           (
             <React.Fragment>
@@ -214,6 +228,9 @@ const mapDispatchToProps = (dispatch) => {
     getResidents: (url, successCallBack, errCallBack) => {
       dispatch(getResidents(url, successCallBack, errCallBack))
     },
+    downloadResidents: (url, successCallBack, errCallBack) => {
+      dispatch(downloadResidents(url, successCallBack, errCallBack))
+    }
   }
 }
 

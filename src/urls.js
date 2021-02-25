@@ -72,6 +72,10 @@ export const yellowPagesUrl = (searchObject) => {
   return `/api/yellow_pages/person/?search=${searchObject}`
 }
 
+export const yellowPagesStudentUrl = (searchObject) => {
+  return `/api/yellow_pages/student/?search=${searchObject}`
+}
+
 export const specificBookingUrl = (residence, id) => {
   return `${baseApiUrl()}${residence}/room_booking/${id}/`
 }
@@ -115,4 +119,7 @@ export const residentSearchUrl = (residence, enrollmentNo) => {
 }
 export const residentUrl = (residence) => {
   return `${baseApiUrl()}${residence}/resident/`
+}
+export const residentDownloadUrl = (residence) => {
+  return `${baseApiUrl()}${residence}/resident/download/`
 }

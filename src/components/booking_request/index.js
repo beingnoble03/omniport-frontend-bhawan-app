@@ -353,6 +353,7 @@ class BookingRequests extends Component {
                       <Table.HeaderCell>From </Table.HeaderCell>
                       <Table.HeaderCell>To</Table.HeaderCell>
                       <Table.HeaderCell>Contact Number</Table.HeaderCell>
+                      <Table.HeaderCell>Show Details</Table.HeaderCell>
                       {activeItem !== 'confirmed' && (
                         <React.Fragment>
                           <Table.HeaderCell>
@@ -407,6 +408,11 @@ class BookingRequests extends Component {
                                 onClick={() => this.setActiveBooking(request)}
                               >
                                 {request.phoneNumber}
+                              </Table.Cell>
+                              <Table.Cell
+                                onClick={() => this.setActiveBooking(request)}
+                              >
+                                <span styleName="cursor">Show</span>
                               </Table.Cell>
                               {activeItem !== 'confirmed' && (
                                 <React.Fragment>

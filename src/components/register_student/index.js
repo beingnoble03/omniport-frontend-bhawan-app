@@ -16,7 +16,7 @@ import { searchPerson } from '../../actions/searchPerson'
 import { searchResident } from '../../actions/search-resident'
 import { addResident } from '../../actions/residents'
 
-import { yellowPagesUrl, residentSearchUrl, residentUrl } from '../../urls'
+import { yellowPagesStudentUrl, residentSearchUrl, residentUrl } from '../../urls'
 
 import './index.css'
 
@@ -71,7 +71,7 @@ class RegisterStudent extends React.Component {
 
   ajaxCall = (e) => {
     this.props.searchPerson(
-      yellowPagesUrl(e.target.value),
+      yellowPagesStudentUrl(e.target.value),
       this.successCallBack
     )
   }
