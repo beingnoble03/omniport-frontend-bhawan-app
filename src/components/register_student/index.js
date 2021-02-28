@@ -54,13 +54,13 @@ class RegisterStudent extends React.Component {
     let options = res.data.map((person, index) => {
       let text = person.fullName
       if (
-        person.roles &&
-        person.roles.length > 0 &&
-        person.roles[0].data &&
-        person.roles[0].data.branch &&
-        person.roles[0].data.enrolmentNumber
+        person.person.roles &&
+        person.person.roles.length > 0 &&
+        person.person.roles[0].data &&
+        person.person.roles[0].data.branch &&
+        person.person.roles[0].data.enrolmentNumber
       ) {
-        text = `${person.roles[0].data.enrolmentNumber}`
+        text = `${person.person.roles[0].data.enrolmentNumber}`
       }
       return { key: index, text: text, value: person }
     })
@@ -107,12 +107,12 @@ class RegisterStudent extends React.Component {
 
   onChange = (e, data) => {
     this.setState(
-      { selected: data.value,
-        name: data.value.fullName,
+      { selected: data.value.person,
+        name: data.value.person.fullName,
         loading: true,
       })
     this.props.searchResident(
-      residentSearchUrl(this.props.activeHostel, data.value.roles[0].data.enrolmentNumber),
+      residentSearchUrl(this.props.activeHostel, data.value.enrolmentNumber),
       this.searchResidentSuccessCallBack
     )
   }
