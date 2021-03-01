@@ -107,7 +107,7 @@ class RegisterStudent extends React.Component {
 
   onChange = (e, data) => {
     this.setState(
-      { selected: data.value.person,
+      { selected: data.value,
         name: data.value.person.fullName,
         loading: true,
       })
