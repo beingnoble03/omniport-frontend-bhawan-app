@@ -127,6 +127,7 @@ class StudentDatabase extends Component {
         <Dropdown
           name="filterBranch"
           clearable
+          search
           placeholder="Filter by branch"
           value={filterBranch}
           onChange={this.onChange}

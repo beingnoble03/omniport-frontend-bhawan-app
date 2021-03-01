@@ -378,7 +378,7 @@ class Facility extends React.Component {
                                 );
                               })
                             : null}
-                          {activePost != "" && (
+                          {activePost != null && (
                             <Button
                               basic
                               color='blue'

@@ -173,8 +173,8 @@ class AdminComplains extends Component {
         'resolved',
         'unresolved',
       ]),
-      this.resolveSuccessCallBack,
-      this.resolvedErrCallBack
+      this.pastSuccessCallBack,
+      this.pastErrCallBack
     )
   }
 
