@@ -21,6 +21,24 @@ export const addResident = (data, url, successCallBack, errCallBack) => {
   }
 }
 
+export const deregister = (url, successCallBack, errCallBack) => {
+  return (dispatch) => {
+    axios({
+      method: 'get',
+      url: url
+    })
+      .then((res) => {
+        successCallBack(res)
+      })
+      .catch((err) => {
+        // console.log("tevjdn")
+        console.log(err)
+        // console.log("hsbd")
+        errCallBack(err)
+      })
+  }
+}
+
 export const getResidents = (url, successCallBack, errCallBack) => {
   return (dispatch) => {
     axios({

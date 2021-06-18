@@ -42,7 +42,7 @@ const rootReducers = combineReducers({
   searchPersonResults: searchPersonResults,
   searchResidentResult: searchResidentResult,
   residents: residents,
-  activePost: activePost,
+  activePost: activePost
 })
 
 export default rootReducers

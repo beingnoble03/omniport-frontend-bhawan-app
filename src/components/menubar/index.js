@@ -85,10 +85,6 @@ class MenuBar extends Component {
             <Menu.Item
               name="bookings"
               onClick={this.handleItemClick}
-              //   active={
-              //     isActiveItem(urlLibraryView(), true) ||
-              //     isActiveItem(urlLibraryCourseView(), false)
-              //   }
               active={activeSubGroup === 'bookings'}
               className={["menu-icon-bar", "menu-items"].join(" ")}
             >
@@ -100,10 +96,6 @@ class MenuBar extends Component {
             <Menu.Item
               name="complains"
               onClick={this.handleItemClick}
-              //   active={
-              //     isActiveItem(urlLibraryView(), true) ||
-              //     isActiveItem(urlLibraryCourseView(), false)
-              //   }
               active={activeSubGroup === 'complains'}
               className={["menu-icon-bar", "menu-items"].join(" ")}
             >
@@ -115,10 +107,6 @@ class MenuBar extends Component {
             <Menu.Item
               name="profile"
               onClick={this.handleItemClick}
-              //   active={
-              //     isActiveItem(urlLibraryView(), true) ||
-              //     isActiveItem(urlLibraryCourseView(), false)
-              //   }
               active={activeSubGroup === 'profile'}
               className={["menu-icon-bar", "menu-items"].join(" ")}
             >
@@ -130,10 +118,6 @@ class MenuBar extends Component {
             <Menu.Item
               name="events"
               onClick={this.handleItemClick}
-              //   active={
-              //     isActiveItem(urlLibraryView(), true) ||
-              //     isActiveItem(urlLibraryCourseView(), false)
-              //   }
               active={activeSubGroup === 'events'}
               className={["menu-icon-bar", "menu-items"].join(" ")}
             >
@@ -145,10 +129,6 @@ class MenuBar extends Component {
             <Menu.Item
               name="home"
               onClick={this.handleItemClick}
-              //   active={
-              //     isActiveItem(urlLibraryView(), true) ||
-              //     isActiveItem(urlLibraryCourseView(), false)
-              //   }
               active={activeSubGroup === 'home'}
               className={["menu-icon-bar", "menu-items"].join(" ")}
             >

@@ -14,9 +14,9 @@ import {
 
 import { searchPerson } from '../../actions/searchPerson'
 import { searchResident } from '../../actions/search-resident'
-import { addResident } from '../../actions/residents'
+import { addResident, deregister } from '../../actions/residents'
 
-import { yellowPagesStudentUrl, residentSearchUrl, residentUrl } from '../../urls'
+import { yellowPagesStudentUrl, residentSearchUrl, residentUrl, deregisterUrl } from '../../urls'
 
 import './index.css'
 
@@ -37,6 +37,7 @@ class RegisterStudent extends React.Component {
       displayPicture: '',
       loading: false,
       registerLoading: false,
+      deregisterLoading: false,
       address: '',
       state: '',
       city: '',
@@ -146,7 +147,7 @@ class RegisterStudent extends React.Component {
     })
     toast({
       type: 'success',
-      title: 'Student Registered SuccesFully',
+      title: 'Student Registered Succesfully',
       animation: 'fade up',
       icon: 'smile outline',
       time: 4000,
@@ -159,10 +160,48 @@ class RegisterStudent extends React.Component {
       successMessage: '',
       registerLoading: false,
     })
-    console.log(err)
     toast({
-      type: 'failure',
+      type: 'error',
       title: 'Unable to register Student',
+      animation: 'fade up',
+      icon: 'frown outline',
+      time: 4000,
+    })
+  }
+
+  deRegisterStudent = () => {
+    let url = deregisterUrl(this.props.activeHostel, this.state.selected.person.id)
+    this.setState({
+      deregisterLoading: true,
+    })
+    this.props.deregister(
+      url,
+      this.deregisterSuccessCallBack,
+      this.deregisterFailureCallBack
+    )
+  }
+
+  deregisterSuccessCallBack = (res) => {
+    this.setState({
+      deregisterLoading: false,
+    })
+    toast({
+      type: 'success',
+      title: res.data,
+      animation: 'fade up',
+      icon: 'smile outline',
+      time: 4000,
+    })
+  }
+
+  deregisterFailureCallBack = (err) => {
+    this.setState({
+      deregisterLoading: false,
+    })
+    console.log()
+    toast({
+      type: 'error',
+      title: "Unable to register student please try again",
       animation: 'fade up',
       icon: 'frown outline',
       time: 4000,
@@ -179,7 +218,7 @@ class RegisterStudent extends React.Component {
       mothersContact
     } = this.state
     let data = {
-      "person" : selected.id,
+      "person" : selected.person.id,
       "room_number" : roomNo,
       "fathers_name": fathersName,
       "mothers_name": mothersName,
@@ -196,6 +235,7 @@ class RegisterStudent extends React.Component {
       this.residentErrCallBack
     )
   }
+
   toggle = () =>
       this.setState((prevState) =>
       ({ havingComputer: !prevState.havingComputer }
@@ -223,7 +263,9 @@ class RegisterStudent extends React.Component {
       fathersName,
       fathersContact,
       mothersName,
-      mothersContact
+      mothersContact,
+      registerLoading,
+      deregisterLoading
     } = this.state
     return (
       <Grid container centered>
@@ -428,10 +470,20 @@ class RegisterStudent extends React.Component {
               <Button
                 primary
                 type='submit'
+                loading={registerLoading}
                 onClick={this.registerStudent}
-                disabled={!roomNo}
+                disabled={!roomNo || !selected}
               >
                 Register
+              </Button>
+              <Button
+                secondary
+                type='submit'
+                onClick={this.deRegisterStudent}
+                loading={deregisterLoading}
+                disabled={!selected}
+              >
+                Deregister
               </Button>
             </Form>
           </Container>
@@ -459,6 +511,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     addResident: (data, url, successCallBack, errCallBack) => {
       dispatch(addResident(data, url, successCallBack, errCallBack))
+    },
+    deregister: (url, successCallBack, errCallBack) => {
+      dispatch(deregister(url, successCallBack, errCallBack))
     }
   }
 }

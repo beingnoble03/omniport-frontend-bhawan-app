@@ -123,3 +123,6 @@ export const residentUrl = (residence) => {
 export const residentDownloadUrl = (residence) => {
   return `${baseApiUrl()}${residence}/resident/download/`
 }
+export const deregisterUrl = (residence, person) => {
+  return `${baseApiUrl()}${residence}/resident/${person}/deregister/`
+}
