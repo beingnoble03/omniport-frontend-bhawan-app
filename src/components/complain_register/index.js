@@ -165,7 +165,7 @@ class ComplainRegister extends React.Component {
             value={complain}
             onChange={this.handleChange}
             control={TextArea}
-            label='Complaint'
+            label='Complaint / Feedback'
             placeholder='Type your complaint here ....'
             styleName='complaint'
             rows='5'
@@ -182,7 +182,7 @@ class ComplainRegister extends React.Component {
             Submit
           </Button>
         </Form>
-        <Header as='h3'>My Complains</Header>
+        <Header as='h3'>My Complains and Feedback</Header>
         {!complainsLoading?
           (
             <React.Fragment>
@@ -240,7 +240,7 @@ class ComplainRegister extends React.Component {
         </React.Fragment>
           ):
           (
-            <Segment>No Complains Made Yet</Segment>
+            <Segment>No Complains or Feedback Yet</Segment>
           )
         }
             </React.Fragment>

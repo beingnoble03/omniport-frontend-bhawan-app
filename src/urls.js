@@ -57,7 +57,7 @@ export const statusComplainsUrl = (residence, statuses) => {
     status = status.toUpperCase()
     allStatus = `${allStatus}status=${status}&`
   })
-  return `${baseApiUrl()}${residence}/complaint/${allStatus}&`
+  return `${baseApiUrl()}${residence}/complaint/${allStatus}`
 }
 
 export const increaseUnsuccesfulComplainsUrl = (residence, id) => {

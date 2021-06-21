@@ -46,11 +46,9 @@ const days = [
 ]
 
 const types = [
-  { key: 'ele', text: 'Electric', value: 'ele' },
-  { key: 'toi', text: 'Toilet', value: 'toi' },
-  { key: 'car', text: 'Carpentry', value: 'car' },
-  { key: 'cle', text: 'Cleaning', value: 'cle' },
-  { key: 'oth', text: 'Others', value: 'oth' },
+  { key: 'ele', text: 'ELECTRIC', value: 'ele' },
+  { key: 'car', text: 'CARPENTRY', value: 'car' },
+  { key: 'cle', text: 'CLEANING', value: 'cle' },
 ]
 
 class AdminComplains extends Component {
@@ -263,7 +261,9 @@ class AdminComplains extends Component {
     this.props.getPendingComplains(
       `${statusComplainsUrl(this.props.activeHostel, [
         'PENDING',
-      ])}&page=${activePage}`
+      ])}page=${activePage}`,
+      this.pendingSuccessCallBack,
+      this.pendingErrCallBack
     )
   }
 
@@ -304,7 +304,7 @@ class AdminComplains extends Component {
       <Grid container>
           <Grid.Column width={16}>
             <Container>
-              <Header as='h4'>Student Complains</Header>
+              <Header as='h4'>Student Complains and Feedback</Header>
               {!pendingLoading?
                 (
                   <React.Fragment>
@@ -435,7 +435,7 @@ class AdminComplains extends Component {
                 <Button primary onClick={this.changeTiming}>Change</Button>
               </Header>
               <Header as='h4'>
-                Past Complains
+                Past Complains and Feedback
                 <Icon name={pastComplainIcon} onClick={this.togglePastIcon} />
               </Header>
               {pastComplainIcon === 'angle down' && (

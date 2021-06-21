@@ -219,7 +219,7 @@ class Nav extends Component {
                 this.handleGroupClick('complains', adminComplainUrl())
               }
             >
-              Complaints
+              Complaints and Feedback
             </Menu.Item>
 
             <Menu.Item
