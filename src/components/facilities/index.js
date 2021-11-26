@@ -95,16 +95,6 @@ class Facilities extends React.Component {
                               <Card.Content>
                                 <div styleName='facilities.facility_card'>
                                   <div>{facility.name}</div>
-                                  <div>
-                                    {facility.timings.map((timing) => {
-                                      return (
-                                        <div>
-                                          {timing.start.substring(0, 5)} -{' '}
-                                          {timing.end.substring(0, 5)}
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
                                 </div>
                               </Card.Content>
                             </Card>
@@ -115,7 +105,7 @@ class Facilities extends React.Component {
                     </div>}
               </Card.Group>
               {facilities.length > this.state.max_length ? (
-                <div onClick={this.increaseCount}>See more</div>
+                <Button styleName="facilities.seeMoreButton" basic onClick={this.increaseCount}>See more</Button>
               ) : null}
             </React.Fragment>
           ):

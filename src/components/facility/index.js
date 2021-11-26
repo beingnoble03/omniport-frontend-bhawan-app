@@ -12,6 +12,7 @@ import {
   Icon,
   Grid,
   Message,
+  Label
 } from 'semantic-ui-react';
 import { TimeInput } from 'semantic-ui-calendar-react';
 import {
@@ -46,6 +47,7 @@ class Facility extends React.Component {
       descriptions: [''],
       name: '',
       days: [[]],
+      formattedTimings: {}
     };
   }
 
@@ -62,6 +64,15 @@ class Facility extends React.Component {
       this.successCallBack,
       this.facilityErrCallBack
     );
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.facility.id !== prevProps.facility.id) {
+      const formattedTimings = this.formatTimings(this.props.facility.timings)
+      this.setState({
+        formattedTimings: formattedTimings
+      });
+    }
   }
 
   createForm = () => {
@@ -260,6 +271,28 @@ class Facility extends React.Component {
     });
   };
 
+  formatTimings = (timings) => {
+    var filterByDesc = {}
+    timings.forEach(function (item) {
+      if(!filterByDesc.hasOwnProperty(item.description)) {
+        filterByDesc[item.description] = []
+      }
+      filterByDesc[item.description].push(item)
+    })
+    var formattedTimings = {}
+    for (let [key, value] of Object.entries(filterByDesc)) {
+      formattedTimings[key] = {}
+      value.forEach(function (item) {
+        const time = item.start+"-"+item.end
+        if(!formattedTimings[key].hasOwnProperty(time)){
+          formattedTimings[key][time] = []
+        }
+        formattedTimings[key][time].push(item.day)
+      })
+    }
+    return formattedTimings;
+  }
+
   handleChange = (event, { name, value }) => {
     if (this.state.hasOwnProperty(name)) {
       this.setState({ [name]: value });
@@ -279,8 +312,7 @@ class Facility extends React.Component {
 
   render() {
     const { facility, facilities, activePost } = this.props;
-    const { information } = this.state;
-
+    const { information, formattedTimings } = this.state;
     return (
       <Grid.Column width={16}>
         <Grid.Column>
@@ -311,7 +343,7 @@ class Facility extends React.Component {
             <React.Fragment>
               <Header as='h2'>{facility.name}</Header>
               <Grid divided='vertically'>
-                <Grid.Row columns={3}>
+                <Grid.Row columns={2}>
                   <Grid.Column width={4}>
                     <Image
                       src={
@@ -321,7 +353,7 @@ class Facility extends React.Component {
                       size='medium'
                     />
                   </Grid.Column>
-                  <Grid.Column width={8}>
+                  <Grid.Column width={12}>
                     <Container>
                       {this.state.editMode ? (
                         <div>
@@ -362,22 +394,41 @@ class Facility extends React.Component {
                           <Header size='small' styleName='low_margin'>
                             Timings
                           </Header>
-                          {facility.timings && facility.timings.length > 0
-                            ? facility.timings.map((timing) => {
-                                return (
-                                  <div>
-                                    {timing.description}:{' '}
-                                    {moment(timing.start, 'hh:mm:ss').format(
-                                      'hh:mm A'
-                                    )}{' '}
-                                    -
-                                    {moment(timing.end, 'hh:mm:ss').format(
-                                      'hh:mm A'
-                                    )}
-                                  </div>
-                                );
-                              })
-                            : null}
+                            {
+                              facility.timings && facility.timings.length > 0 && formattedTimings != {}
+                              ? <Grid celled>
+                                  {
+                                    Object.keys(formattedTimings).map((key) => {
+                                    return (
+                                      <Grid.Row>
+                                        <Grid.Column styleName="facilityDescription" width={4}>{key}</Grid.Column>
+                                        <Grid.Column width={12}>
+                                          <Grid celled>
+                                            {Object.keys(formattedTimings[key]).map((newKey) => {
+                                              return (
+                                                <Grid.Row>
+                                                  <Grid.Column styleName="facilityDescription" width={6}>{newKey}</Grid.Column>
+                                                  <Grid.Column width={10}>
+                                                    {
+                                                      formattedTimings[key][newKey].map((day) => {
+                                                        return (
+                                                          <Label>{day.charAt(0).toUpperCase() + day.slice(1)}</Label>
+                                                        )
+                                                      })
+                                                    }
+                                                  </Grid.Column>
+                                                </Grid.Row>
+                                              )
+                                            })}
+                                          </Grid>
+                                        </Grid.Column>
+                                      </Grid.Row>
+                                    )
+                                    })
+                                  }
+                                </Grid>
+                              : ""
+                            }
                           {activePost != null && (
                             <Button
                               basic
