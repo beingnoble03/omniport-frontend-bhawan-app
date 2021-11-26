@@ -30,3 +30,7 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.seeMoreButton {
+    margin-top: 10px !important;
+}

@@ -7,8 +7,13 @@
 }
 .button_margin{
     margin-right: 17px !important;
+    margin-bottom: 10px !important;
 }
 .plus-icon{
     margin-top: 3.3%;
     cursor: pointer;
+}
+.facilityDescription {
+    align-self: center;
+    text-align: center;
 }
