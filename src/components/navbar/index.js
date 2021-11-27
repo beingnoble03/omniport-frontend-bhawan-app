@@ -150,7 +150,6 @@ class Nav extends Component {
               options={options}
               defaultValue={0}
               onChange={this.handleChange}
-              simple
             />
           </Menu.Item>
           {!constants['administrative_council'].includes(activePost) ? isMobile ? (
