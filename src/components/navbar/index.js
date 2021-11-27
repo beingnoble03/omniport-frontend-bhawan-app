@@ -207,7 +207,7 @@ class Nav extends Component {
             </Menu.Menu>
           ) : null}
         </Menu>
-        { constants['administrative_council'].includes(activePost) ? (
+        { [...constants['administrative_council'],...constants['global_council']].includes(activePost) ? (
           <Menu size='mini' secondary styleName='navCss.lower_menu'>
             <Menu.Item
               size='mini'
