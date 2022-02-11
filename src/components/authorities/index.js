@@ -60,7 +60,7 @@ class Authorities extends React.Component {
     const { constants, activePost } = this.props
 
     this.props.setActiveAuthority(authority)
-    if(constants['administrative_council'].includes(activePost)) {
+    if([...constants['administrative_council'],...constants['global_council']].includes(activePost)) {
       this.props.history.push('/bhawan_app/edit-authority')
     }
   }
@@ -73,7 +73,7 @@ class Authorities extends React.Component {
       <Container styleName='top-margin'>
         <h2>
           Authorities
-          {constants['administrative_council'].includes(activePost) && (
+          {[...constants['administrative_council'],...constants['global_council']].includes(activePost) && (
             <Link to='/bhawan_app/create-authority'>
               <span styleName="plus-icon">
                 <Icon name="plus" color="blue" size="small"/>

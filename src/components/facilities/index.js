@@ -71,7 +71,7 @@ class Facilities extends React.Component {
       <Container>
         <h2>
           Facilities
-          {(constants['administrative_council'].includes(activePost)) &&
+          {([...constants['administrative_council'],...constants['global_council']].includes(activePost)) &&
           <Link to='/bhawan_app/add/facility/'>
             <span styleName="facilities.plus-icon">
               <Icon name="plus" color="blue" size="small" />

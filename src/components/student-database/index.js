@@ -29,8 +29,13 @@ const yearOptions = [
   { key: 1, text: '1st Year', value: 1 },
   { key: 2, text: '2nd Year', value: 2 },
   { key: 3, text: '3rd Year', value: 3 },
-  { key: 4, text: '4rd Year', value: 4 },
-  { key: 5, text: '5rd Year', value: 5 }
+  { key: 4, text: '4th Year', value: 4 },
+  { key: 5, text: '5th Year', value: 5 },
+  { key: 6, text: '6th Year', value: 6 },
+  { key: 7, text: '7th Year', value: 7 },
+  { key: 8, text: '8th Year', value: 8 },
+  { key: 9, text: '9th Year', value: 9 },
+  { key: 10, text: '10th Year', value: 10 },
 ]
 
 class StudentDatabase extends Component {
@@ -46,6 +51,7 @@ class StudentDatabase extends Component {
     inCampus: "",
     activeResident: {},
     previousRecords: [],
+    feeTypeFilter: "",
   };
 
   componentDidMount() {
@@ -72,12 +78,16 @@ class StudentDatabase extends Component {
         filter = `${filter}year=${this.state.filterYear}&`
       }
       if(this.state.inCampus !== "") {
-        filter = `${filter}is_living_in_campus=${this.state.inCampus}`
+        filter = `${filter}is_living_in_campus=${this.state.inCampus}&`
       }
 
       if (this.state.allResidents) {
         filter = `${filter}all=${true}&`
       }
+      
+      if(this.state.feeTypeFilter) [
+        filter = `${filter}feeType=${this.state.feeTypeFilter}&`
+      ]
 
       if (this.state.residentSearch.length >= 3) {
         filter = `${filter}search=${this.state.residentSearch}&`
@@ -153,6 +163,7 @@ class StudentDatabase extends Component {
       filterBranch,
       filterYear,
       loading,
+      feeTypeFilter,
       currentResidentDownloadUrl,
       allResidents,
       residentSearch,
@@ -174,8 +185,19 @@ class StudentDatabase extends Component {
         text: "Inside Campus",
       },
     ]
+    let feeOptions = []
+    for(const option in constants.statues.FEE_TYPES) {
+      feeOptions = [
+        ...feeOptions,
+        {
+          key: option.toString(),
+          value: option.toString(),
+          text: constants.statues.FEE_TYPES[option].toString(),
+        }
+      ]
+    }
     let branchOptions = [];
-    for (var i in constants.branches) {
+    for (const i in constants.branches) {
       branchOptions.push({
         key: i.toString(),
         value: i.toString(),
@@ -196,6 +218,7 @@ class StudentDatabase extends Component {
           })}}
           open={open}
         >
+          
           <Modal.Header>Student Details</Modal.Header>
           <Modal.Content image>
             <Image size='medium' src={activeResident.displayPicture} wrapped />
@@ -208,6 +231,11 @@ class StudentDatabase extends Component {
               <div>Department: {activeResident.department}</div>
               <div>Date of Birth: {activeResident.dateOfBirth}</div>
               <div>Inside Campus: {activeResident.isLivingInCampus? "Yes": "No"}</div>
+              <div>Fathers Name: {activeResident.fathersName}</div>
+              <div>Fathers Contact: {activeResident.fathersContact}</div>
+              <div>Mothers Name: {activeResident.mothersName}</div>
+              <div>Mothers Contact: {activeResident.mothersContact}</div>
+              <div>Fee Status: {constants.statues.FEE_TYPES[activeResident.feeType]}</div>
               <div>Address: {activeResident.address}</div>
               <div>City: {activeResident.city}</div>
               <div>State: {activeResident.state}</div>
@@ -218,7 +246,7 @@ class StudentDatabase extends Component {
                 {previousRecords.map((record, ind) => {
                   return (
                     <div>
-                      {record.hostel} : 
+                      {constants.hostels[record.hostel]} : 
                       {record.startDate && moment(record.startDate).format('DD/MM/YY')} - 
                       {record.endDate && (moment(record.endDate).format('DD/MM/YY'))} 
                     </div>
@@ -270,6 +298,15 @@ class StudentDatabase extends Component {
               options={LivingOptions}
               selection
             />
+            <Dropdown
+              name="feeTypeFilter"
+              clearable
+              placeholder="Filter by fee status"
+              value={feeTypeFilter}
+              onChange={this.onChange}
+              options={feeOptions}
+              selection
+            />
             <Checkbox
               name="allResidents"
               checked={allResidents}
@@ -306,6 +343,7 @@ class StudentDatabase extends Component {
                         <Table.HeaderCell>Department</Table.HeaderCell>
                         <Table.HeaderCell>Date of Joining</Table.HeaderCell>
                         <Table.HeaderCell>Inside Campus</Table.HeaderCell>
+                        <Table.HeaderCell>Fee Status</Table.HeaderCell>
                         {allResidents && <Table.HeaderCell>Hostel</Table.HeaderCell>}
                         <Table.HeaderCell>Details</Table.HeaderCell>
                       </Table.Row>
@@ -324,7 +362,8 @@ class StudentDatabase extends Component {
                                 <Table.Cell>{resident.department}</Table.Cell>
                                 <Table.Cell>{resident.startDate && moment(resident.startDate).format('DD/MM/YY')}</Table.Cell>
                                 <Table.Cell>{resident.isLivingInCampus? "Yes": "No"}</Table.Cell>
-                                {allResidents && <Table.Cell>{resident.hostelCode}</Table.Cell>}
+                                <Table.Cell>{constants.statues.FEE_TYPES[resident.feeType]}</Table.Cell>
+                                {allResidents && <Table.Cell>{constants.hostels[resident.hostelCode]}</Table.Cell>}
                                 <Table.Cell >
                                   <Button onClick={() => {this.showResidentDetails(resident)}}>
                                     Show

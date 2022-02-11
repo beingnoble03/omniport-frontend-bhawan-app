@@ -9,7 +9,7 @@ class MyInfo extends React.Component {
 
   handleRedirect = () => {
     const { constants, activePost } = this.props
-    if(!constants['administrative_council'].includes(activePost) ) {
+    if(![...constants['administrative_council'],...constants['global_council']].includes(activePost) ) {
     this.props.history.push('/bhawan_app/profile')
     }
   };
@@ -29,7 +29,7 @@ class MyInfo extends React.Component {
                 <Icon name='home' size='small' />
                 {constants.hostels[this.props.activeHostel]}
               </Card.Description>
-              {(who_am_i.roomNumber && !constants['administrative_council'].includes(this.props.activePost) )&& (
+              {(who_am_i.roomNumber && ![...constants['administrative_council'],...constants['global_council']].includes(this.props.activePost) )&& (
                 <Card.Description styleName='font_color' onClick={this.handleRedirect}>
                 <Icon name='hotel' size='small'/>
                 {who_am_i.roomNumber}

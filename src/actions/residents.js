@@ -79,14 +79,18 @@ export const fetchPreviousRecords = (url, prevSuccessCallBack, prevErrCallBack) 
   }
 }
 
-export const markResident = (url, successCallBack, errCallBack) => {
+export const editResident = (data, url, successCallBack, errCallBack) => {
+  let headers = {
+    'Content-Type': 'application/json',
+    'X-CSRFToken': getCookie('csrftoken')
+  }
   return (dispatch) => {
-    axios({
-      method: 'get',
-      url: url
-    })
-      .then((response) => {
-        successCallBack(response)
+    axios
+      .patch(url, data, {
+        headers: headers
+      })
+      .then((res) => {
+        successCallBack(res)
       })
       .catch((err) => {
         errCallBack(err)

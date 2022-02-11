@@ -9,12 +9,13 @@ import {
   Image,
   Grid,
   Container,
-  Dropdown
+  Dropdown,
+  Checkbox
 } from 'semantic-ui-react'
 
 import { searchPerson } from '../../actions/searchPerson'
 import { searchResident } from '../../actions/search-resident'
-import { addResident, deregister, markResident } from '../../actions/residents'
+import { addResident, deregister, editResident } from '../../actions/residents'
 
 import {
   yellowPagesStudentUrl,
@@ -40,11 +41,14 @@ class RegisterStudent extends React.Component {
       currentYear : '',
       department : '',
       phoneNumber : '',
+      insideCampus: '',
+      feeStatus: '',
       dateOfBirth :'',
       displayPicture: '',
       loading: false,
       registerLoading: false,
       deregisterLoading: false,
+      editLoading: false,
       address: '',
       state: '',
       city: '',
@@ -101,6 +105,8 @@ class RegisterStudent extends React.Component {
       dateOfBirth : res.dateOfBirth,
       displayPicture : res.displayPicture,
       havingComputer: res.havingComputer,
+      insideCampus: res.isLivingInCampus,
+      feeStatus: res.feeType,
       address: res.address,
       state: res.state,
       city: res.city,
@@ -131,11 +137,20 @@ class RegisterStudent extends React.Component {
     }
   }
 
+  checkedChange = (event, {name, checked}) => {
+    this.setState({
+      insideCampus:checked,
+    })
+  }
+
   residentSuccessCallBack = (res) => {
     this.setState({
       errMessage: '',
       registerLoading: false,
       roomNo: '',
+      enrollmentNo: '',
+      feeStatus: '',
+      insideCampus: '',
       emailAddress : '',
       currentYear : '',
       department : '',
@@ -175,6 +190,53 @@ class RegisterStudent extends React.Component {
       time: 4000,
     })
   }
+  residentEditSuccessCallBack = (res) => {
+    this.setState({
+      errMessage: '',
+      editLoading: false,
+      roomNo: '',
+      enrollmentNo: '',
+      feeStatus: '',
+      insideCampus: '',
+      emailAddress : '',
+      currentYear : '',
+      department : '',
+      phoneNumber : '',
+      dateOfBirth : '',
+      displayPicture : '',
+      successMessage : 'Student Edited Succesfully',
+      address: '',
+      city: '',
+      postalCode: '',
+      country: '',
+      fathersName: '',
+      fathersContact: '',
+      mothersName: '',
+      mothersContact: '',
+    })
+    toast({
+      type: 'success',
+      title: 'Student Edited Succesfully',
+      animation: 'fade up',
+      icon: 'smile outline',
+      time: 4000,
+    })
+  }
+
+  residentEditErrCallBack = (err) => {
+    this.setState({
+      errMessage: 'Failed to edit student',
+      successMessage: '',
+      editLoading: false,
+    })
+    toast({
+      type: 'error',
+      title: 'Unable to register Student',
+      animation: 'fade up',
+      icon: 'frown outline',
+      time: 4000,
+    })
+  }
 
   markSuccessCallBack = (res) => {
     toast({
@@ -189,7 +251,7 @@ class RegisterStudent extends React.Component {
   markFailureCallBack = (err) => {
     toast({
       type: 'error',
-      title: "Unable to mark student please try again",
+      title: "Unable to edit student please try again",
       animation: 'fade up',
       icon: 'frown outline',
       time: 4000,
@@ -261,11 +323,15 @@ class RegisterStudent extends React.Component {
       fathersName,
       fathersContact,
       mothersName,
-      mothersContact
+      mothersContact,
+      insideCampus,
+      feeStatus,
     } = this.state
     let data = {
       "person" : selected.person.id,
       "room_number" : roomNo,
+      "is_living_in_campus" : insideCampus,
+      "fee_type" : feeStatus,
       "fathers_name": fathersName,
       "mothers_name": mothersName,
       "fathers_contact": fathersContact,
@@ -279,6 +345,36 @@ class RegisterStudent extends React.Component {
       residentUrl(this.props.activeHostel),
       this.residentSuccessCallBack,
       this.residentErrCallBack
+    )
+  }
+  editStudent = () => {
+    const {
+      selected,
+      roomNo,
+      fathersName,
+      fathersContact,
+      mothersName,
+      mothersContact,
+      insideCampus,
+      feeStatus,
+    } = this.state
+    let data = {
+      "room_number" : roomNo,
+      "is_living_in_campus" : insideCampus,
+      "fee_type" : feeStatus,
+      "fathers_name": fathersName,
+      "mothers_name": mothersName,
+      "fathers_contact": fathersContact,
+      "mothers_contact": mothersContact
+    }
+    this.setState({
+      editLoading: true
+    })
+    this.props.editResident(
+      data,
+      `${residentUrl(this.props.activeHostel)}${selected.enrolmentNumber}/`,
+      this.residentEditSuccessCallBack,
+      this.residentEditErrCallBack
     )
   }
 
@@ -302,17 +398,33 @@ class RegisterStudent extends React.Component {
       displayPicture,
       loading,
       address,
+      feeStatus,
       city,
       state,
       country,
+      insideCampus,
       postalCode,
       fathersName,
       fathersContact,
       mothersName,
       mothersContact,
+      editLoading,
       registerLoading,
       deregisterLoading
     } = this.state
+    const { constants } = this.props;
+    let feeOptions = [];
+    for(const option in constants.statues.FEE_TYPES) {
+      feeOptions = [
+        ...feeOptions,
+        {
+          key: option.toString(),
+          text: constants.statues.FEE_TYPES[option].toString(),
+          value: option.toString(),
+        }
+      ]
+    }
+
     return (
       <Grid container centered>
         <Grid.Column width={6} centered>
@@ -358,6 +470,27 @@ class RegisterStudent extends React.Component {
                   <Input
                     name='roomNo'
                     value={roomNo}
+                    onChange={this.fieldsChange}
+                    loading={loading}
+                  />
+                </Form.Field>
+              </Form.Group>
+              <Form.Group fluid widths='equal'>
+                <Form.Field>
+                  <label>Inside Campus</label>
+                  <Checkbox
+                    name='insideCampus'
+                    checked={insideCampus}
+                    onClick={this.checkedChange}
+                  />
+                </Form.Field>
+                <Form.Field required>
+                  <label>Fee Status</label>
+                  <Dropdown
+                    name='feeStatus'
+                    selection
+                    options={feeOptions}
+                    value={feeStatus}
                     onChange={this.fieldsChange}
                     loading={loading}
                   />
@@ -514,6 +647,15 @@ class RegisterStudent extends React.Component {
                 </Form.Field>
               </Form.Group>
               <div>
+              <Button
+                  primary
+                  type='submit'
+                  loading={editLoading}
+                  onClick={this.editStudent}
+                  disabled={!roomNo || !selected}
+                >
+                  Edit Resident
+                </Button>
                 <Button
                   primary
                   type='submit'
@@ -533,7 +675,7 @@ class RegisterStudent extends React.Component {
                   Deregister
                 </Button>
               </div>
-              <div>
+              {/* <div>
                 <Button
                   primary
                   type='submit'
@@ -551,7 +693,7 @@ class RegisterStudent extends React.Component {
                 >
                   Mark Out of Campus
                 </Button>
-              </div>
+              </div> */}
             </Form>
           </Container>
         </Grid.Column>
@@ -582,8 +724,8 @@ const mapDispatchToProps = (dispatch) => {
     deregister: (url, successCallBack, errCallBack) => {
       dispatch(deregister(url, successCallBack, errCallBack))
     },
-    markResident: (url, successCallBack, errCallBack) => {
-      dispatch(markResident(url, successCallBack, errCallBack))
+    editResident: (data, url, successCallBack, errCallBack) => {
+      dispatch(editResident(data, url, successCallBack, errCallBack))
     }
   }
 }

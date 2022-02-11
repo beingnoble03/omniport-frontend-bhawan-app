@@ -152,7 +152,7 @@ class Nav extends Component {
               onChange={this.handleChange}
             />
           </Menu.Item>
-          {!constants['administrative_council'].includes(activePost) ? isMobile ? (
+          {![...constants['administrative_council'],...constants['global_council']].includes(activePost) ? isMobile ? (
             <Menu.Menu position='right' styleName="navCss.right-margin">
               <button
                 styleName={`hamburger.hamburger hamburger.${

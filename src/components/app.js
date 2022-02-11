@@ -190,7 +190,7 @@ class App extends React.Component {
                       path={`${match.path}book_room`}
                       exact
                       render={(props) =>
-                        constants['administrative_council'].includes(activePost) && (
+                        [...constants['administrative_council'],...constants['global_council']].includes(activePost) && (
                           <BookingRequests
                             who_am_i={who_am_i}
                             constants={constants}
@@ -247,7 +247,7 @@ class App extends React.Component {
                         path={`${match.path}book_room`}
                         exact
                         render={(props) =>
-                          !constants['administrative_council'].includes(activePost) ? (
+                          ![...constants['administrative_council'],...constants['global_council']].includes(activePost) ? (
                             <BookRoom
                               who_am_i={who_am_i}
                               constants={constants}
@@ -351,7 +351,7 @@ class App extends React.Component {
                           </Grid.Column>
                         )}
                       />
-                      {!constants['administrative_council'].includes(activePost) && (
+                      {![...constants['administrative_council'],...constants['global_council']].includes(activePost) && (
                         <Route
                           path={`${match.path}book_room`}
                           exact
