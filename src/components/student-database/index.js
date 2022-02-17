@@ -224,6 +224,7 @@ class StudentDatabase extends Component {
             <Image size='medium' src={activeResident.displayPicture} wrapped />
             <Modal.Description>
               <Header>{activeResident.residentName} - {activeResident.enrolmentNumber}</Header>
+              <div>Current Hostel: {constants.hostels[activeResident.hostelCode]}</div>
               <div>Room Number: {activeResident.roomNumber}</div>
               <div>Contact Number: {activeResident.phoneNumber}</div>
               <div>Email Address: {activeResident.emailAddress}</div>
@@ -344,7 +345,7 @@ class StudentDatabase extends Component {
                         <Table.HeaderCell>Date of Joining</Table.HeaderCell>
                         <Table.HeaderCell>Inside Campus</Table.HeaderCell>
                         <Table.HeaderCell>Fee Status</Table.HeaderCell>
-                        {allResidents && <Table.HeaderCell>Hostel</Table.HeaderCell>}
+                        <Table.HeaderCell>Hostel</Table.HeaderCell>
                         <Table.HeaderCell>Details</Table.HeaderCell>
                       </Table.Row>
                     </Table.Header>
@@ -363,7 +364,7 @@ class StudentDatabase extends Component {
                                 <Table.Cell>{resident.startDate && moment(resident.startDate).format('DD/MM/YY')}</Table.Cell>
                                 <Table.Cell>{resident.isLivingInCampus? "Yes": "No"}</Table.Cell>
                                 <Table.Cell>{constants.statues.FEE_TYPES[resident.feeType]}</Table.Cell>
-                                {allResidents && <Table.Cell>{constants.hostels[resident.hostelCode]}</Table.Cell>}
+                                <Table.Cell>{constants.hostels[resident.hostelCode]}</Table.Cell>
                                 <Table.Cell >
                                   <Button onClick={() => {this.showResidentDetails(resident)}}>
                                     Show
