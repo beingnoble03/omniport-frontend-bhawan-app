@@ -16,6 +16,7 @@ const StudentDatabase = lazy(() => import("./student-database/index"))
 const EventsCard = lazy(() => import("./events-card/index"))
 const Events = lazy(() => import("./events/index"))
 const AdminComplains = lazy(() => import("./admin-complaints/index"))
+const Items = lazy(() => import("./items/index"))
 const BookingRequests = lazy(() => import("./booking_request/index"))
 const Facility = lazy(() => import("./facility/index"))
 const MyProfile = lazy(() => import("./my_profile/index"))
@@ -215,6 +216,18 @@ class App extends React.Component {
                       exact
                       render={(props) => (
                         <AdminComplains
+                          who_am_i={who_am_i}
+                          constants={constants}
+                          setNavigation={this.setNavigation}
+                          {...props}
+                        />
+                      )}
+                    />
+                    <Route
+                      path={`${match.path}item`}
+                      exact
+                      render={(props) => (
+                        <Items
                           who_am_i={who_am_i}
                           constants={constants}
                           setNavigation={this.setNavigation}

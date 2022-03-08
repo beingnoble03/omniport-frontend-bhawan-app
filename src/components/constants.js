@@ -25,3 +25,37 @@ export const entries = [
     { key: '100', text: '100', value: '100' },
     { key: '150', text: '150', value: '150' },
   ]
+
+  export const complaint_items = [
+    { key: 'almrep', text: 'Almirah Repair', value: 'almrep' },
+    { key: 'cha', text: 'Chair', value: 'cha' },
+    { key: 'stutab', text: 'Study Table', value: 'stutab' },
+    { key: 'teatab', text: 'Tea Table', value: 'teatab' },
+    { key: 'doorep', text: 'Door Repair', value: 'doorep' },
+    { key: 'plaprep', text: 'Plaster Repair', value: 'plarep' },
+    { key: 'florep', text: 'Floor Repair', value: 'florep' },
+    { key: 'winrep', text: 'Window Repair', value: 'winrep' },
+    { key: 'seep', text: 'Seepage in Walls', value: 'seep' },
+    { key: 'term', text: 'Termite Treatment', value: 'term' },
+    { key: 'leak', text: 'Water line Leakage', value: 'leak' },
+    { key: 'ceifanrep', text: 'Ceiling Fan Repair', value: 'ceifanrep' },
+    { key: 'elepanrep', text: 'Electric Panel Repair', value: 'elepanrep' },
+    { key: 'ligpoirep', text: 'Light Point Repair', value: 'ligpoirep' },
+    { key: 'strligrep', text: 'Street Light Repair', value: 'strligrep' },
+    { key: 'swiboarep', text: 'Switch Board Repair', value: 'swiboarep' },
+    { key: 'wirrep', text: 'Wiring Repair', value: 'wirrep' },
+    { key: 'chacle', text: 'Chamber Cleaning', value: 'chacle' },
+    { key: 'garrem', text: 'Garbage Removal', value: 'garrem' },
+    { key: 'gracut', text: 'Grass Cutting', value: 'gracut' },
+    { key: 'san', text: 'Sanitization', value: 'san' },
+    { key: 'sewlincho', text: 'Sewer Line Choke', value: 'sewlincho' },
+    { key: 'hotwat', text: 'Hot Water', value: 'hotwat' },
+    { key: 'hotwatleak', text: 'Hot Water Line Leakage', value: 'hotwatleak' },
+    { key: 'watove', text: 'Water Overflowing', value: 'watove' },
+    { key: 'lanwor', text: 'Landscape Work', value: 'lanwor' },
+    { key: 'tretri', text: 'Tree Branches Trimming', value: 'tretri' },
+    { key: 'remtre', text: 'Trees Removal', value: 'remtre' },
+    { key: 'oth', text: 'Other', value: 'oth' },  
+  ]
+
+  

@@ -5,6 +5,8 @@ import activeFacility from './active-facility'
 import authorities from './authorities'
 import facilities from './facilities'
 import complains from './complains'
+import items from './items'
+import defaultItems from './default-items'
 import constants from './constants'
 import whoAmI from './who-am-i'
 import events from './events'
@@ -30,6 +32,8 @@ const rootReducers = combineReducers({
   constants: constants,
   facilities: facilities,
   complains: complains,
+  items: items,
+  defaultItems: defaultItems,
   who_am_i: whoAmI,
   events: events,
   bookingRequests: bookingRequests,
