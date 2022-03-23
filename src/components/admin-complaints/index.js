@@ -16,7 +16,7 @@ import {
   Popup,
   Segment,
   TextArea,
-  TableCell,
+  Input
 } from 'semantic-ui-react'
 import moment from 'moment'
 
@@ -69,7 +69,9 @@ class AdminComplains extends Component {
     entryAprNo: '5',
     complainsDownloadUrl: '',
     options: [],
-    complaint_item : [{default_item:null, quantity:null}]
+    complaint_item : [{default_item:null, quantity:null}],
+    residentSearch: "",
+    residentSearchApr: "",
   }
 
   componentDidMount() {
@@ -303,6 +305,35 @@ class AdminComplains extends Component {
     this.setState({ activeItem: name })
   }
 
+  handleResidentSearch = (e, { value }) => {
+    this.setState({ residentSearch: value })
+    this.setState({
+      pendingLoading: true
+    })
+    this.props.getPendingComplains(
+      `${statusComplainsUrl(this.props.activeHostel, [
+        'PENDING',
+      ])}search=${value}`,
+      this.pendingSuccessCallBack,
+      this.pendingErrCallBack
+    )
+  }
+
+  handlePastResidentSearch = (e, { value }) => {
+    this.setState({ residentSearchApr: value })
+    this.setState({
+      pastLoading: true
+    })
+    this.props.getResolvedComplains(
+      `${statusComplainsUrl(this.props.activeHostel, [
+        'RESOLVED',
+        'UNRESOLVED',
+      ])}search=${value}`,
+      this.pastSuccessCallBack,
+      this.pastErrCallBack
+    )
+  }
+
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage })
     this.setState({
@@ -392,7 +423,9 @@ class AdminComplains extends Component {
       entryNo,
       entryAprNo,
       remark,
-      complainsDownloadUrl
+      complainsDownloadUrl,
+      residentSearch,
+      residentSearchApr
     } = this.state
     const { pendingComplains, resolvedComplains, defaultItems, constants } = this.props
     
@@ -402,13 +435,22 @@ class AdminComplains extends Component {
             <Container>
               <div styleName="complain-header">
                 <Header as='h4'>Student Complains and Feedback</Header>
-                <a href={complainsDownloadUrl} download>
-                  <Button
-                  primary
-                  >
-                    Download list
-                  </Button>
-                </a>
+                <div styleName="complain-header">
+                  <Input
+                    name="residentSearch"
+                    value={residentSearch}
+                    onChange={this.handleResidentSearch}
+                    icon="search"
+                    placeholder="Filter by Name/Enrollment no."
+                  />
+                  <a href={complainsDownloadUrl} download>
+                    <Button
+                    primary
+                    >
+                      Download list
+                    </Button>
+                  </a>
+                </div>
               </div>
               {!pendingLoading?
                 (
@@ -554,10 +596,19 @@ class AdminComplains extends Component {
                   />
                 <Button primary onClick={this.changeTiming}>Change</Button>
               </Header>
-              <Header as='h4'>
-                Past Complains and Feedback
-                <Icon name={pastComplainIcon} onClick={this.togglePastIcon} />
-              </Header>
+              <div styleName="complain-header">
+                <Header as='h4'>
+                  Past Complains and Feedback
+                  <Icon name={pastComplainIcon} onClick={this.togglePastIcon} />
+                </Header>
+                <Input
+                  name="residentSearchApr"
+                  value={residentSearchApr}
+                  onChange={this.handlePastResidentSearch}
+                  icon="search"
+                  placeholder="Filter by Name/Enrollment no."
+                />
+              </div>
               {pastComplainIcon === 'angle down' && (
                 <React.Fragment>
                   {!pastLoading?
