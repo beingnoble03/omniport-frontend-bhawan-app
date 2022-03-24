@@ -2,10 +2,13 @@ const initialState = {}
 
 const defaultItems = (state = initialState, action) => {
   switch (action.type) {
-    case 'GET_DEFAULT_ITEMS':
+    case 'GET_ALL_DEFAULT_ITEMS':
       return action.payload
     case 'ADD_DEFAULT_ITEM': {
-      return [...state, action.payload]
+      state.count++
+      let results = state.results
+      state.results = [action.payload, ...results]
+      return state
     }
     default:
       return state

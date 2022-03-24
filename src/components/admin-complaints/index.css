@@ -36,6 +36,9 @@
 .info-icon{
     margin-left: 10px;
 }
+.plus-icon{
+    margin-left: 5px;
+}
 .pagination-container {
     display: flex;
     justify-content: space-between;

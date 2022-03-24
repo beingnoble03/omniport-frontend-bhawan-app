@@ -19,8 +19,9 @@ import moment from 'moment'
 
 import { Loading } from "formula_one";
 
-import { itemsUrl } from '../../urls'
+import { itemsUrl, defaultItemsUrl,} from '../../urls'
 
+import { getDefaultItems } from '../../actions/default-items'
 import { getItems } from '../../actions/items'
 import { addDefaultItem} from '../../actions/add_defaultitem';
 import { entries } from '../constants'
@@ -37,6 +38,9 @@ class Items extends Component {
   };
 
   componentDidMount() {
+    this.props.getDefaultItems(
+      defaultItemsUrl(this.props.activeHostel),
+    )
     this.props.getItems(
       `${itemsUrl(this.props.activeHostel)}`,
       this.successCallBack,
@@ -46,7 +50,7 @@ class Items extends Component {
 
   handleChange = (event, { name, value }) => {
     if (this.state.hasOwnProperty(name)) {
-      this.setState({ [name]: value })
+      this.setState({ [name]: value.toUpperCase() })
     }
   }
 
@@ -60,8 +64,8 @@ class Items extends Component {
     this.props.addDefaultItem(
       data,
       this.props.activeHostel,
-      this.successCallBack,
-      this.errCallBack
+      this.defaultItemSuccessCallBack,
+      this.defaultItemErrCallBack
     );
   };
 
@@ -86,9 +90,29 @@ class Items extends Component {
     )
   }
 
+  defaultItemSuccessCallBack = (res) => {
+    this.setState({
+      success: true,
+      error: false,
+      message: res.statusText,
+      loading: false
+    })
+    this.close()
+  }
+
+  defaultItemErrCallBack = (err) => {
+    this.setState({
+      error: true,
+      success: false,
+      message: err,
+      loading: false
+    })
+    this.close()
+  }
+
   successCallBack = () => {
     this.setState({
-      loading: false
+      loading: false,
     })
   }
 
@@ -112,7 +136,7 @@ class Items extends Component {
       open,
       itemName
     } = this.state
-    const { items, constants } = this.props
+    const { items, defaultItems, constants } = this.props
     
     return (
       <div>
@@ -214,6 +238,7 @@ class Items extends Component {
 
 function mapStateToProps(state) {
   return {
+    defaultItems: state.defaultItems,
     items: state.items,
     activeHostel: state.activeHostel,
   }
@@ -223,6 +248,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getItems: (url, successCallBack, errCallBack) => {
       dispatch(getItems(url, successCallBack, errCallBack))
+    },
+    getDefaultItems: (url) => {
+      dispatch(getDefaultItems(url))
     },
     addDefaultItem: (data, residence, successCallBack, errCallBack) => {
       dispatch(addDefaultItem(data, residence, successCallBack, errCallBack));

@@ -9,7 +9,7 @@ export const getDefaultItems = (url) => {
       .then((response) => {
         let item = response.data
         dispatch({
-          type: 'GET_DEFAULT_ITEMS',
+          type: 'GET_ALL_DEFAULT_ITEMS',
           payload: item
         })
       })

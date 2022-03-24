@@ -46,14 +46,19 @@ const creators = [
     link: "https://github.com/SuyashSalampuria/",
   },
   {
+    name: "Gauransh Dingwani",
+    role: "Developer",
+    link: "https://github.com/gauransh7/",
+  },
+  {
+    name: "Vaishnavi Gupta",
+    role: "Developer",
+    link: "https://github.com/vaishnavi-gupta18/",
+  },
+  {
     name: "Ritvik Jain",
     role: "Developer",
     link: "https://github.com/ritvikjain99/",
-  },
-  {
-    name: "Kashish Jagyasi",
-    role: "Designer",
-    link: "https://link.medium.com/eoXeYayNH5/",
   },
 ];
 

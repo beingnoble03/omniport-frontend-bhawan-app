@@ -16,7 +16,6 @@ import {
   Popup,
   Segment,
   TextArea,
-  Input
 } from 'semantic-ui-react'
 import moment from 'moment'
 
@@ -69,7 +68,7 @@ class AdminComplains extends Component {
     entryAprNo: '5',
     complainsDownloadUrl: '',
     options: [],
-    complaint_item : [{default_item:null, quantity:null}],
+    complaint_item : [{default_item:null, quantity:1}],
     residentSearch: "",
     residentSearchApr: "",
   }
@@ -185,7 +184,6 @@ class AdminComplains extends Component {
         default_item: element.default_item,
         quantity: element.quantity,
       }
-      console.log(data)
       this.props.addItem(
         data,
         this.props.activeHostel,
@@ -481,7 +479,7 @@ class AdminComplains extends Component {
                             pendingComplains.results.length > 0
                             ? pendingComplains.results.map((complain, index) => {
                                 return (
-                                  <Table.Row>
+                                  <Table.Row key={index}>
                                     <Table.Cell>
                                       {entryNo * (activePage - 1) + index + 1}
                                     </Table.Cell>
@@ -507,7 +505,10 @@ class AdminComplains extends Component {
                                       }
                                     >
                                       {complain.failedAttempts}
-                                      <span styleName='cursor'> + </span>
+                                      <span styleName='cursor' styleName="plus-icon">
+                                        <Icon name="add circle" color="grey" size="large" />
+                                        
+                                      </span>
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.show(complain.id)}>
                                       <span styleName='resolve-style'>Resolve</span>
@@ -641,7 +642,7 @@ class AdminComplains extends Component {
                               resolvedComplains.results.length > 0
                                 ? resolvedComplains.results.map((complain, index) => {
                                     return (
-                                      <Table.Row>
+                                      <Table.Row key={index}>
                                         <Table.Cell>
                                           {entryAprNo * (activeAprPage - 1) + index + 1}
                                         </Table.Cell>
@@ -738,7 +739,7 @@ class AdminComplains extends Component {
             <Modal size='mini' open={open} onClose={this.close}>
               <Modal.Header styleName='center'>Resolve Complain?</Modal.Header>
               <Modal.Content>
-              <Form centered>
+              <Form>
               <Form.Group styleName='item-container'>
                   <Form.Field>
                   <label>Item</label>
@@ -748,7 +749,7 @@ class AdminComplains extends Component {
                   </Form.Field>
                 </Form.Group>
               {this.state.complaint_item.map((element, index) => (
-                  <Form.Group styleName='item-container'>
+                  <Form.Group styleName='item-container' key={index}>
                   <Form.Field >
                     <Dropdown
                       name='default_item'
@@ -756,7 +757,6 @@ class AdminComplains extends Component {
                       selection
                       options={options}
                       onChange={(event, value) => this.handleDefaultItemChange(index, event, value)}
-                      compact
                     />
                   </Form.Field>
                   <Form.Field styleName='field-width'>
