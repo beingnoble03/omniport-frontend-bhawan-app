@@ -21,6 +21,14 @@ export const complainUrl = () => {
   return `${baseNavUrl('/complain')}`
 }
 
+export const itemUrl = () => {
+  return `${baseNavUrl('/item')}`
+}
+
+export const defaultItemUrl = () => {
+  return `${baseNavUrl('/default_item')}`
+}
+
 export const adminComplainUrl = () => {
   return `${baseNavUrl('/admin_complain')}`
 }
@@ -49,6 +57,14 @@ export const baseApiUrl = () => {
 
 export const complainsUrl = (residence) => {
   return `${baseApiUrl()}${residence}/complaint/`
+}
+
+export const itemsUrl = (residence) => {
+  return `${baseApiUrl()}${residence}/item/`
+}
+
+export const defaultItemsUrl = (residence) => {
+  return `${baseApiUrl()}${residence}/default_item/`
 }
 
 export const complainsDownloadUrl = (residence) => {

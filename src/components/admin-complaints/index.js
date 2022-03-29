@@ -6,14 +6,16 @@ import {
   Header,
   Table,
   Button,
+  Form,
   Modal,
   Container,
+  Input,
   Icon,
   Dropdown,
   Pagination,
   Popup,
   Segment,
-  Input
+  TextArea,
 } from 'semantic-ui-react'
 import moment from 'moment'
 
@@ -24,10 +26,13 @@ import {
   getResolvedComplains,
   increaseUnsuccefulAttempts,
 } from '../../actions/complains'
+import { getDefaultItems } from '../../actions/default-items'
 import { getTimeSlots, changeTimeSlot } from '../../actions/time-slots'
 import { resolveComplain } from '../../actions/resolveComplain'
+import { addItem } from '../../actions/add_item'
 import {
   statusComplainsUrl,
+  defaultItemsUrl,
   increaseUnsuccesfulComplainsUrl,
   timeSlotsUrl,
   complainsDownloadUrl,
@@ -47,9 +52,11 @@ class AdminComplains extends Component {
     success: false,
     err: false,
     message: '',
+    loading: true,
     pendingLoading: true,
     pastLoading: true,
     type: '',
+    remark: '',
     activeId: null,
     activeItem: 'apr',
     activePage: 1,
@@ -60,6 +67,8 @@ class AdminComplains extends Component {
     entryNo: '5',
     entryAprNo: '5',
     complainsDownloadUrl: '',
+    options: [],
+    complaint_item : [{default_item:null, quantity:1}],
     residentSearch: "",
     residentSearchApr: "",
   }
@@ -79,10 +88,32 @@ class AdminComplains extends Component {
       this.pastSuccessCallBack,
       this.pastErrCallBack
     )
+    this.props.getDefaultItems(
+      defaultItemsUrl(this.props.activeHostel),
+    )
     this.props.getTimeSlots(this.props.activeHostel)
     this.setState({
       complainsDownloadUrl: complainsDownloadUrl(this.props.activeHostel)
     })
+
+  }
+
+  
+
+  componentDidUpdate(prevProps) {
+    if( (prevProps.defaultItems!== this.props.defaultItems) && this.props.defaultItems.results.length>0){
+      let options = []
+      const results = this.props.defaultItems.results
+      for (var i in results) {
+        options.push({
+          key: results[i].id.toString(),
+          text: results[i].name.toString(),
+          value: results[i].id.toString(),
+        });
+      }
+      this.setState({ options : options})
+    }
+
   }
 
   show = (id) => {
@@ -102,7 +133,7 @@ class AdminComplains extends Component {
   }
 
   handleChange = (event, { name, value }) => {
-    if (this.state.hasOwnProperty(name)) {
+    if(this.state.hasOwnProperty(name)) {
       this.setState({ [name]: value })
     }
     if (name == 'type') {
@@ -136,10 +167,30 @@ class AdminComplains extends Component {
     })
   }
 
+  addItemField = () => {
+    this.setState((prevState) => ({
+      complaint_item: [...prevState.complaint_item, {default_item: null, quantity: null}],
+    }))
+  }
+
   resolveComplaint = () => {
     const body = {
       status: 'res',
+      remark: this.state.remark,
     }
+    {this.state.complaint_item.map((element, index) => {
+      const data = {
+        complaint: this.state.activeId,
+        default_item: element.default_item,
+        quantity: element.quantity,
+      }
+      this.props.addItem(
+        data,
+        this.props.activeHostel,
+        this.resolveSuccessCallBack,
+        this.errCallBack
+      )
+      })}
     this.props.resolveComplain(
       this.state.activeId,
       body,
@@ -169,6 +220,10 @@ class AdminComplains extends Component {
       this.pastSuccessCallBack,
       this.pastErrCallBack
     )
+    
+    let complaint_item = [{default_item:null, quantity:null}]
+    this.setState({ complaint_item })
+    
   }
 
   pendingSuccessCallBack = (res) => {
@@ -335,6 +390,17 @@ class AdminComplains extends Component {
     )   
   }
 
+  handleDefaultItemChange = (i, event, {value}) => {
+    let complaint_item = [...this.state.complaint_item]
+    complaint_item[i].default_item = parseInt(value)
+    this.setState({ complaint_item })
+  }
+  handleQuantityChange(i, event) {
+    let complaint_item = [...this.state.complaint_item]
+    complaint_item[i].quantity = parseInt(event.target.value)
+    this.setState({ complaint_item })
+  }
+
   increaseUnsuccesfulComplains = (id) => {
     this.props.increaseUnsuccefulAttempts(
       increaseUnsuccesfulComplainsUrl(this.props.activeHostel, id),
@@ -346,6 +412,7 @@ class AdminComplains extends Component {
   render() {
     const {
       open,
+      options,
       pastComplainIcon,
       activePage,
       activeAprPage,
@@ -353,11 +420,13 @@ class AdminComplains extends Component {
       pastLoading,
       entryNo,
       entryAprNo,
+      remark,
       complainsDownloadUrl,
       residentSearch,
       residentSearchApr
     } = this.state
-    const { pendingComplains, resolvedComplains, constants } = this.props
+    const { pendingComplains, resolvedComplains, defaultItems, constants } = this.props
+    
     return (
       <Grid container>
           <Grid.Column width={16}>
@@ -410,7 +479,7 @@ class AdminComplains extends Component {
                             pendingComplains.results.length > 0
                             ? pendingComplains.results.map((complain, index) => {
                                 return (
-                                  <Table.Row>
+                                  <Table.Row key={index}>
                                     <Table.Cell>
                                       {entryNo * (activePage - 1) + index + 1}
                                     </Table.Cell>
@@ -436,7 +505,10 @@ class AdminComplains extends Component {
                                       }
                                     >
                                       {complain.failedAttempts}
-                                      <span styleName='cursor'> + </span>
+                                      <span styleName='cursor' styleName="plus-icon">
+                                        <Icon name="add circle" color="grey" size="large" />
+                                        
+                                      </span>
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.show(complain.id)}>
                                       <span styleName='resolve-style'>Resolve</span>
@@ -449,6 +521,7 @@ class AdminComplains extends Component {
                       </Table>
                       </div>
                       <div styleName='pagination-container'>
+                        
                         <div>
                           {pendingComplains.count > entryNo ? (
                             <Pagination
@@ -560,6 +633,8 @@ class AdminComplains extends Component {
                                   Unsuccesful attempts to solve
                                 </Table.HeaderCell>
                                 <Table.HeaderCell>Complain Status</Table.HeaderCell>
+                                <Table.HeaderCell>Items</Table.HeaderCell>
+                                <Table.HeaderCell>Remark</Table.HeaderCell>
                               </Table.Row>
                             </Table.Header>
                             <Table.Body>
@@ -567,7 +642,7 @@ class AdminComplains extends Component {
                               resolvedComplains.results.length > 0
                                 ? resolvedComplains.results.map((complain, index) => {
                                     return (
-                                      <Table.Row>
+                                      <Table.Row key={index}>
                                         <Table.Cell>
                                           {entryAprNo * (activeAprPage - 1) + index + 1}
                                         </Table.Cell>
@@ -596,6 +671,28 @@ class AdminComplains extends Component {
                                               complain.status
                                             ]
                                           }
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                          {complain.items.length > 0 
+                                            ? complain.items.map((item,index) => {
+                                            return(
+                                              <Table.Row>
+                                                <Table.Cell>
+                                                  {item.quantity}
+                                                </Table.Cell>
+                                                <Table.Cell>
+                                                  {item.name}
+                                                </Table.Cell>
+                                              </Table.Row>
+                                            )
+                                          })
+                                        : (
+                                          'None'
+                                        )}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            {complain.remark.trim() != '' 
+                                              ? complain.remark : 'None'}
                                         </Table.Cell>
                                       </Table.Row>
                                     )
@@ -641,6 +738,54 @@ class AdminComplains extends Component {
             </Container>
             <Modal size='mini' open={open} onClose={this.close}>
               <Modal.Header styleName='center'>Resolve Complain?</Modal.Header>
+              <Modal.Content>
+              <Form>
+              <Form.Group styleName='item-container'>
+                  <Form.Field>
+                  <label>Item</label>
+                  </Form.Field>
+                  <Form.Field styleName='field-width'>
+                  <label>Quantity</label>
+                  </Form.Field>
+                </Form.Group>
+              {this.state.complaint_item.map((element, index) => (
+                  <Form.Group styleName='item-container' key={index}>
+                  <Form.Field >
+                    <Dropdown
+                      name='default_item'
+                      placeholder='Replace or repair items'
+                      selection
+                      options={options}
+                      onChange={(event, value) => this.handleDefaultItemChange(index, event, value)}
+                    />
+                  </Form.Field>
+                  <Form.Field styleName='field-width'>
+                  <Input
+                      name='quantity'
+                      id = {index}
+                      type='number'
+                      onChange={(event) => this.handleQuantityChange(index, event)}
+                    />
+                  </Form.Field>
+                </Form.Group>
+              ))}
+              <div styleName='right-align'>
+              <Header as='h5' onClick={this.addItemField} styleName='cursor'>
+                  <span>+</span>
+                  Add Item
+              </Header>
+              </div>
+              <Form.Field
+                name='remark'
+                value={remark}
+                onChange={this.handleChange}
+                control={TextArea}
+                label='Remark'
+                placeholder='Type any remark ....'
+                rows='3'
+              />
+              </Form>
+              </Modal.Content>
               <Modal.Actions styleName='modalActions'>
                 <Button positive fluid onClick={this.resolveComplaint}>
                   Yes
@@ -660,6 +805,7 @@ function mapStateToProps(state) {
   return {
     pendingComplains: state.pendingComplains,
     resolvedComplains: state.resolvedComplains,
+    defaultItems: state.defaultItems,
     timeSlots: state.timeSlots,
     activeHostel: state.activeHostel
   }
@@ -672,6 +818,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     getResolvedComplains: (url, successCallBack, errCallBack) => {
       dispatch(getResolvedComplains(url, successCallBack, errCallBack))
+    },
+    getDefaultItems: (url) => {
+      dispatch(getDefaultItems(url))
     },
     getTimeSlots: (residence) => {
       dispatch(getTimeSlots(residence))
@@ -701,6 +850,11 @@ const mapDispatchToProps = (dispatch) => {
     resolveComplain: (id, data, residence, successCallBack, errCallBack) => {
       dispatch(
         resolveComplain(id, data, residence, successCallBack, errCallBack)
+      )
+    },
+    addItem: (data, residence, successCallBack, errCallBack) => {
+      dispatch(
+        addItem(data, residence, successCallBack, errCallBack)
       )
     },
   }

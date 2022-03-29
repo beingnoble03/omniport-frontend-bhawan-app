@@ -42,6 +42,7 @@ class StudentDatabase extends Component {
   state = {
     activePage: 1,
     open: false,
+    filter: '',
     filterYear: "",
     filterBranch: '',
     loading: true,
@@ -66,7 +67,7 @@ class StudentDatabase extends Component {
   }
 
   onChange = (event, { name, value }) => {
-    let filter = '?is_student=true&'
+    let filter = 'is_student=true&'
     if (this.state.hasOwnProperty(name)) {
       this.setState({ [name]: value }, () => {
         
@@ -94,11 +95,12 @@ class StudentDatabase extends Component {
       }
 
       this.setState({
-        loading: true
+        loading: true,
+        filter: filter
       })
 
       this.props.getResidents(
-        `${residentUrl(this.props.activeHostel)}${filter}`,
+        `${residentUrl(this.props.activeHostel)}?${filter}`,
           this.successCallBack,
           this.errCallBack
       )
@@ -107,7 +109,7 @@ class StudentDatabase extends Component {
           activePage: 1,
           currentResidentDownloadUrl: `${residentDownloadUrl(
             this.props.activeHostel
-          )}${filter}`
+          )}?${filter}`
         })
       })
     }
@@ -116,7 +118,7 @@ class StudentDatabase extends Component {
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage, loading: false })
     this.props.getResidents(
-      `${residentUrl(this.props.activeHostel)}?page=${activePage}`,
+      `${residentUrl(this.props.activeHostel)}?page=${activePage}&${this.state.filter}`,
       this.successCallBack,
       this.errCallBack
     )

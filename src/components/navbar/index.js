@@ -19,6 +19,7 @@ const MenuBar = lazy(() => import("../menubar/index"))
 import {
   homePageUrl,
   adminComplainUrl,
+  itemUrl,
   bookingUrl,
   eventUrl,
   complainUrl,
@@ -67,6 +68,12 @@ class Nav extends Component {
       case adminComplainUrl(): {
         this.setState({
           activeSubGroup: 'complains'
+        })
+        return
+      }
+      case itemUrl(): {
+        this.setState({
+          activeSubGroup: 'items'
         })
         return
       }
@@ -219,6 +226,19 @@ class Nav extends Component {
               }
             >
               Complaints and Feedback
+            </Menu.Item>
+
+            <Menu.Item
+              size='mini'
+              name='items'
+              color='blue'
+              styleName='navCss.navColor'
+              active={activeSubGroup == 'items'}
+              onClick={() =>
+                this.handleGroupClick('items', itemUrl())
+              }
+            >
+              Items
             </Menu.Item>
 
             <Menu.Item

@@ -2,6 +2,14 @@
     display: flex !important;
     justify-content: center;
 }
+.field-width{
+    width: 30% !important;
+}
+.item-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .modalActions{
     display: flex;
 }
@@ -28,10 +36,17 @@
 .info-icon{
     margin-left: 10px;
 }
+.plus-icon{
+    margin-left: 5px;
+}
 .pagination-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+.right-align {
+    display: flex;
+    justify-content: flex-end;
 }
 .table-height {
     min-height: 280px;
