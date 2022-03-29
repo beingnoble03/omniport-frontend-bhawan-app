@@ -23,6 +23,7 @@ export const addDefaultItem = (data, residence, successCallBack, errCallBack) =>
           icon: 'smile outline',
           time: 4000
         })
+        console.log(res)
         successCallBack(res)
         const response = {
           status: true,
@@ -34,7 +35,6 @@ export const addDefaultItem = (data, residence, successCallBack, errCallBack) =>
         })
       })
       .catch((err) => {
-        console.log(err)
         toast({
           type: 'error',
           title: 'Item could not be created',
