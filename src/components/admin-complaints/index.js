@@ -426,7 +426,7 @@ class AdminComplains extends Component {
       residentSearchApr
     } = this.state
     const { pendingComplains, resolvedComplains, defaultItems, constants } = this.props
-    
+
     return (
       <Grid container>
           <Grid.Column width={16}>
@@ -691,7 +691,7 @@ class AdminComplains extends Component {
                                         )}
                                         </Table.Cell>
                                         <Table.Cell>
-                                            {complain.remark.trim() != '' 
+                                            {complain.remark && complain.remark.trim() != '' 
                                               ? complain.remark : 'None'}
                                         </Table.Cell>
                                       </Table.Row>
