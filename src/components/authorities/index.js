@@ -110,12 +110,6 @@ class Authorities extends React.Component {
                         />
                         <Container styleName='authority-info'>
                           <Card.Content>
-                            <span styleName='bold'>Room no: </span>
-                            <span styleName='details'>
-                              {authority.roomNumber}
-                            </span>
-                          </Card.Content>
-                          <Card.Content>
                             <span styleName='bold'>Email: </span>
                             <span styleName='details'>
                               {authority.emailAddress}

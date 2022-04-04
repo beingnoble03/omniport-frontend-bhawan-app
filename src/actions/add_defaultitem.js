@@ -35,6 +35,7 @@ export const addDefaultItem = (data, residence, successCallBack, errCallBack) =>
         })
       })
       .catch((err) => {
+        console.log("btr")
         toast({
           type: 'error',
           title: 'Item could not be created',
