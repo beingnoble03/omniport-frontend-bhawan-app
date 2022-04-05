@@ -184,7 +184,6 @@ class Nav extends Component {
             <Menu.Menu position='right' styleName='navCss.right-margin'>
               <Menu.Item styleName='blocks.zero-padding'>
                 <Button
-                  basic
                   color='blue'
                   styleName={
                     location.pathname === bookingUrl()

@@ -72,7 +72,7 @@ class Complains extends React.Component {
                 {(complains.results && complains.results.length > 0)?
             (
               <React.Fragment>
-                <div styleName="table-height">
+                <div styleName="table-height"> 
                 <Table unstackable celled>
                   <Table.Header>
                     <Table.Row>
@@ -82,6 +82,8 @@ class Complains extends React.Component {
                       <Table.HeaderCell>Complain Status</Table.HeaderCell>
                       <Table.HeaderCell>Complain Date and Time</Table.HeaderCell>
                       <Table.HeaderCell>Applicant Room</Table.HeaderCell>
+                      <Table.HeaderCell>Items</Table.HeaderCell>
+                      <Table.HeaderCell>Remark</Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
@@ -97,6 +99,29 @@ class Complains extends React.Component {
                               <Table.Cell>{constants.statues.COMLAINT_STATUSES[complain.status]}</Table.Cell>
                               <Table.Cell>{moment(complain.datetimeCreated).format('DD/MM/YY, hh:mm a')}</Table.Cell>
                               <Table.Cell>{complain.roomNo}</Table.Cell>
+                              <Table.Cell>
+                                {complain.items.length > 0 
+                                  ? complain.items.map((item,index) => {
+                                    return(
+                                      <Table.Row>
+                                        <Table.Cell>
+                                          {item.quantity}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                          {item.name}
+                                        </Table.Cell>
+                                      </Table.Row>
+                                    )
+                                  })
+                                  :(
+                                  'None'
+                                  )
+                                }
+                              </Table.Cell>
+                              <Table.Cell>
+                                  {complain.remark && complain.remark.trim() != '' 
+                                    ? complain.remark : 'None'}
+                              </Table.Cell>
                             </Table.Row>
                           )
                         })
