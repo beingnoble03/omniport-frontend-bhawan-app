@@ -46,7 +46,7 @@ class ComplainRegister extends React.Component {
     this.props.setNavigation('Register a Complain');
 
     this.props.getComplains(
-      complainsUrl(this.props.activeHostel),
+      `${complainsUrl(this.props.activeHostel)}?me=True`,
       this.complainsSuccessCallBack,
       this.complainsErrCallBack
     );

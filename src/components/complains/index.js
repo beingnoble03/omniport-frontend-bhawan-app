@@ -21,7 +21,7 @@ class Complains extends React.Component {
   }
   componentDidMount() {
     this.props.getComplains(
-      complainsUrl(this.props.activeHostel),
+      `${complainsUrl(this.props.activeHostel)}?me=True`,
       this.complainsSuccessCallBack,
       this.complainsErrCallBack
     )

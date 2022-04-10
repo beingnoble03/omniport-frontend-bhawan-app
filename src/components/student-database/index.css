@@ -7,8 +7,9 @@
 
 .filter-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
+    margin-bottom: 3px;
 }
 
 .filter-container > div {

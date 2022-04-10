@@ -43,8 +43,9 @@ class StudentDatabase extends Component {
     activePage: 1,
     open: false,
     filter: '',
-    filterYear: "",
-    filterBranch: '',
+    filterYear: [],
+    filterBranch: [],
+    filterDegree: [],
     loading: true,
     currentResidentDownloadUrl: '',
     allResidents: false,
@@ -73,6 +74,10 @@ class StudentDatabase extends Component {
         
       if (this.state.filterBranch != '') {
         filter = `${filter}branch=${this.state.filterBranch}&`
+      } 
+
+      if (this.state.filterDegree != '') {
+        filter = `${filter}degree=${this.state.filterDegree}&`
       } 
          
       if (this.state.filterYear != '') {
@@ -163,6 +168,7 @@ class StudentDatabase extends Component {
     const {
       activePage,
       filterBranch,
+      filterDegree,
       filterYear,
       loading,
       feeTypeFilter,
@@ -204,6 +210,15 @@ class StudentDatabase extends Component {
         key: i.toString(),
         value: i.toString(),
         text: constants.branches[i].toString(),
+      });
+    }
+    
+    let degreeOptions = [];
+    for (const i in constants.degrees) {
+      degreeOptions.push({
+        key: i,
+        value: constants.degrees[i],
+        text: constants.degrees[i],
       });
     }
 
@@ -264,10 +279,11 @@ class StudentDatabase extends Component {
           <div>
             Total Count: {residents.count}
           </div>
-        <div styleName='filter-container'>
           <div styleName='filter-container'>
             <Dropdown
               name="filterYear"
+              multiple
+              search
               clearable
               options={yearOptions}
               onChange={this.onChange}
@@ -276,8 +292,20 @@ class StudentDatabase extends Component {
               selection
             />
             <Dropdown
+              name="filterDegree"
+              clearable
+              multiple
+              search
+              placeholder="Filter by degree"
+              value={filterDegree}
+              onChange={this.onChange}
+              options={degreeOptions}
+              selection
+            />
+            <Dropdown
               name="filterBranch"
               clearable
+              multiple
               search
               placeholder="Filter by branch"
               value={filterBranch}
@@ -301,6 +329,8 @@ class StudentDatabase extends Component {
               options={LivingOptions}
               selection
             />
+            </div>
+          <div styleName='filter-container'>
             <Dropdown
               name="feeTypeFilter"
               clearable
@@ -318,7 +348,6 @@ class StudentDatabase extends Component {
                 this.onChange(e, { name: name, value: checked })
               }
             />
-          </div>
           <a href={currentResidentDownloadUrl} download>
             <Button
             primary

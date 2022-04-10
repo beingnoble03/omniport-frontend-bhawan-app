@@ -31,9 +31,6 @@ export const deregister = (url, successCallBack, errCallBack) => {
         successCallBack(res)
       })
       .catch((err) => {
-        // console.log("tevjdn")
-        console.log(err)
-        // console.log("hsbd")
         errCallBack(err)
       })
   }

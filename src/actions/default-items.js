@@ -14,7 +14,6 @@ export const getDefaultItems = (url) => {
         })
       })
       .catch((err) => {
-        console.log(err)
       })
   }
 }
