@@ -123,6 +123,12 @@ class RegisterStudent extends React.Component {
   }
 
   onChange = (e, data) => {
+    if (data.name == "enrollment") {
+      this.setState({
+        roomNo: '',
+        feeStatus: '',
+      })
+    }
     this.setState(
       { selected: data.value,
         name: data.value.person.fullName,
