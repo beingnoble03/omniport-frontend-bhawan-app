@@ -230,8 +230,8 @@ class ComplaintRegister extends React.Component {
                           {constants.complaint_types[complaint.complaintType]}
                         </Table.Cell>
                         <Table.Cell>
-                          {constants.statues.COMPLAINT_STATUSES[complaint.status]}
-                          {constants.statues.COMPLAINT_STATUSES[complaint.status]!='RESOLVED' && complaint.remark && 
+                          {constants.statuses.COMPLAINT_STATUSES[complaint.status]}
+                          {constants.statuses.COMPLAINT_STATUSES[complaint.status]!='RESOLVED' && complaint.remark && 
                             <>
                               <br/> ( {complaint.remark} )
                             </>

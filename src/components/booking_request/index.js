@@ -54,7 +54,7 @@ class BookingRequests extends Component {
       this.props.getPresentRoomBookings(
         statusBookingsUrl(
           this.props.activeHostel,
-          this.props.constants.statues.BOOKING_STATUSES.pen,
+          this.props.constants.statuses.BOOKING_STATUSES.pen,
           'false'
         ),
         this.presentSuccessCallBack,
@@ -64,7 +64,7 @@ class BookingRequests extends Component {
       this.props.getPastRoomBookings(
         statusBookingsUrl(
           this.props.activeHostel,
-          this.props.constants.statues.BOOKING_STATUSES.cnf,
+          this.props.constants.statuses.BOOKING_STATUSES.cnf,
           'true'
         ),
         this.pastSuccessCallBack,
@@ -75,7 +75,7 @@ class BookingRequests extends Component {
       this.props.getPresentRoomBookings(
         statusBookingsUrl(
           this.props.activeHostel,
-          this.props.constants.statues.BOOKING_STATUSES.fwd,
+          this.props.constants.statuses.BOOKING_STATUSES.fwd,
           'false'
         ),
         this.presentSuccessCallBack,
@@ -84,7 +84,7 @@ class BookingRequests extends Component {
       this.props.getPastRoomBookings(
         statusBookingsUrl(
           this.props.activeHostel,
-          this.props.constants.statues.BOOKING_STATUSES.cnf,
+          this.props.constants.statuses.BOOKING_STATUSES.cnf,
           'true'
         ),
         this.pastSuccessCallBack,
@@ -598,7 +598,7 @@ class BookingRequests extends Component {
               <div>
                 Current Status -{' '}
                 {
-                  constants.statues.BOOKING_STATUSES[
+                  constants.statuses.BOOKING_STATUSES[
                     this.state.activeBooking.status
                   ]
                 }

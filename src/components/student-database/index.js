@@ -300,13 +300,13 @@ class StudentDatabase extends Component {
       },
     ]
     let feeOptions = []
-    for (const option in constants.statues.FEE_TYPES) {
+    for (const option in constants.statuses.FEE_TYPES) {
       feeOptions = [
         ...feeOptions,
         {
           key: option.toString(),
           value: option.toString(),
-          text: constants.statues.FEE_TYPES[option].toString(),
+          text: constants.statuses.FEE_TYPES[option].toString(),
         }
       ]
     }
@@ -363,7 +363,7 @@ class StudentDatabase extends Component {
               <div>Fathers Contact: {activeResident.fathersContact}</div>
               <div>Mothers Name: {activeResident.mothersName}</div>
               <div>Mothers Contact: {activeResident.mothersContact}</div>
-              <div>Fee Status: {constants.statues.FEE_TYPES[activeResident.feeType]}</div>
+              <div>Fee Status: {constants.statuses.FEE_TYPES[activeResident.feeType]}</div>
               <div>Address: {activeResident.address}</div>
               <div>City: {activeResident.city}</div>
               <div>State: {activeResident.state}</div>
@@ -538,7 +538,7 @@ class StudentDatabase extends Component {
                                   <Table.Cell>{resident.department}</Table.Cell>
                                   <Table.Cell>{resident.startDate && moment(resident.startDate).format('DD/MM/YY')}</Table.Cell>
                                   <Table.Cell>{resident.isLivingInCampus ? "Yes" : "No"}</Table.Cell>
-                                  <Table.Cell>{constants.statues.FEE_TYPES[resident.feeType]}</Table.Cell>
+                                  <Table.Cell>{constants.statuses.FEE_TYPES[resident.feeType]}</Table.Cell>
                                   <Table.Cell>{constants.hostels[resident.hostelCode]}</Table.Cell>
                                   <Table.Cell >
                                     <Button onClick={() => { this.showResidentDetails(resident) }}>

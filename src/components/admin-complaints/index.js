@@ -543,10 +543,10 @@ class AdminComplaints extends Component {
     } = this.state
     const { pendingComplaints, resolvedComplaints, defaultItems, constants } = this.props
     let complaint_status_options = [];
-    for (var i in constants.statues['COMPLAINT_STATUSES']) {
+    for (var i in constants.statuses['COMPLAINT_STATUSES']) {
       complaint_status_options.push({
         key: i.toString(),
-        text: constants.statues['COMPLAINT_STATUSES'][i].toString(),
+        text: constants.statuses['COMPLAINT_STATUSES'][i].toString(),
         value: i.toString(),
       });
     }
@@ -668,7 +668,7 @@ class AdminComplaints extends Component {
                                         selection 
                                         options={complaint_status_options} 
                                       />
-                                      {constants.statues.COMPLAINT_STATUSES[complaint.status]!='RESOLVED' && complaint.remark && 
+                                      {constants.statuses.COMPLAINT_STATUSES[complaint.status]!='RESOLVED' && complaint.remark && 
                                         <>
                                           <br/> ( {complaint.remark} )
                                         </>
@@ -858,11 +858,11 @@ class AdminComplaints extends Component {
                                         </Table.Cell>
                                         <Table.Cell>
                                           {
-                                            constants.statues.COMPLAINT_STATUSES[
+                                            constants.statuses.COMPLAINT_STATUSES[
                                               complaint.status
                                             ]
                                           }
-                                          {constants.statues.COMPLAINT_STATUSES[complaint.status]!='RESOLVED' && complaint.remark && 
+                                          {constants.statuses.COMPLAINT_STATUSES[complaint.status]!='RESOLVED' && complaint.remark && 
                                             <>
                                               <br/> ( {complaint.remark} )
                                             </>

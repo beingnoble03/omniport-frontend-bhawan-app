@@ -430,12 +430,12 @@ class RegisterStudent extends React.Component {
     } = this.state
     const { constants } = this.props;
     let feeOptions = [];
-    for(const option in constants.statues.FEE_TYPES) {
+    for(const option in constants.statuses.FEE_TYPES) {
       feeOptions = [
         ...feeOptions,
         {
           key: option.toString(),
-          text: constants.statues.FEE_TYPES[option].toString(),
+          text: constants.statuses.FEE_TYPES[option].toString(),
           value: option.toString(),
         }
       ]

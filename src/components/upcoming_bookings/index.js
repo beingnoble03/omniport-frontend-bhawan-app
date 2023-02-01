@@ -65,7 +65,7 @@ class UpcomingBookings extends React.Component {
                             : 'main.yellow'
                       }
                     >
-                      {constants.statues.BOOKING_STATUSES[request.status]}
+                      {constants.statuses.BOOKING_STATUSES[request.status]}
                     </span>{' '}
                     . <span>Booking ID</span> . <span>{request.id}</span>
                   </div>
