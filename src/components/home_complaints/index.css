@@ -1,0 +1,24 @@
+.max-width-350 {
+  width: 100%;
+  max-width: 350px;
+}
+
+.color-primary {
+  color: #304ffe !important;
+}
+
+.color-light {
+  background-color: #133bc5 !important;
+}
+
+.dot {
+  height: 8px;
+  width: 8px;
+  background-color: blue;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.gap-16 {
+  gap: 16px;
+}
